@@ -17,7 +17,8 @@ namespace SurvivalRts
         UiOpen,
         UiClose,
         MusicCalm,
-        MusicBattle
+        MusicBattle,
+        BuilderHammer
     }
 
     // Sự kiện âm thanh do gameplay (kể cả job Burst) phát ra; AudioDirector quyết định có phát thành tiếng hay không.

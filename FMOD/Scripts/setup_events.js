@@ -15,6 +15,7 @@ var EVENTS = [
     { path: "Enemy/Death", files: ["Enemy_Death_01", "Enemy_Death_02", "Enemy_Death_03"], length: 0.8, is3D: true, maxInstances: 6, pitchRandom: 2.0, bus: "Combat" },
     { path: "Tower/Shot", files: ["Tower_Shot_01", "Tower_Shot_02", "Tower_Shot_03"], length: 0.4, is3D: true, maxInstances: 8, pitchRandom: 1.5, bus: "Combat" },
     { path: "Building/Collapse", files: ["Building_Collapse_01"], length: 1.9, is3D: true, maxInstances: 3, pitchRandom: 1.0, bus: "Combat" },
+    { path: "Building/Construct", files: ["Builder_Hammer_01", "Builder_Hammer_02", "Builder_Hammer_03"], length: 0.35, is3D: true, maxInstances: 6, pitchRandom: 2.0, bus: "Combat" },
     { path: "Ambience/CrowdMarch", files: ["Crowd_March_Loop"], length: 2.0, is3D: false, maxInstances: 1, loop: true, bus: "Ambience" },
     { path: "Ambience/Battle", files: ["Battle_Loop"], length: 3.0, is3D: false, maxInstances: 1, loop: true, bus: "Ambience" },
     { path: "UI/Click", files: ["UI_Click"], length: 0.1, is3D: false, maxInstances: 2, bus: "UI" },

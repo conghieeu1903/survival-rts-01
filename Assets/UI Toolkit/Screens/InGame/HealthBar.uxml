@@ -12,6 +12,12 @@
         <ui:Label name="workerLabel" text="Thợ: 0/3" class="worker-label" picking-mode="Ignore" />
         <ui:Button name="addWorkerButton" text="+ Thợ" class="worker-btn worker-btn--add" />
       </ui:VisualElement>
+      <ui:VisualElement name="demolishPanel" class="demolish-panel hidden">
+        <ui:Button name="demolishButton" text="Tháo dỡ" class="worker-btn worker-btn--danger" />
+        <ui:Label name="demolishConfirmLabel" text="Phá (2.5s)?" class="demolish-label hidden" picking-mode="Ignore" />
+        <ui:Button name="confirmDemolishBtn" text="Xác nhận phá" class="worker-btn worker-btn--danger-confirm hidden" />
+        <ui:Button name="cancelDemolishBtn" text="Hủy" class="worker-btn hidden" />
+      </ui:VisualElement>
     </ui:VisualElement>
   </ui:VisualElement>
 </ui:UXML>

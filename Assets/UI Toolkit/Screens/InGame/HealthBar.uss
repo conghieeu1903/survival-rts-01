@@ -102,6 +102,51 @@
   color: var(--color-accent);
 }
 
+.health-status--danger {
+  border-color: var(--color-health-low);
+  color: #ff7b61;
+}
+
+.demolish-panel {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4px;
+  padding: 3px 6px;
+  background-color: var(--color-track);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+}
+
+.demolish-label {
+  margin-right: 6px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: #ff7b61;
+}
+
+.worker-btn--danger {
+  border-color: var(--color-health-low);
+  color: #ff7b61;
+}
+
+.worker-btn--danger:hover {
+  background-color: rgba(217, 72, 47, 0.25);
+  border-color: #ff7b61;
+}
+
+.worker-btn--danger-confirm {
+  margin-right: 4px;
+  background-color: var(--color-health-low);
+  border-color: var(--color-health-low);
+  color: #0b0f0b;
+}
+
+.worker-btn--danger-confirm:hover {
+  background-color: #f06046;
+  border-color: #f06046;
+}
+
 .hidden {
   display: none;
 }

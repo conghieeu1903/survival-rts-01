@@ -563,7 +563,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(house, BuildingPrefabDir + "/House.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_House.asset", "House", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 2.5f, 250f, 5f, 3, 0, ResourceType.None, 0f, false, 0f, 0);
+                    prefab, new Vector2Int(2, 2), 2.5f, 250f, 5f, 3, 0, ResourceType.None, 0f, false, 0f, 0,
+                    woodCost: 2);
             }
             finally
             {
@@ -596,7 +597,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(hut, BuildingPrefabDir + "/BuilderHut.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_BuilderHut.asset", "Builder's Hut", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 2.2f, 300f, 6f, 0, 3, ResourceType.None, 0f, false, 0f, 0);
+                    prefab, new Vector2Int(2, 2), 2.2f, 300f, 6f, 0, 3, ResourceType.None, 0f, false, 0f, 0,
+                    woodCost: 3, stoneCost: 1);
             }
             finally
             {
@@ -632,7 +634,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(camp, BuildingPrefabDir + "/LumberCamp.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_LumberCamp.asset", "Lumber Camp", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 1.9f, 280f, 5f, 0, 3, ResourceType.Wood, 8f, false, 2.5f, 2);
+                    prefab, new Vector2Int(2, 2), 1.9f, 280f, 5f, 0, 3, ResourceType.Wood, 8f, false, 2.5f, 2,
+                    woodCost: 2);
             }
             finally
             {
@@ -668,7 +671,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(quarry, BuildingPrefabDir + "/StoneQuarry.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_StoneQuarry.asset", "Stone Quarry", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 2.3f, 350f, 6f, 0, 3, ResourceType.Stone, 0f, true, 3f, 2);
+                    prefab, new Vector2Int(2, 2), 2.3f, 350f, 6f, 0, 3, ResourceType.Stone, 0f, true, 3f, 2,
+                    woodCost: 4);
             }
             finally
             {
@@ -778,7 +782,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(farm, BuildingPrefabDir + "/Farm.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_Farm.asset", "Farm", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 0.7f, 240f, 5f, 0, 3, ResourceType.Food, 0f, false, 2.5f, 3);
+                    prefab, new Vector2Int(2, 2), 0.7f, 240f, 5f, 0, 3, ResourceType.Food, 0f, false, 2.5f, 3,
+                    woodCost: 3);
             }
             finally
             {
@@ -863,7 +868,8 @@ namespace SurvivalRts.Editor
 
                 var prefab = PrefabUtility.SaveAsPrefabAsset(mine, BuildingPrefabDir + "/IronMine.prefab");
                 SaveBuildingData(BuildingDataDir + "/Building_IronMine.asset", "Iron Mine", BuildingCategory.Economy,
-                    prefab, new Vector2Int(2, 2), 2.5f, 380f, 6f, 0, 3, ResourceType.Iron, 0f, true, 3f, 2);
+                    prefab, new Vector2Int(2, 2), 2.5f, 380f, 6f, 0, 3, ResourceType.Iron, 0f, true, 3f, 2,
+                    woodCost: 4, stoneCost: 3);
             }
             finally
             {
@@ -871,7 +877,7 @@ namespace SurvivalRts.Editor
             }
         }
 
-        // Chuyển các công trình thử nghiệm kích thước (Building 1x1..4x4, 2x3, 1x4) sang danh mục Test
+        // Chuyển các công trình thử nghiệm kích thước (Building 1x1..4x4, 2x3, 1x4) sang danh mục Test và gán giá cho Watchtower
         static void ReassignTestBuildings()
         {
             string[] testAssets =
@@ -892,6 +898,14 @@ namespace SurvivalRts.Editor
                     data.category = BuildingCategory.Test;
                     EditorUtility.SetDirty(data);
                 }
+            }
+
+            var watchtower = AssetDatabase.LoadAssetAtPath<BuildingData>(BuildingDataDir + "/Building_Watchtower.asset");
+            if (watchtower != null)
+            {
+                watchtower.woodCost = 3;
+                watchtower.stoneCost = 2;
+                EditorUtility.SetDirty(watchtower);
             }
         }
 
@@ -916,7 +930,8 @@ namespace SurvivalRts.Editor
             GameObject prefab, Vector2Int footprint, float height, float maxHealth,
             float buildTime, int populationProvided, int maxWorkers,
             ResourceType harvestResource, float harvestRadius, bool requireAdjacentResource,
-            float harvestInterval, int harvestAmount)
+            float harvestInterval, int harvestAmount,
+            int woodCost = 0, int stoneCost = 0, int ironCost = 0, int foodCost = 0, int goldCost = 0)
         {
             var data = AssetDatabase.LoadAssetAtPath<BuildingData>(path);
             if (data == null)
@@ -938,6 +953,11 @@ namespace SurvivalRts.Editor
             data.requireAdjacentResource = requireAdjacentResource;
             data.harvestInterval = harvestInterval;
             data.harvestAmount = harvestAmount;
+            data.woodCost = woodCost;
+            data.stoneCost = stoneCost;
+            data.ironCost = ironCost;
+            data.foodCost = foodCost;
+            data.goldCost = goldCost;
             EditorUtility.SetDirty(data);
         }
 

@@ -15,6 +15,7 @@ namespace SurvivalRts
 
         const float MoveSpeed = 3.2f;
         const float ArriveDistance = 0.25f;
+        const float WorkSoundInterval = 0.65f;
 
         GpuMeshAnimator animator;
         ResourceCamp camp;
@@ -23,6 +24,7 @@ namespace SurvivalRts
         Vector3 workPosition;
         Vector3 lookTarget;
         float timer;
+        float workSoundTimer;
 
         public void Setup(ResourceCamp ownerCamp, int slot)
         {
@@ -50,6 +52,7 @@ namespace SurvivalRts
                     {
                         state = State.Harvesting;
                         timer = camp.HarvestInterval;
+                        workSoundTimer = 0.2f + (slotIndex % 3) * 0.15f;
                         if (animator != null) animator.Play("Work", true);
                     }
                     break;
@@ -57,6 +60,15 @@ namespace SurvivalRts
                 case State.Harvesting:
                     FaceTowards(lookTarget);
                     timer -= Time.deltaTime;
+                    if (camp.ResourceType != ResourceType.Food)
+                    {
+                        workSoundTimer -= Time.deltaTime;
+                        if (workSoundTimer <= 0f)
+                        {
+                            workSoundTimer = WorkSoundInterval;
+                            AudioDirector.Post(SoundId.BuilderHammer, transform.position);
+                        }
+                    }
                     if (timer <= 0f)
                     {
                         state = State.ReturningToCamp;

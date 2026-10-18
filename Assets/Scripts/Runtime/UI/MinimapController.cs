@@ -302,7 +302,9 @@ namespace SurvivalRts
                 }
                 else if (occ.isBuilding)
                 {
-                    var col = occ.GetComponent<ConstructionSite>() != null ? ConstructionColor : BuildingColor;
+                    var col = occ.GetComponent<DemolishSite>() != null ? EnemyDot
+                        : occ.GetComponent<ConstructionSite>() != null ? ConstructionColor
+                        : BuildingColor;
                     DrawFilledRect(p.x, p.y, halfSpan, col);
                 }
                 else

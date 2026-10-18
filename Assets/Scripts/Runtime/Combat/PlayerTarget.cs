@@ -71,6 +71,10 @@ namespace SurvivalRts
 
         void OnDied()
         {
+            if (Priority != TargetPriority.Unit)
+            {
+                AudioDirector.Post(SoundId.BuildingCollapse, transform.position);
+            }
             // Nhà chính ở lại để GameManager xử lý thua; các công trình khác bị phá.
             if (Priority != TargetPriority.Headquarters) Destroy(gameObject);
         }

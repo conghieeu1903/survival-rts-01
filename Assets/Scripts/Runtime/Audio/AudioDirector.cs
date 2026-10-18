@@ -24,26 +24,32 @@ namespace SurvivalRts
         [Tooltip("Camera RTS, dùng để lấy khung nhìn và điểm nhìn xuống mặt đất (đặt listener)")]
         [SerializeField] CameraController cameraController;
 
-        [Header("Lọc theo camera")]
+        [Header("Lọc theo camera & độ zoom")]
         [Tooltip("Lề (m) cộng thêm quanh khung nhìn; sự kiện ngoài vùng này bị bỏ")]
-        [SerializeField] float viewMargin = 6f;
+        [SerializeField] float viewMargin = 2f;
+
+        [Tooltip("Mức orthographicSize tối đa còn nghe thấy tiếng tại chỗ (zoom xa hơn mức này sẽ tắt tiếng 3D, zoom gần vào sẽ nghe rõ dần)")]
+        [SerializeField] float maxAudibleOrthoSize = 18f;
+
+        [Tooltip("Bán kính (m) quanh tâm điểm nhìn trên mặt đất được phép phát tiếng khi zoom vào")]
+        [SerializeField] float audibleGroundRadius = 16f;
 
         [Header("Loop đám đông")]
-        [Tooltip("Số kẻ địch đang đi trong khung nhìn để loop bước chân đạt âm lượng tối đa")]
-        [SerializeField] int marchFullCount = 150;
+        [Tooltip("Số kẻ địch đang đi trong vùng nghe để loop bước chân đạt âm lượng tối đa")]
+        [SerializeField] int marchFullCount = 40;
 
-        [Tooltip("Số kẻ địch đang đánh trong khung nhìn để loop giao tranh đạt âm lượng tối đa")]
-        [SerializeField] int battleFullCount = 60;
+        [Tooltip("Số kẻ địch đang đánh trong vùng nghe để loop giao tranh đạt âm lượng tối đa")]
+        [SerializeField] int battleFullCount = 15;
 
         [Tooltip("Tốc độ âm lượng loop đuổi theo giá trị mới (càng lớn càng nhanh)")]
-        [SerializeField] float loopSmoothing = 3f;
+        [SerializeField] float loopSmoothing = 4f;
 
         [Header("Nhạc nền")]
-        [Tooltip("Số kẻ địch đang đánh trong khung nhìn để nhạc chuyển hẳn sang nhạc trận")]
-        [SerializeField] int battleMusicEngagedCount = 15;
+        [Tooltip("Số kẻ địch đang đánh trong vùng nghe để nhạc chuyển hẳn sang nhạc trận")]
+        [SerializeField] int battleMusicEngagedCount = 8;
 
-        [Tooltip("Số kẻ địch đang tiến vào trong khung nhìn để nhạc chuyển hẳn sang nhạc trận")]
-        [SerializeField] int battleMusicMovingCount = 200;
+        [Tooltip("Số kẻ địch đang tiến vào trong vùng nghe để nhạc chuyển hẳn sang nhạc trận")]
+        [SerializeField] int battleMusicMovingCount = 60;
 
         [Tooltip("Tốc độ chuyển giữa nhạc yên và nhạc trận (nhỏ = chuyển chậm, êm)")]
         [SerializeField] float musicSmoothing = 0.5f;
@@ -65,6 +71,9 @@ namespace SurvivalRts
         bool inBattleMusic;
         float battleMusicHoldTimer;
         Vector4 view;
+        Vector3 groundPivot;
+        float zoomVolumeFactor;
+        bool shotSubscribed;
 
         public static AudioDirector Instance { get; private set; }
 
@@ -130,7 +139,7 @@ namespace SurvivalRts
         {
             AudioVolumeSettings.Changed += ApplyVolumes;
             ApplyVolumes();
-            EnemyWorld.ShotFired += OnShotFired;
+            TrySubscribeShots();
 
             var headquarters = FindFirstObjectByType<Headquarters>();
             if (headquarters != null)
@@ -141,10 +150,17 @@ namespace SurvivalRts
             }
         }
 
+        void TrySubscribeShots()
+        {
+            if (shotSubscribed || World.DefaultGameObjectInjectionWorld == null) return;
+            EnemyWorld.ShotFired += OnShotFired;
+            shotSubscribed = true;
+        }
+
         void OnDestroy()
         {
             AudioVolumeSettings.Changed -= ApplyVolumes;
-            EnemyWorld.ShotFired -= OnShotFired;
+            if (shotSubscribed) EnemyWorld.ShotFired -= OnShotFired;
             if (headquartersHealth != null) headquartersHealth.Changed -= OnHeadquartersHealthChanged;
             backend?.Shutdown();
             if (Instance == this) Instance = null;
@@ -163,6 +179,7 @@ namespace SurvivalRts
 
         void LateUpdate()
         {
+            TrySubscribeShots();
             UpdateViewAndListener();
 
             events.Clear();
@@ -184,6 +201,19 @@ namespace SurvivalRts
         {
             if (cameraController == null) return;
 
+            groundPivot = cameraController.GroundPivot();
+            float ortho = cameraController.OrthographicSize;
+            float minOrtho = cameraController.ZoomRange.x;
+            if (ortho >= maxAudibleOrthoSize)
+            {
+                zoomVolumeFactor = 0f;
+            }
+            else
+            {
+                float t = Mathf.Clamp01((maxAudibleOrthoSize - ortho) / Mathf.Max(0.1f, maxAudibleOrthoSize - minOrtho));
+                zoomVolumeFactor = Mathf.SmoothStep(0.15f, 1f, t);
+            }
+
             if (cameraController.GetGroundFrustumCorners(corners))
             {
                 float minX = float.MaxValue, minZ = float.MaxValue, maxX = float.MinValue, maxZ = float.MinValue;
@@ -197,11 +227,20 @@ namespace SurvivalRts
                 view = new Vector4(minX - viewMargin, minZ - viewMargin, maxX + viewMargin, maxZ + viewMargin);
 
                 var density = World.DefaultGameObjectInjectionWorld?.GetExistingSystemManaged<AudioDensitySystem>();
-                if (density != null) density.ViewRect = new float4(view.x, view.y, view.z, view.w);
+                if (density != null)
+                {
+                    // Chỉ đếm mật độ quái trong bán kính nghe quanh điểm camera đang zoom vào.
+                    float r = zoomVolumeFactor > 0f ? audibleGroundRadius : 0f;
+                    density.ViewRect = new float4(
+                        groundPivot.x - r,
+                        groundPivot.z - r,
+                        groundPivot.x + r,
+                        groundPivot.z + r);
+                }
             }
 
             // Listener đặt ở điểm camera nhìn xuống mặt đất, xoay theo hướng camera để trái/phải khớp màn hình.
-            listener.position = cameraController.GroundPivot();
+            listener.position = groundPivot;
             var forward = Vector3.ProjectOnPlane(cameraController.transform.forward, Vector3.up);
             if (forward.sqrMagnitude > 1e-4f) listener.rotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
             backend.UpdateListener(listener);
@@ -211,16 +250,29 @@ namespace SurvivalRts
         {
             buckets.Clear();
             int culled = 0;
+            float maxRadiusSq = audibleGroundRadius * audibleGroundRadius;
             foreach (var e in events)
             {
                 var rule = library.Get(e.Id);
                 if (rule == null || rule.kind == SoundKind.Loop) continue;
 
                 var p = (Vector3)e.Position;
-                if (rule.cullOutsideView && (p.x < view.x || p.z < view.y || p.x > view.z || p.z > view.w))
+                if (rule.cullOutsideView)
                 {
-                    culled++;
-                    continue;
+                    // Khi chưa zoom gần hoặc nguồn phát nằm ngoài bán kính quanh điểm nhìn camera thì bỏ qua.
+                    if (zoomVolumeFactor <= 0.001f || p.x < view.x || p.z < view.y || p.x > view.z || p.z > view.w)
+                    {
+                        culled++;
+                        continue;
+                    }
+
+                    float dx = p.x - groundPivot.x;
+                    float dz = p.z - groundPivot.z;
+                    if (dx * dx + dz * dz > maxRadiusSq)
+                    {
+                        culled++;
+                        continue;
+                    }
                 }
 
                 long key = (long)e.Id << 48;
@@ -261,6 +313,9 @@ namespace SurvivalRts
                 tokens[rule.id] = Mathf.Min(t + rule.maxStartsPerSecond * deltaTime, Mathf.Max(1f, rule.maxStartsPerSecond * 0.25f));
             }
 
+            float innerRadius = audibleGroundRadius * 0.45f;
+            float falloffSpan = Mathf.Max(0.1f, audibleGroundRadius - innerRadius);
+
             foreach (var bucket in ordered)
             {
                 var rule = library.Get(bucket.Id);
@@ -277,10 +332,21 @@ namespace SurvivalRts
                     continue;
                 }
 
+                Vector3 pos = bucket.Sum / bucket.Count;
+                float volume = Mathf.Min(rule.maxVolume, rule.volume * (1f + rule.mergeVolumeBoost * Mathf.Log(bucket.Count, 2f)));
+                if (rule.cullOutsideView)
+                {
+                    float dist = Vector2.Distance(new Vector2(pos.x, pos.z), new Vector2(groundPivot.x, groundPivot.z));
+                    float distFactor = dist <= innerRadius
+                        ? 1f
+                        : Mathf.SmoothStep(1f, 0f, (dist - innerRadius) / falloffSpan);
+                    volume *= zoomVolumeFactor * distFactor;
+                    if (volume <= 0.01f) continue;
+                }
+
                 tokens[rule.id] -= 1f;
                 lastPlayed[rule.id] = now;
-                float volume = Mathf.Min(rule.maxVolume, rule.volume * (1f + rule.mergeVolumeBoost * Mathf.Log(bucket.Count, 2f)));
-                backend.PlayOneShot(rule, bucket.Sum / bucket.Count, volume);
+                backend.PlayOneShot(rule, pos, volume);
                 started++;
             }
 
@@ -296,8 +362,10 @@ namespace SurvivalRts
             LastDensity = counts;
 
             float k = 1f - Mathf.Exp(-loopSmoothing * Time.unscaledDeltaTime);
-            marchVolume = Mathf.Lerp(marchVolume, Mathf.Clamp01(counts.x / (float)marchFullCount), k);
-            battleVolume = Mathf.Lerp(battleVolume, Mathf.Clamp01(counts.y / (float)battleFullCount), k);
+            float targetMarch = Mathf.Clamp01(counts.x / (float)marchFullCount) * zoomVolumeFactor;
+            float targetBattle = Mathf.Clamp01(counts.y / (float)battleFullCount) * zoomVolumeFactor;
+            marchVolume = Mathf.Lerp(marchVolume, targetMarch, k);
+            battleVolume = Mathf.Lerp(battleVolume, targetBattle, k);
 
             var march = library.Get(SoundId.CrowdMarch);
             var battle = library.Get(SoundId.Battle);
@@ -305,7 +373,7 @@ namespace SurvivalRts
             if (battle != null) backend.SetLoopVolume(battle, battleVolume * battle.volume);
 
             // Chuyển trạng thái nhạc rõ ràng (yên <-> trận) kèm thời gian giữ để tránh đổi qua lại liên tục.
-            bool combatActive = counts.y >= battleMusicEngagedCount || counts.x >= battleMusicMovingCount;
+            bool combatActive = zoomVolumeFactor > 0f && (counts.y >= battleMusicEngagedCount || counts.x >= battleMusicMovingCount);
             if (combatActive)
             {
                 inBattleMusic = true;

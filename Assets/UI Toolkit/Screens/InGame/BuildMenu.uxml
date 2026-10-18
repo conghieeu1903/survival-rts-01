@@ -64,6 +64,7 @@
       <ui:VisualElement name="placingBar" class="build-placing build-hidden">
         <ui:Label name="placingLabel" text="Đang đặt" class="build-placing-label" />
         <ui:Button name="rotateButton" text="Xoay 90°" class="build-action" />
+        <ui:Button name="confirmDemolishButton" text="Xác nhận phá" class="build-action build-action--danger build-hidden" />
         <ui:Button name="cancelButton" text="Hủy" class="build-action build-action--cancel" />
       </ui:VisualElement>
     </ui:VisualElement>

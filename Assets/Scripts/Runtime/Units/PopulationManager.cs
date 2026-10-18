@@ -32,6 +32,21 @@ namespace SurvivalRts
         [Tooltip("Có sẵn 1 thợ xây khởi điểm ở Nhà chính để xây công trình đầu tiên")]
         [SerializeField] int initialBuilders = 1;
 
+        [Tooltip("Số gỗ khởi điểm khi bắt đầu ván")]
+        [SerializeField] int initialWood = 10;
+
+        [Tooltip("Số đá khởi điểm khi bắt đầu ván")]
+        [SerializeField] int initialStone = 4;
+
+        [Tooltip("Số lúa khởi điểm khi bắt đầu ván")]
+        [SerializeField] int initialFood = 6;
+
+        [Tooltip("Số sắt khởi điểm khi bắt đầu ván")]
+        [SerializeField] int initialIron;
+
+        [Tooltip("Số tiền vàng khởi điểm khi bắt đầu ván")]
+        [SerializeField] int initialGold;
+
         readonly List<GameObject> freeVillagerVisuals = new List<GameObject>();
         readonly List<BuilderUnit> activeBuilders = new List<BuilderUnit>();
         readonly List<HarvesterUnit> activeHarvesters = new List<HarvesterUnit>();
@@ -68,6 +83,11 @@ namespace SurvivalRts
                 return;
             }
             Instance = this;
+            Wood = Mathf.Max(0, initialWood);
+            Stone = Mathf.Max(0, initialStone);
+            Food = Mathf.Max(0, initialFood);
+            Iron = Mathf.Max(0, initialIron);
+            Gold = Mathf.Max(0, initialGold);
             ResourceNode.EnsureSceneNodesRegistered();
         }
 
@@ -97,6 +117,45 @@ namespace SurvivalRts
             else if (type == ResourceType.Stone) Stone += amount;
             else if (type == ResourceType.Iron) Iron += amount;
             else if (type == ResourceType.Food) Food += amount;
+            Changed?.Invoke();
+        }
+
+        // Kiểm tra kho tài nguyên có đủ để xây công trình này không.
+        public bool CanAfford(BuildingData data)
+        {
+            if (data == null) return false;
+            return Wood >= data.woodCost
+                && Stone >= data.stoneCost
+                && Iron >= data.ironCost
+                && Food >= data.foodCost
+                && Gold >= data.goldCost;
+        }
+
+        // Trừ tài nguyên khi đặt móng công trình; trả về false nếu không đủ.
+        public bool TrySpendResources(BuildingData data)
+        {
+            if (!CanAfford(data)) return false;
+            if (!data.HasAnyCost) return true;
+
+            Wood -= data.woodCost;
+            Stone -= data.stoneCost;
+            Iron -= data.ironCost;
+            Food -= data.foodCost;
+            Gold -= data.goldCost;
+            Changed?.Invoke();
+            return true;
+        }
+
+        // Hoàn lại 100% chi phí xây dựng khi người chơi tháo dỡ công trình.
+        public void RefundResources(BuildingData data)
+        {
+            if (data == null || !data.HasAnyCost) return;
+
+            Wood += data.woodCost;
+            Stone += data.stoneCost;
+            Iron += data.ironCost;
+            Food += data.foodCost;
+            Gold += data.goldCost;
             Changed?.Invoke();
         }
 

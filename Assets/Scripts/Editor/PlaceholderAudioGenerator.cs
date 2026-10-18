@@ -34,6 +34,7 @@ namespace SurvivalRts.Editor
             count += Save("UI", "Alert_HQ", Alert());
             count += Save("Music", "Music_Calm_Loop", MusicCalm());
             count += Save("Music", "Music_Battle_Loop", MusicBattle(800));
+            for (int i = 0; i < 3; i++) count += Save("Building", $"Builder_Hammer_{i + 1:00}", Hammer(0.92f + i * 0.08f, 900 + i));
 
             Debug.Log($"Đã tạo {count} file WAV tại {OutputDirectory}");
         }
@@ -81,22 +82,42 @@ namespace SurvivalRts.Editor
             return buffer;
         }
 
-        // Tháp bắn: tiếng nổ chát + đuôi vang ngắn.
+        // Tháp bắn: tiếng nổ đanh có lực trầm + tiếng vút đạn rõ ràng.
         static float[] Shot(float pitch, int seed)
         {
             var rng = new System.Random(seed);
-            var buffer = new float[Samples(0.35f)];
-            float previous = 0f;
+            var buffer = new float[Samples(0.42f)];
+            float lowpass = 0f;
             float tail = 0f;
             for (int n = 0; n < buffer.Length; n++)
             {
                 float t = n / (float)SampleRate;
                 float noise = Noise(rng);
-                float highpass = noise - previous;
-                previous = noise;
-                tail = OnePole(tail, noise, 0.08f);
-                float click = Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(1100f, 300f, Mathf.Clamp01(t / 0.03f)) * pitch * t) * Mathf.Exp(-t * 90f);
-                buffer[n] = highpass * Mathf.Exp(-t * 65f) * 0.9f + click * 0.6f + tail * Mathf.Exp(-t * 10f) * 0.5f;
+                lowpass = OnePole(lowpass, noise, 0.35f);
+                tail = OnePole(tail, noise, 0.09f);
+                float bodyFreq = Mathf.Lerp(280f, 75f, Mathf.Clamp01(t / 0.14f)) * pitch;
+                float body = Mathf.Sin(2f * Mathf.PI * bodyFreq * t) * Mathf.Exp(-t * 18f);
+                float snapFreq = Mathf.Lerp(1200f, 260f, Mathf.Clamp01(t / 0.06f)) * pitch;
+                float snap = Mathf.Sin(2f * Mathf.PI * snapFreq * t) * Mathf.Exp(-t * 35f);
+                buffer[n] = body * 1.1f + snap * 0.8f + lowpass * Mathf.Exp(-t * 28f) * 0.9f + tail * Mathf.Exp(-t * 9f) * 0.55f;
+            }
+            return buffer;
+        }
+
+        // Thợ xây gõ búa đóng gỗ/đinh: tiếng búa gõ đanh trên thớt gỗ kèm nhịp dội ngắn.
+        static float[] Hammer(float pitch, int seed)
+        {
+            var rng = new System.Random(seed);
+            var buffer = new float[Samples(0.32f)];
+            float wood = 0f;
+            for (int n = 0; n < buffer.Length; n++)
+            {
+                float t = n / (float)SampleRate;
+                wood = OnePole(wood, Noise(rng), 0.28f);
+                float woodTone = Mathf.Sin(2f * Mathf.PI * 340f * pitch * t) * Mathf.Exp(-t * 26f);
+                float metalTap = Mathf.Sin(2f * Mathf.PI * 1450f * pitch * t) * Mathf.Exp(-t * 55f);
+                float knock = wood * Mathf.Exp(-t * 42f);
+                buffer[n] = woodTone * 0.95f + metalTap * 0.65f + knock * 0.85f;
             }
             return buffer;
         }

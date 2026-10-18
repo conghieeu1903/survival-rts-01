@@ -19,6 +19,7 @@ namespace SurvivalRts
         Material ringMaterial;
         bool wasPlacing;
 
+        public BuildingPlacer Placer => placer;
         public Health Selected { get; private set; }
 
         public event Action<Health> SelectionChanged;
@@ -73,7 +74,8 @@ namespace SurvivalRts
             UpdateRangeRing();
 
             var mouse = Mouse.current;
-            bool blocked = wasPlacing || placer.IsPlacing || UiPointerState.IsOverUI;
+            bool activeTool = placer != null && (placer.IsPlacing || placer.IsDemolishing);
+            bool blocked = wasPlacing || activeTool || UiPointerState.IsOverUI;
             if (mouse == null || blocked || !mouse.leftButton.wasPressedThisFrame) return;
 
             var ray = cam.ScreenPointToRay(mouse.position.ReadValue());
@@ -86,7 +88,7 @@ namespace SurvivalRts
 
         void LateUpdate()
         {
-            wasPlacing = placer.IsPlacing;
+            wasPlacing = placer != null && (placer.IsPlacing || placer.IsDemolishing);
         }
 
         void OnSelectedDied()
@@ -94,7 +96,7 @@ namespace SurvivalRts
             Select(null);
         }
 
-        void Select(Health target)
+        public void Select(Health target)
         {
             if (ReferenceEquals(Selected, target)) return;
             if (!ReferenceEquals(Selected, null)) Selected.Died -= OnSelectedDied;
@@ -127,6 +129,7 @@ namespace SurvivalRts
         static float GetSelectedRadius(Health target)
         {
             if (target == null || target.IsDead) return 0f;
+            if (target.GetComponent<DemolishSite>() != null) return 0f;
 
             var tower = target.GetComponent<Tower>();
             if (tower != null && tower.Data != null && tower.Data.range > 0f)

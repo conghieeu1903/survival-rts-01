@@ -144,8 +144,26 @@ namespace SurvivalRts
                 }
             }
 
+            AudioDirector.Post(SoundId.UiPlace, transform.position);
             ProgressChanged?.Invoke(1f, 3);
             Completed?.Invoke(this);
+        }
+
+        // Dừng thi công để chuyển sang quá trình tháo dỡ công trình.
+        public void CancelForDemolish()
+        {
+            if (IsCompleted) return;
+            IsCompleted = true;
+            activeSites.Remove(this);
+
+            if (stageRoot != null) Destroy(stageRoot);
+            if (buildingRenderers != null)
+            {
+                foreach (var r in buildingRenderers)
+                {
+                    if (r != null) r.enabled = true;
+                }
+            }
         }
 
         void OnDestroy()

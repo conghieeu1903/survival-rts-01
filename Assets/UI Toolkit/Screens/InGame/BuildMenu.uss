@@ -246,6 +246,45 @@
   border-color: var(--color-accent);
 }
 
+.build-tab--demolish {
+  margin-left: auto;
+  margin-right: 0;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  -unity-font-style: bold;
+}
+
+.build-tab--demolish:hover {
+  background-color: rgba(224, 100, 74, 0.18);
+  border-color: var(--color-danger);
+  color: var(--color-text);
+}
+
+.build-tab--demolish-active {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-key);
+  -unity-font-style: bold;
+}
+
+.build-tab--demolish-active:hover {
+  background-color: var(--color-danger);
+  color: var(--color-key);
+}
+
+.build-action--danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-key);
+  -unity-font-style: bold;
+}
+
+.build-action--danger:hover {
+  background-color: #f0765c;
+  border-color: #f0765c;
+  color: var(--color-key);
+}
+
 .build-action--cancel:hover {
   border-color: var(--color-danger);
   color: var(--color-danger);
@@ -256,10 +295,10 @@
 }
 
 .build-card {
-  width: 96px;
-  height: 108px;
+  width: 102px;
+  height: 118px;
   margin: 0 8px 0 0;
-  padding: 6px;
+  padding: 5px;
   align-items: center;
   background-color: var(--color-card);
   border-width: 1px;
@@ -277,12 +316,22 @@
   background-color: var(--color-card-hover);
   border-color: var(--color-accent);
   border-width: 2px;
-  padding: 5px;
+  padding: 4px;
+}
+
+.build-card--disabled {
+  opacity: 0.55;
+  border-color: #322c20;
+}
+
+.build-card--disabled:hover {
+  background-color: var(--color-card);
+  border-color: var(--color-danger);
 }
 
 .build-card-preview {
   width: 72px;
-  height: 56px;
+  height: 48px;
   justify-content: center;
   align-items: center;
 }
@@ -294,7 +343,7 @@
 }
 
 .build-card-name {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -303,8 +352,19 @@
 }
 
 .build-card-size {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--color-text-dim);
+}
+
+.build-card-cost {
+  margin-top: 2px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: var(--color-accent);
+}
+
+.build-card-cost--lack {
+  color: var(--color-danger);
 }
 
 .fp-w-1 { width: 12px; }

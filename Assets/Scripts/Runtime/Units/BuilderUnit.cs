@@ -7,12 +7,14 @@ namespace SurvivalRts
     {
         const float MoveSpeed = 3.8f;
         const float ArriveThreshold = 0.25f;
+        const float HammerInterval = 0.55f;
 
         GpuMeshAnimator animator;
         Transform homeTransform;
         Vector3 idlePosition;
         ConstructionSite targetSite;
         int workSlot;
+        float hammerTimer;
 
         public void Setup(Transform home, int slot)
         {
@@ -56,6 +58,7 @@ namespace SurvivalRts
                 SnapToGround();
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 12f * Time.deltaTime);
                 if (animator != null) animator.Play("Walk");
+                hammerTimer = 0.18f + (workSlot % 3) * 0.12f;
                 return;
             }
 
@@ -69,6 +72,13 @@ namespace SurvivalRts
 
             if (animator != null) animator.Play("Build");
             targetSite.AddWork(Time.deltaTime);
+
+            hammerTimer -= Time.deltaTime;
+            if (hammerTimer <= 0f)
+            {
+                hammerTimer = HammerInterval;
+                AudioDirector.Post(SoundId.BuilderHammer, transform.position);
+            }
         }
 
         void UpdateReturnHome()

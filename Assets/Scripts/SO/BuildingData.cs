@@ -38,9 +38,28 @@ namespace SurvivalRts
         [Tooltip("Gán nếu công trình là tháp tự bắn kẻ địch, để trống với công trình thường")]
         public TowerData tower;
 
+        [Header("Chi phí xây dựng")]
+        [Tooltip("Số gỗ cần để xây công trình này")]
+        public int woodCost;
+
+        [Tooltip("Số đá cần để xây công trình này")]
+        public int stoneCost;
+
+        [Tooltip("Số sắt cần để xây công trình này")]
+        public int ironCost;
+
+        [Tooltip("Số lúa cần để xây công trình này")]
+        public int foodCost;
+
+        [Tooltip("Số tiền vàng cần để xây công trình này")]
+        public int goldCost;
+
         [Header("Xây dựng & Dân cư")]
         [Tooltip("Thời gian (giây) để 1 thợ xây hoàn thành công trình này")]
         public float buildTime = 6f;
+
+        [Tooltip("Thời gian (giây) để tháo dỡ hoàn toàn công trình này")]
+        public float demolishTime = 2.5f;
 
         [Tooltip("Số dân cộng thêm khi công trình xây xong (dùng cho Nhà dân)")]
         public int populationProvided;
@@ -63,5 +82,22 @@ namespace SurvivalRts
 
         [Tooltip("Lượng tài nguyên thu về mỗi chuyến")]
         public int harvestAmount = 5;
+
+        public bool HasAnyCost =>
+            woodCost > 0 || stoneCost > 0 || ironCost > 0 || foodCost > 0 || goldCost > 0;
+
+        // Trả về chuỗi tóm tắt chi phí để hiển thị trên thẻ xây dựng.
+        public string FormatCost()
+        {
+            if (!HasAnyCost) return "Miễn phí";
+
+            var parts = new System.Collections.Generic.List<string>(3);
+            if (woodCost > 0) parts.Add($"{woodCost} Gỗ");
+            if (stoneCost > 0) parts.Add($"{stoneCost} Đá");
+            if (ironCost > 0) parts.Add($"{ironCost} Sắt");
+            if (foodCost > 0) parts.Add($"{foodCost} Lúa");
+            if (goldCost > 0) parts.Add($"{goldCost} Vàng");
+            return string.Join(" · ", parts);
+        }
     }
 }

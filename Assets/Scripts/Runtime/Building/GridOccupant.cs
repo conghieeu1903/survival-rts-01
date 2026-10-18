@@ -11,9 +11,22 @@ namespace SurvivalRts
         [Tooltip("Bật cho công trình phe mình: kẻ địch có thể phá để đi qua. Tắt cho vật cản tĩnh (cây, đá, tường): kẻ địch luôn đi vòng")]
         public bool isBuilding;
 
+        [Tooltip("Dữ liệu cấu hình của công trình đặt từ menu, dùng để tra tên, chi phí hoàn lại và thời gian tháo dỡ")]
+        public BuildingData buildingData;
+
         bool registered;
 
         public Vector2Int Min { get; private set; }
+
+        public string DisplayName =>
+            buildingData != null && !string.IsNullOrEmpty(buildingData.displayName)
+                ? buildingData.displayName
+                : gameObject.name;
+
+        public float DemolishTime =>
+            buildingData != null && buildingData.demolishTime > 0f
+                ? buildingData.demolishTime
+                : 2.5f;
 
         void Start()
         {

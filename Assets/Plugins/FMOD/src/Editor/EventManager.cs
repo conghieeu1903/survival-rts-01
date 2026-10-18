@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
@@ -417,16 +417,7 @@ namespace FMODUnity
 
         private static void ShowEventsRenamedDialog()
         {
-#if !FMOD_SERIALIZE_GUID_ONLY
-            bool runUpdater = EditorUtility.DisplayDialog("Events Renamed",
-                string.Format("Some events have been renamed in FMOD Studio. Do you want to run {0} " +
-                "to find and update any references to them?", EventReferenceUpdater.MenuPath), "Yes", "No");
-
-            if (runUpdater)
-            {
-                EventReferenceUpdater.ShowWindow();
-            }
-#endif
+            // Bỏ qua hộp thoại chặn luồng chính khi tạo lại bank bằng script
         }
 
         private static void UpdateCacheBank(EditorBankRef bankRef, ref bool renameOccurred)

@@ -19,3 +19,16 @@ MonoBehaviour:
   height: 4.2
   maxHealth: 400
   tower: {fileID: 11400000, guid: 5ebabddc5b1ef9c40ad1f3f8c966d43b, type: 2}
+  woodCost: 3
+  stoneCost: 2
+  ironCost: 0
+  foodCost: 0
+  goldCost: 0
+  buildTime: 6
+  populationProvided: 0
+  maxWorkers: 0
+  harvestResource: 0
+  harvestRadius: 8
+  requireAdjacentResource: 0
+  harvestInterval: 2.5
+  harvestAmount: 5

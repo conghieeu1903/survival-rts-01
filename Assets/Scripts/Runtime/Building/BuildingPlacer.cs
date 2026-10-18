@@ -41,6 +41,7 @@ namespace SurvivalRts
         readonly List<BuildingData> visible = new List<BuildingData>();
 
         CameraController cameraController;
+        BuildingSelector selector;
         BuildingCategory category;
         bool visibleDirty = true;
         BuildingData current;
@@ -53,14 +54,20 @@ namespace SurvivalRts
         bool dirty;
         Vector3 lastCenter;
         int lastTurns;
+        bool demolishMode;
+        Health hoveredDemolishTarget;
+        Health pendingDemolishTarget;
 
         const string FrontMarkerName = "FrontMarker";
         const int RingSegments = 48;
 
         public event System.Action<BuildingData> CurrentChanged;
         public event System.Action<BuildingCategory> CategoryChanged;
+        public event System.Action DemolishStateChanged;
 
         public bool IsPlacing => current != null;
+        public bool IsDemolishing => demolishMode;
+        public Health PendingDemolishTarget => pendingDemolishTarget;
         public BuildingData Current => current;
         public IReadOnlyList<BuildingData> Buildings => buildings;
         public BuildingCategory Category => category;
@@ -103,6 +110,73 @@ namespace SurvivalRts
             CategoryChanged?.Invoke(category);
         }
 
+        // Bật hoặc tắt chế độ tháo dỡ công trình từ thanh menu hoặc phím tắt X.
+        public void ToggleDemolishMode()
+        {
+            if (demolishMode)
+            {
+                CancelDemolish();
+                return;
+            }
+
+            Cancel();
+            if (selector == null) selector = FindFirstObjectByType<BuildingSelector>();
+            demolishMode = true;
+            hoveredDemolishTarget = null;
+            pendingDemolishTarget = selector != null && DemolishSite.CanDemolish(selector.Selected)
+                ? selector.Selected
+                : null;
+            ShowDemolishFootprint(pendingDemolishTarget);
+            DemolishStateChanged?.Invoke();
+        }
+
+        // Chọn một công trình cụ thể để đưa vào trạng thái chờ xác nhận tháo dỡ.
+        public void RequestDemolish(Health target)
+        {
+            if (!DemolishSite.CanDemolish(target)) return;
+            Cancel();
+            if (selector == null) selector = FindFirstObjectByType<BuildingSelector>();
+            if (selector != null) selector.Select(target);
+            demolishMode = true;
+            hoveredDemolishTarget = target;
+            pendingDemolishTarget = target;
+            ShowDemolishFootprint(target);
+            DemolishStateChanged?.Invoke();
+        }
+
+        // Xác nhận tháo dỡ công trình đang chờ: gắn DemolishSite để bắt đầu đếm ngược, diễn hoạt và phát tiếng.
+        public void ConfirmDemolish()
+        {
+            if (!DemolishSite.CanDemolish(pendingDemolishTarget))
+            {
+                CancelDemolish();
+                return;
+            }
+
+            var targetGo = pendingDemolishTarget.gameObject;
+            var occ = targetGo.GetComponent<GridOccupant>();
+            var data = occ != null ? occ.buildingData : null;
+            var demolish = targetGo.GetComponent<DemolishSite>();
+            if (demolish == null) demolish = targetGo.AddComponent<DemolishSite>();
+            demolish.Setup(data, constructionStages);
+
+            demolishMode = false;
+            hoveredDemolishTarget = null;
+            pendingDemolishTarget = null;
+            HideCells();
+            DemolishStateChanged?.Invoke();
+        }
+
+        public void CancelDemolish()
+        {
+            if (!demolishMode && pendingDemolishTarget == null) return;
+            demolishMode = false;
+            hoveredDemolishTarget = null;
+            pendingDemolishTarget = null;
+            HideCells();
+            DemolishStateChanged?.Invoke();
+        }
+
         // Xoay bóng mờ 90°, hướng được nhớ cho lần đặt sau cùng loại công trình.
         public void Rotate()
         {
@@ -110,12 +184,14 @@ namespace SurvivalRts
             turns = (turns + 1) & 3;
             savedTurns[current] = turns;
             dirty = true;
+            AudioDirector.Post(SoundId.UiClick, Vector3.zero);
         }
 
         void Awake()
         {
             if (cam == null) cam = Camera.main;
             cameraController = cam != null ? cam.GetComponent<CameraController>() : null;
+            selector = FindFirstObjectByType<BuildingSelector>();
             cellRoot = new GameObject("PlacementCells").transform;
             cellRoot.SetParent(transform, false);
             InitRadiusRing();
@@ -139,9 +215,22 @@ namespace SurvivalRts
 
         void Update()
         {
+            var keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.xKey.wasPressedThisFrame)
+            {
+                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
+                ToggleDemolishMode();
+                return;
+            }
+
+            if (demolishMode)
+            {
+                UpdateDemolishMode(keyboard);
+                return;
+            }
+
             if (current == null) return;
 
-            var keyboard = Keyboard.current;
             if (keyboard != null)
             {
                 if (keyboard.rKey.wasPressedThisFrame) Rotate();
@@ -169,10 +258,116 @@ namespace SurvivalRts
             if (mouse.leftButton.wasPressedThisFrame && lastValid) Place();
         }
 
+        void UpdateDemolishMode(Keyboard keyboard)
+        {
+            if (pendingDemolishTarget != null && !DemolishSite.CanDemolish(pendingDemolishTarget))
+            {
+                pendingDemolishTarget = null;
+                DemolishStateChanged?.Invoke();
+            }
+
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
+            {
+                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
+                CancelDemolish();
+                return;
+            }
+
+            var mouse = Mouse.current;
+            if (mouse == null) return;
+
+            bool rightClicked = mouse.rightButton.wasReleasedThisFrame
+                && !UiPointerState.IsOverUI
+                && (cameraController == null || !cameraController.RotatedWithRightButton);
+            if (rightClicked)
+            {
+                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
+                CancelDemolish();
+                return;
+            }
+
+            if (UiPointerState.IsOverUI)
+            {
+                ShowDemolishFootprint(pendingDemolishTarget);
+                return;
+            }
+
+            var ray = cam.ScreenPointToRay(mouse.position.ReadValue());
+            Health candidate = null;
+            if (Physics.Raycast(ray, out var hit, 500f))
+            {
+                var h = hit.collider.GetComponentInParent<Health>();
+                if (DemolishSite.CanDemolish(h)) candidate = h;
+            }
+
+            hoveredDemolishTarget = candidate;
+            ShowDemolishFootprint(hoveredDemolishTarget != null ? hoveredDemolishTarget : pendingDemolishTarget);
+
+            if (!mouse.leftButton.wasPressedThisFrame) return;
+
+            if (candidate != null)
+            {
+                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
+                if (candidate == pendingDemolishTarget)
+                {
+                    ConfirmDemolish();
+                }
+                else
+                {
+                    if (selector == null) selector = FindFirstObjectByType<BuildingSelector>();
+                    if (selector != null) selector.Select(candidate);
+                    pendingDemolishTarget = candidate;
+                    ShowDemolishFootprint(pendingDemolishTarget);
+                    DemolishStateChanged?.Invoke();
+                }
+            }
+            else if (pendingDemolishTarget != null)
+            {
+                pendingDemolishTarget = null;
+                HideCells();
+                DemolishStateChanged?.Invoke();
+            }
+        }
+
+        void ShowDemolishFootprint(Health target)
+        {
+            var grid = BuildGrid.Instance;
+            if (grid == null || !DemolishSite.CanDemolish(target))
+            {
+                HideCells();
+                return;
+            }
+
+            var occ = target.GetComponent<GridOccupant>();
+            var footprint = occ.footprint;
+            int count = footprint.x * footprint.y;
+            while (cellObjects.Count < count)
+            {
+                var cell = Instantiate(gridCellPrefab, cellRoot);
+                cellObjects.Add(cell);
+                cellRenderers.Add(cell.GetComponentInChildren<Renderer>());
+            }
+
+            var min = grid.MinCell(target.transform.position, footprint);
+            float baseY = target.transform.position.y;
+            for (int i = 0; i < cellObjects.Count; i++)
+            {
+                bool used = i < count;
+                cellObjects[i].SetActive(used);
+                if (!used) continue;
+
+                var cellPos = grid.CellCenter(new Vector2Int(min.x + i % footprint.x, min.y + i / footprint.x));
+                cellObjects[i].transform.position = new Vector3(cellPos.x, baseY + 0.06f, cellPos.z);
+                cellRenderers[i].sharedMaterial = cellBlocked;
+            }
+        }
+
         void Begin(BuildingData data)
         {
             Cancel();
+            if (demolishMode) CancelDemolish();
             if (data == null || data.prefab == null) return;
+            if (PopulationManager.Instance != null && !PopulationManager.Instance.CanAfford(data)) return;
 
             ResourceNode.EnsureSceneNodesRegistered();
             current = data;
@@ -190,6 +385,11 @@ namespace SurvivalRts
 
         public void Cancel()
         {
+            if (demolishMode)
+            {
+                CancelDemolish();
+                return;
+            }
             bool wasPlacing = current != null;
             if (ghost != null) Destroy(ghost);
             ghost = null;
@@ -239,8 +439,10 @@ namespace SurvivalRts
                 }
             }
 
+            bool canAfford = PopulationManager.Instance == null || PopulationManager.Instance.CanAfford(current);
+
             // Kẻ địch luôn di chuyển, nên khi còn kẻ địch thì kiểm tra lại mỗi frame.
-            if (!dirty && center == lastCenter && turns == lastTurns && EnemyWorld.AliveCount == 0) return;
+            if (!dirty && center == lastCenter && turns == lastTurns && canAfford && EnemyWorld.AliveCount == 0) return;
             dirty = false;
             lastCenter = center;
             lastTurns = turns;
@@ -249,7 +451,7 @@ namespace SurvivalRts
             bool enemyInside = EnemyInside(grid, center, footprint);
             bool resourceValid = EvaluateResourceRule(grid, center, footprint, turns);
 
-            lastValid = !enemyInside && resourceValid;
+            lastValid = !enemyInside && resourceValid && canAfford;
             foreach (var state in states)
                 if (state != CellState.Free) lastValid = false;
 
@@ -258,7 +460,7 @@ namespace SurvivalRts
                 new Vector3(center.x, baseY, center.z),
                 Quaternion.Euler(0f, 90f * turns, 0f));
             ApplyGhostMaterial(lastValid ? ghostValid : ghostInvalid);
-            ShowCells(grid, center, footprint, states, baseY, enemyInside || !resourceValid);
+            ShowCells(grid, center, footprint, states, baseY, enemyInside || !resourceValid || !canAfford);
             UpdateRadiusRing(center, baseY, lastValid);
         }
 
@@ -415,6 +617,8 @@ namespace SurvivalRts
 
         void Place()
         {
+            if (PopulationManager.Instance != null && !PopulationManager.Instance.TrySpendResources(current)) return;
+
             var grid = BuildGrid.Instance;
             var footprint = BuildGrid.RotatedFootprint(current.footprint, turns);
 
@@ -424,6 +628,7 @@ namespace SurvivalRts
             var occupant = building.AddComponent<GridOccupant>();
             occupant.footprint = footprint;
             occupant.isBuilding = true;
+            occupant.buildingData = current;
             occupant.Register();
 
             building.AddComponent<Health>().SetMax(current.maxHealth);
@@ -453,6 +658,7 @@ namespace SurvivalRts
             obstacle.center = new Vector3(0f, current.height * 0.5f, 0f);
             obstacle.carving = true;
 
+            AudioDirector.Post(SoundId.UiPlace, building.transform.position);
             Cancel();
         }
     }

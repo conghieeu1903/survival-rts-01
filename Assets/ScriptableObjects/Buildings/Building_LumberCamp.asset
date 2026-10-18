@@ -19,6 +19,11 @@ MonoBehaviour:
   height: 1.9
   maxHealth: 280
   tower: {fileID: 0}
+  woodCost: 2
+  stoneCost: 0
+  ironCost: 0
+  foodCost: 0
+  goldCost: 0
   buildTime: 5
   populationProvided: 0
   maxWorkers: 3
