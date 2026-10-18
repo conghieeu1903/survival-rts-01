@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c69d22d5b33492340b3c330d50d2612f, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.SoundLibrary
+  rules:
+  - id: 1
+    eventPath: event:/Enemy/Hit
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 6
+    maxStartsPerSecond: 12
+    cooldown: 0
+    volume: 1
+    mergeVolumeBoost: 0.3
+    maxVolume: 1.6
+  - id: 2
+    eventPath: event:/Enemy/Death
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 6
+    maxStartsPerSecond: 8
+    cooldown: 0
+    volume: 1
+    mergeVolumeBoost: 0.25
+    maxVolume: 1.6
+  - id: 3
+    eventPath: event:/Tower/Shot
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 4
+    maxStartsPerSecond: 15
+    cooldown: 0
+    volume: 0.9
+    mergeVolumeBoost: 0.15
+    maxVolume: 1.6
+  - id: 4
+    eventPath: event:/Building/Collapse
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 0
+    maxStartsPerSecond: 3
+    cooldown: 0
+    volume: 1
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 5
+    eventPath: event:/Ambience/CrowdMarch
+    kind: 2
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 0
+    cooldown: 0
+    volume: 0.6
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 6
+    eventPath: event:/Ambience/Battle
+    kind: 2
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 0
+    cooldown: 0
+    volume: 0.8
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 7
+    eventPath: event:/UI/Click
+    kind: 1
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 10
+    cooldown: 0
+    volume: 0.8
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 8
+    eventPath: event:/UI/Place
+    kind: 1
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 5
+    cooldown: 0
+    volume: 1
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 9
+    eventPath: event:/UI/AlertHQ
+    kind: 1
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 1
+    cooldown: 8
+    volume: 1
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 10
+    eventPath: event:/UI/Open
+    kind: 1
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 5
+    cooldown: 0
+    volume: 0.9
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 11
+    eventPath: event:/UI/Close
+    kind: 1
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 5
+    cooldown: 0
+    volume: 0.9
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 12
+    eventPath: event:/Music/Calm
+    kind: 2
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 0
+    cooldown: 0
+    volume: 0.5
+    mergeVolumeBoost: 0
+    maxVolume: 1.6
+  - id: 13
+    eventPath: event:/Music/Battle
+    kind: 2
+    cullOutsideView: 0
+    mergeCellSize: 0
+    maxStartsPerSecond: 0
+    cooldown: 0
+    volume: 0.55
+    mergeVolumeBoost: 0
+    maxVolume: 1.6

@@ -7,7 +7,8 @@ namespace SurvivalRts
     {
         Economy,
         Military,
-        Defense
+        Defense,
+        Test
     }
 
     [CreateAssetMenu(menuName = "SurvivalRts/Building Data", fileName = "BuildingData")]

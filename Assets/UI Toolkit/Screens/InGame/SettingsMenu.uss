@@ -1,0 +1,132 @@
+:root {
+  --color-dim: rgba(0, 0, 0, 0.55);
+  --color-panel: rgba(16, 20, 16, 0.96);
+  --color-row: #1c231c;
+  --color-border: #4a4128;
+  --color-accent: #e0a33a;
+  --color-text: #e8ece6;
+  --color-text-dim: #8c978c;
+  --color-track: #0b0f0b;
+}
+
+.settings-root {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-dim);
+}
+
+.settings-panel {
+  width: 460px;
+  padding: 18px 22px 20px 22px;
+  background-color: var(--color-panel);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 8px;
+}
+
+.settings-title {
+  font-size: 20px;
+  letter-spacing: 4px;
+  -unity-font-style: bold;
+  -unity-text-align: middle-center;
+  color: var(--color-accent);
+}
+
+.settings-section {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--color-text-dim);
+}
+
+.settings-row {
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 6px;
+  padding: 0 12px;
+  background-color: var(--color-row);
+  border-radius: 4px;
+}
+
+.settings-row-label {
+  width: 110px;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.settings-slider {
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+.settings-slider .unity-base-slider__tracker {
+  height: 6px;
+  margin-top: -3px;
+  background-color: var(--color-track);
+  border-width: 0;
+  border-radius: 3px;
+}
+
+.settings-slider .unity-base-slider__dragger {
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  background-color: var(--color-accent);
+  border-width: 0;
+  border-radius: 8px;
+}
+
+.settings-row-value {
+  width: 44px;
+  font-size: 13px;
+  -unity-text-align: middle-right;
+  color: var(--color-accent);
+}
+
+.settings-buttons {
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.settings-button {
+  height: 34px;
+  margin: 0 0 0 10px;
+  padding: 0 18px;
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-row);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+  transition-duration: 0.12s;
+}
+
+.settings-button:hover {
+  border-color: var(--color-accent);
+}
+
+.settings-button--primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-track);
+  -unity-font-style: bold;
+}
+
+.settings-hint {
+  margin-top: 10px;
+  font-size: 11px;
+  -unity-text-align: middle-center;
+  color: var(--color-text-dim);
+}
+
+.hidden {
+  display: none;
+}

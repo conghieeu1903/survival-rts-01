@@ -1,4 +1,5 @@
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -12,6 +13,8 @@ namespace SurvivalRts
     public partial class EnemyAnimationSystem : SystemBase
     {
         const float CorpseLinger = 2f;
+        // Thời điểm (giây) trong clip Attack mà gậy đập xuống; phát tiếng đánh trúng đúng lúc này.
+        const float AttackStrikeTime = 0.5f;
 
         // Gắn component animation vào prefab entity mà EnemySimulationSystem đã tạo từ cùng EnemyData.
         public void Configure(EnemyData data)
@@ -54,7 +57,15 @@ namespace SurvivalRts
             var commands = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(World.Unmanaged);
 
-            Dependency = new EnemyAnimationJob { DeltaTime = SystemAPI.Time.DeltaTime }.ScheduleParallel(Dependency);
+            var audio = World.GetExistingSystemManaged<AudioEventSystem>();
+            Dependency = Unity.Jobs.JobHandle.CombineDependencies(Dependency, audio.ProducerDependency);
+            Dependency = new EnemyAnimationJob
+            {
+                DeltaTime = SystemAPI.Time.DeltaTime,
+                StrikeTime = AttackStrikeTime,
+                Audio = audio.Writer
+            }.ScheduleParallel(Dependency);
+            audio.AddProducer(Dependency);
             Dependency = new EnemyCorpseJob { Commands = commands.AsParallelWriter(), Linger = CorpseLinger }
                 .ScheduleParallel(Dependency);
         }
@@ -67,9 +78,11 @@ namespace SurvivalRts
         const float PhaseSpread = 10f;
 
         public float DeltaTime;
+        public float StrikeTime;
+        public NativeQueue<AudioEvent>.ParallelWriter Audio;
 
         void Execute(Entity entity, ref EnemyAnimation animation, ref EnemyAnimData data,
-            in EnemyBrain brain, in EnemyHealth health)
+            in EnemyBrain brain, in EnemyHealth health, in LocalTransform transform)
         {
             var next = health.Current <= 0f ? EnemyAnimClip.Death
                 : brain.Engaged != 0 ? EnemyAnimClip.Attack
@@ -80,9 +93,20 @@ namespace SurvivalRts
             {
                 // Đánh và chết luôn phát từ đầu; đứng và đi giữ nhịp để chuyển qua lại không giật.
                 if (next == EnemyAnimClip.Attack || next == EnemyAnimClip.Death) animation.Time = 0f;
+                if (next == EnemyAnimClip.Death) Audio.Enqueue(new AudioEvent { Id = SoundId.EnemyDeath, Position = transform.Position });
                 animation.Current = next;
             }
+
+            float previousTime = animation.Time;
             animation.Time += DeltaTime;
+
+            if (next == EnemyAnimClip.Attack)
+            {
+                // Mỗi vòng clip Attack có một cú đập; phát tiếng khi thời gian vừa vượt qua mốc đập của vòng đó.
+                float length = animation.Attack.Length;
+                if (math.floor((animation.Time - StrikeTime) / length) > math.floor((previousTime - StrikeTime) / length))
+                    Audio.Enqueue(new AudioEvent { Id = SoundId.EnemyHit, Position = transform.Position });
+            }
 
             var clip = next == EnemyAnimClip.Death ? animation.Death
                 : next == EnemyAnimClip.Attack ? animation.Attack

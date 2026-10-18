@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -31,6 +32,12 @@ namespace SurvivalRts
         {
             var system = System;
             return system != null && system.AnyInRect(center, halfExtents);
+        }
+
+        public static void CopyAlivePositions(List<Vector2> output)
+        {
+            output.Clear();
+            System?.CopyAlivePositions(output);
         }
 
         public static Entity CreateTower(TowerData data, Vector3 basePosition)

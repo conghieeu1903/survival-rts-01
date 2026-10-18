@@ -23,7 +23,16 @@ namespace SurvivalRts
         public float HarvestInterval => harvestInterval;
         public int HarvestAmount => harvestAmount;
 
-        public string WorkerRoleName => resourceType == ResourceType.Stone ? "Thợ mỏ" : "Tiều phu";
+        public string WorkerRoleName
+        {
+            get
+            {
+                if (resourceType == ResourceType.Stone) return "Thợ mỏ đá";
+                if (resourceType == ResourceType.Iron) return "Thợ mỏ sắt";
+                if (resourceType == ResourceType.Food) return "Nông dân";
+                return "Tiều phu";
+            }
+        }
         public int WorkerCount => workers.Count;
         public int MaxWorkers => maxWorkers;
 
@@ -76,6 +85,10 @@ namespace SurvivalRts
         public Vector3 GetDropOffPosition(int slotIndex)
         {
             float lateral = (slotIndex - 1) * 0.55f;
+            if (resourceType == ResourceType.Food)
+            {
+                return transform.position + transform.rotation * new Vector3(lateral * 0.6f, 0f, 0.92f);
+            }
             float forwardOffset = adjacentMode ? -0.9f : 1.15f;
             return transform.position + transform.rotation * new Vector3(lateral, 0f, forwardOffset);
         }
@@ -83,6 +96,17 @@ namespace SurvivalRts
         public bool TryGetHarvestPoint(int slotIndex, out Vector3 workPos, out Vector3 lookTarget)
         {
             RefreshNodes();
+
+            // Trang trại (Food): nông dân đi qua cổng vào giữa các luống rau và lúa bên trong ô ruộng 2x2 để canh tác.
+            if (resourceType == ResourceType.Food && nodesInRange.Count == 0)
+            {
+                float lateral = ((slotIndex % 3) - 1) * 0.48f;
+                float depth = (slotIndex % 2 == 0) ? -0.32f : 0.18f;
+                workPos = transform.position + transform.rotation * new Vector3(lateral, 0f, depth);
+                lookTarget = workPos - transform.forward;
+                return true;
+            }
+
             if (nodesInRange.Count == 0)
             {
                 workPos = transform.position;
@@ -100,15 +124,15 @@ namespace SurvivalRts
                 return true;
             }
 
-            // Trại gỗ: chia công nhân tới các cây trong bán kính khai thác.
-            var tree = nodesInRange[Mathf.Abs(slotIndex) % nodesInRange.Count];
-            var toCamp = transform.position - tree.transform.position;
+            // Trại gỗ hoặc bụi quả: chia công nhân tới các điểm tài nguyên trong bán kính khai thác.
+            var node = nodesInRange[Mathf.Abs(slotIndex) % nodesInRange.Count];
+            var toCamp = transform.position - node.transform.position;
             toCamp.y = 0f;
             if (toCamp.sqrMagnitude < 0.01f) toCamp = Vector3.back;
             float angleOffset = (slotIndex % 3 - 1) * 28f;
             var standDir = Quaternion.Euler(0f, angleOffset, 0f) * toCamp.normalized;
-            workPos = tree.transform.position + standDir * 0.75f;
-            lookTarget = tree.transform.position;
+            workPos = node.transform.position + standDir * 0.75f;
+            lookTarget = node.transform.position;
             return true;
         }
 

@@ -139,9 +139,21 @@ namespace SurvivalRts
 
         void Update()
         {
-            // Chưa có phím tắt: chọn, xoay, hủy đều qua nút trên menu xây dựng; chuột phải vẫn hủy.
+            if (current == null) return;
+
+            var keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                if (keyboard.rKey.wasPressedThisFrame) Rotate();
+                if (keyboard.escapeKey.wasPressedThisFrame)
+                {
+                    Cancel();
+                    return;
+                }
+            }
+
             var mouse = Mouse.current;
-            if (mouse == null || current == null) return;
+            if (mouse == null) return;
 
             bool rightClicked = mouse.rightButton.wasReleasedThisFrame
                 && !UiPointerState.IsOverUI
@@ -260,6 +272,9 @@ namespace SurvivalRts
                 return IsFacingAdjacentResource(min, footprint, currentTurn, current.harvestResource);
             }
 
+            // Nếu harvestRadius <= 0 (như Trang trại tự canh tác trên đất), không yêu cầu có mỏ tài nguyên xung quanh.
+            if (current.harvestRadius <= 0f) return true;
+
             return HasResourceInRadius(center, current.harvestResource, current.harvestRadius);
         }
 
@@ -326,22 +341,28 @@ namespace SurvivalRts
         void UpdateRadiusRing(Vector3 center, float baseY, bool valid)
         {
             if (radiusRing == null) return;
-            bool show = current != null
-                && current.harvestResource != ResourceType.None
-                && !current.requireAdjacentResource
-                && current.harvestRadius > 0f;
+            float r = GetDisplayRadius(current);
+            bool show = r > 0f;
 
             radiusRing.enabled = show;
             if (!show) return;
 
             radiusRing.sharedMaterial = valid ? cellFree : cellBlocked;
-            float r = current.harvestRadius;
             float y = baseY + 0.08f;
             for (int i = 0; i < RingSegments; i++)
             {
                 float angle = i / (float)RingSegments * Mathf.PI * 2f;
                 radiusRing.SetPosition(i, new Vector3(center.x + Mathf.Cos(angle) * r, y, center.z + Mathf.Sin(angle) * r));
             }
+        }
+
+        static float GetDisplayRadius(BuildingData data)
+        {
+            if (data == null) return 0f;
+            if (data.tower != null && data.tower.range > 0f) return data.tower.range;
+            if (data.harvestResource != ResourceType.None && !data.requireAdjacentResource && data.harvestRadius > 0f)
+                return data.harvestRadius;
+            return 0f;
         }
 
         bool EnemyInside(BuildGrid grid, Vector3 center, Vector2Int footprint)
@@ -410,7 +431,7 @@ namespace SurvivalRts
 
             if (current.buildTime > 0f)
             {
-                building.AddComponent<ConstructionSite>().Setup(current, footprint, constructionStages);
+                building.AddComponent<ConstructionSite>().Setup(current, constructionStages);
             }
             else
             {

@@ -17,7 +17,8 @@ namespace SurvivalRts
         {
             { BuildingCategory.Economy, "Kinh tế" },
             { BuildingCategory.Military, "Quân sự" },
-            { BuildingCategory.Defense, "Phòng thủ" }
+            { BuildingCategory.Defense, "Phòng thủ" },
+            { BuildingCategory.Test, "Test" }
         };
 
         [Header("Tham chiếu")]
@@ -33,20 +34,33 @@ namespace SurvivalRts
         VisualElement placingBar;
         Label placingLabel;
         Label popLabel;
+        Label popValueLabel;
         Label woodValueLabel;
         Label stoneValueLabel;
+        Label ironValueLabel;
+        Label foodValueLabel;
+        Label goldValueLabel;
         PopulationManager subscribedPop;
 
         void OnEnable()
         {
+            if (GetComponent<MinimapController>() == null)
+            {
+                gameObject.AddComponent<MinimapController>();
+            }
+
             var root = GetComponent<UIDocument>().rootVisualElement;
             list = root.Q<VisualElement>("buildList");
             emptyLabel = root.Q<Label>("emptyLabel");
             placingBar = root.Q<VisualElement>("placingBar");
             placingLabel = root.Q<Label>("placingLabel");
             popLabel = root.Q<Label>("popLabel");
+            popValueLabel = root.Q<Label>("popValueLabel");
             woodValueLabel = root.Q<Label>("woodValueLabel");
             stoneValueLabel = root.Q<Label>("stoneValueLabel");
+            ironValueLabel = root.Q<Label>("ironValueLabel");
+            foodValueLabel = root.Q<Label>("foodValueLabel");
+            goldValueLabel = root.Q<Label>("goldValueLabel");
             root.Q<Button>("rotateButton").clicked += placer.Rotate;
             root.Q<Button>("cancelButton").clicked += placer.Cancel;
             var panel = root.Q<VisualElement>("buildPanel");
@@ -90,8 +104,13 @@ namespace SurvivalRts
         void RefreshPopulation()
         {
             var pop = PopulationManager.Instance;
+            if (popValueLabel != null)
+                popValueLabel.text = pop != null ? $"{pop.FreePopulation} / {pop.TotalPopulation}" : "0 / 0";
             if (woodValueLabel != null) woodValueLabel.text = pop != null ? pop.Wood.ToString() : "0";
             if (stoneValueLabel != null) stoneValueLabel.text = pop != null ? pop.Stone.ToString() : "0";
+            if (ironValueLabel != null) ironValueLabel.text = pop != null ? pop.Iron.ToString() : "0";
+            if (foodValueLabel != null) foodValueLabel.text = pop != null ? pop.Food.ToString() : "0";
+            if (goldValueLabel != null) goldValueLabel.text = pop != null ? pop.Gold.ToString() : "0";
 
             if (popLabel == null) return;
             if (pop == null)

@@ -27,7 +27,7 @@ namespace SurvivalRts
         public event Action<float, int> ProgressChanged;
         public event Action<ConstructionSite> Completed;
 
-        public void Setup(BuildingData buildingData, Vector2Int finalFootprint, GameObject[] stagePrefabs)
+        public void Setup(BuildingData buildingData, GameObject[] stagePrefabs)
         {
             data = buildingData;
             buildTime = Mathf.Max(0.5f, buildingData.buildTime);
@@ -37,6 +37,8 @@ namespace SurvivalRts
             foreach (var r in buildingRenderers) r.enabled = false;
 
             // Tạo khung giàn giáo 3 giai đoạn co giãn theo kích thước thực của công trình.
+            // Khung là con của công trình đã xoay, nên dùng footprint gốc (chưa xoay) theo trục local;
+            // dùng footprint đã xoay sẽ bị xoay thêm lần nữa và khung trở lại hướng cũ.
             stageRoot = new GameObject("ConstructionStages");
             stageRoot.transform.SetParent(transform, false);
             stageRoot.transform.localPosition = Vector3.zero;
@@ -44,9 +46,9 @@ namespace SurvivalRts
 
             float cellSize = BuildGrid.Instance != null ? BuildGrid.Instance.CellSize : 1f;
             stageRoot.transform.localScale = new Vector3(
-                finalFootprint.x * cellSize,
+                buildingData.footprint.x * cellSize,
                 Mathf.Max(1.5f, buildingData.height),
-                finalFootprint.y * cellSize);
+                buildingData.footprint.y * cellSize);
 
             if (stagePrefabs != null)
             {

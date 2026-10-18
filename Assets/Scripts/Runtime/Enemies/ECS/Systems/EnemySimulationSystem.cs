@@ -176,6 +176,22 @@ namespace SurvivalRts
             return false;
         }
 
+        public void CopyAlivePositions(List<Vector2> output)
+        {
+            output.Clear();
+            lastHandle.Complete();
+            if (!positions.IsCreated || !alive.IsCreated) return;
+
+            for (int i = 0; i < positionCount; i++)
+            {
+                if (alive[i] != 0)
+                {
+                    var p = positions[i];
+                    output.Add(new Vector2(p.x, p.z));
+                }
+            }
+        }
+
         protected override void OnUpdate()
         {
             lastHandle.Complete();

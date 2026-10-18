@@ -33,6 +33,10 @@ namespace SurvivalRts
         // True khi lần giữ chuột phải vừa rồi là xoay camera, dùng để không coi nó là click hủy.
         public bool RotatedWithRightButton => rotateDragDistance > dragThreshold;
 
+        public float OrthographicSize => cam != null ? cam.orthographicSize : zoomRange.y;
+
+        public Vector2 ZoomRange => zoomRange;
+
         void Awake()
         {
             cam = GetComponent<Camera>();
@@ -82,12 +86,49 @@ namespace SurvivalRts
         }
 
         // Điểm trên mặt đất mà camera đang nhìn vào (giữa màn hình).
-        Vector3 GroundPivot()
+        public Vector3 GroundPivot()
         {
             var ray = new Ray(transform.position, transform.forward);
             return new Plane(Vector3.up, Vector3.zero).Raycast(ray, out float distance)
                 ? ray.GetPoint(distance)
                 : transform.position;
+        }
+
+        // Dịch chuyển camera tới nhìn thẳng vào một điểm (x, z) trên mặt đất (dùng khi bấm hoặc kéo trên Minimap).
+        public void FocusOnGroundPoint(Vector3 groundTarget)
+        {
+            var pivot = GroundPivot();
+            var target = new Vector3(groundTarget.x, pivot.y, groundTarget.z);
+            transform.position += target - pivot;
+            ClampToBounds();
+        }
+
+        // Tính 4 góc khung nhìn của camera chiếu xuống mặt phẳng y = 0 để vẽ khung trắng trên Minimap.
+        public bool GetGroundFrustumCorners(Vector3[] outCorners)
+        {
+            if (cam == null || outCorners == null || outCorners.Length < 4) return false;
+            var plane = new Plane(Vector3.up, Vector3.zero);
+            Vector2[] viewportCorners =
+            {
+                new Vector2(0f, 0f),
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(1f, 0f)
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                var ray = cam.ViewportPointToRay(new Vector3(viewportCorners[i].x, viewportCorners[i].y, 0f));
+                if (plane.Raycast(ray, out float dist))
+                {
+                    outCorners[i] = ray.GetPoint(dist);
+                }
+                else
+                {
+                    outCorners[i] = GroundPivot();
+                }
+            }
+            return true;
         }
 
         void ClampToBounds()

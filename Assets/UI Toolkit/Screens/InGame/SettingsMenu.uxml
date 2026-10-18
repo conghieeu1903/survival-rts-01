@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="SettingsMenu.uss" />
+  <ui:VisualElement name="settingsRoot" class="settings-root hidden">
+    <ui:VisualElement name="settingsPanel" class="settings-panel">
+      <ui:Label name="titleLabel" text="CÀI ĐẶT" class="settings-title" />
+      <ui:Label name="audioSection" text="ÂM THANH" class="settings-section" />
+      <ui:VisualElement name="masterRow" class="settings-row">
+        <ui:Label text="Tổng" class="settings-row-label" />
+        <ui:Slider name="masterSlider" low-value="0" high-value="100" class="settings-slider" />
+        <ui:Label name="masterValue" text="80%" class="settings-row-value" />
+      </ui:VisualElement>
+      <ui:VisualElement name="musicRow" class="settings-row">
+        <ui:Label text="Nhạc nền" class="settings-row-label" />
+        <ui:Slider name="musicSlider" low-value="0" high-value="100" class="settings-slider" />
+        <ui:Label name="musicValue" text="80%" class="settings-row-value" />
+      </ui:VisualElement>
+      <ui:VisualElement name="sfxRow" class="settings-row">
+        <ui:Label text="Hiệu ứng" class="settings-row-label" />
+        <ui:Slider name="sfxSlider" low-value="0" high-value="100" class="settings-slider" />
+        <ui:Label name="sfxValue" text="80%" class="settings-row-value" />
+      </ui:VisualElement>
+      <ui:VisualElement name="uiRow" class="settings-row">
+        <ui:Label text="Giao diện" class="settings-row-label" />
+        <ui:Slider name="uiSlider" low-value="0" high-value="100" class="settings-slider" />
+        <ui:Label name="uiValue" text="80%" class="settings-row-value" />
+      </ui:VisualElement>
+      <ui:VisualElement name="buttonRow" class="settings-buttons">
+        <ui:Button name="defaultButton" text="Mặc định" class="settings-button" />
+        <ui:Button name="resumeButton" text="Tiếp tục" class="settings-button settings-button--primary" />
+      </ui:VisualElement>
+      <ui:Label name="hintLabel" text="Esc để đóng · Game tạm dừng khi menu mở" class="settings-hint" />
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

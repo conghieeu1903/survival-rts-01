@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: Building_4x4
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.BuildingData
   displayName: Building 4x4
+  category: 3
+  prefab: {fileID: 5938995799688907603, guid: bc672b8c247610045a8f3cc4250cf782, type: 3}
   footprint: {x: 4, y: 4}
   height: 3
   maxHealth: 800
-  prefab: {fileID: 5938995799688907603, guid: bc672b8c247610045a8f3cc4250cf782, type: 3}
+  tower: {fileID: 0}
+  buildTime: 6
+  populationProvided: 0
+  maxWorkers: 0
+  harvestResource: 0
+  harvestRadius: 8
+  requireAdjacentResource: 0
+  harvestInterval: 2.5
+  harvestAmount: 5

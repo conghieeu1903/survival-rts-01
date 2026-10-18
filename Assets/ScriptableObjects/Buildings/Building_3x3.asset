@@ -13,7 +13,17 @@ MonoBehaviour:
   m_Name: Building_3x3
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.BuildingData
   displayName: Building 3x3
+  category: 3
+  prefab: {fileID: 6985829498407091483, guid: e7030fe5e12a4904a9388257384fd0a3, type: 3}
   footprint: {x: 3, y: 3}
   height: 2
   maxHealth: 500
-  prefab: {fileID: 6985829498407091483, guid: e7030fe5e12a4904a9388257384fd0a3, type: 3}
+  tower: {fileID: 0}
+  buildTime: 6
+  populationProvided: 0
+  maxWorkers: 0
+  harvestResource: 0
+  harvestRadius: 8
+  requireAdjacentResource: 0
+  harvestInterval: 2.5
+  harvestAmount: 5

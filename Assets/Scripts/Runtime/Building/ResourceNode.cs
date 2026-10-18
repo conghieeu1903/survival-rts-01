@@ -7,17 +7,19 @@ namespace SurvivalRts
     {
         None = 0,
         Wood = 1,
-        Stone = 2
+        Stone = 2,
+        Food = 3,
+        Iron = 4
     }
 
-    // Đánh dấu vật thể tài nguyên trên bản đồ (Cây gỗ, Mỏ đá) để nhà khai thác kiểm tra vị trí và công nhân tới thu hoạch.
+    // Đánh dấu vật thể tài nguyên trên bản đồ (Cây gỗ, Mỏ đá, Bụi quả, Mỏ sắt) để nhà khai thác kiểm tra vị trí và công nhân tới thu hoạch.
     [RequireComponent(typeof(GridOccupant))]
     public class ResourceNode : MonoBehaviour
     {
         static readonly List<ResourceNode> all = new List<ResourceNode>();
 
         [Header("Tài nguyên")]
-        [Tooltip("Loại tài nguyên của điểm này (Wood = Cây gỗ, Stone = Mỏ đá)")]
+        [Tooltip("Loại tài nguyên của điểm này (Wood = Cây gỗ, Stone = Mỏ đá, Food = Nông sản, Iron = Mỏ sắt)")]
         public ResourceType resourceType = ResourceType.Wood;
 
         GridOccupant occupant;
@@ -48,7 +50,7 @@ namespace SurvivalRts
             all.Remove(this);
         }
 
-        // Tự động gắn ResourceNode cho các Tree và StoneMine có sẵn trong scene nếu chưa được gắn.
+        // Tự động gắn ResourceNode cho các Tree, StoneMine, BerryBush và IronDeposit có sẵn trong scene nếu chưa được gắn.
         public static void EnsureSceneNodesRegistered()
         {
             var occupants = FindObjectsByType<GridOccupant>(FindObjectsSortMode.None);
@@ -65,6 +67,14 @@ namespace SurvivalRts
                 else if (n.StartsWith("StoneMine"))
                 {
                     occ.gameObject.AddComponent<ResourceNode>().resourceType = ResourceType.Stone;
+                }
+                else if (n.StartsWith("BerryBush"))
+                {
+                    occ.gameObject.AddComponent<ResourceNode>().resourceType = ResourceType.Food;
+                }
+                else if (n.StartsWith("IronDeposit") || n.StartsWith("IronOre"))
+                {
+                    occ.gameObject.AddComponent<ResourceNode>().resourceType = ResourceType.Iron;
                 }
             }
         }

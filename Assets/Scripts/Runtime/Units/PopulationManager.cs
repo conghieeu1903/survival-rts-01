@@ -22,6 +22,9 @@ namespace SurvivalRts
         [Tooltip("Prefab thợ mỏ khai thác đá (Miner)")]
         [SerializeField] GameObject minerPrefab;
 
+        [Tooltip("Prefab nông dân canh tác (Farmer)")]
+        [SerializeField] GameObject farmerPrefab;
+
         [Header("Khởi đầu")]
         [Tooltip("Số dân tự do có sẵn ở Nhà chính khi bắt đầu ván")]
         [SerializeField] int initialFreePopulation = 4;
@@ -39,17 +42,22 @@ namespace SurvivalRts
         public int FreePopulation => Mathf.Max(0, TotalPopulation - AssignedWorkers);
         public int BuilderCount => activeBuilders.Count;
 
+        public int Gold { get; private set; }
+        public int Food { get; private set; }
         public int Wood { get; private set; }
         public int Stone { get; private set; }
+        public int Iron { get; private set; }
 
         public event Action Changed;
 
-        public void ConfigurePrefabs(GameObject villager, GameObject builder, GameObject lumberjack = null, GameObject miner = null)
+        public void ConfigurePrefabs(GameObject villager, GameObject builder,
+            GameObject lumberjack = null, GameObject miner = null, GameObject farmer = null)
         {
             villagerPrefab = villager;
             builderPrefab = builder;
             if (lumberjack != null) lumberjackPrefab = lumberjack;
             if (miner != null) minerPrefab = miner;
+            if (farmer != null) farmerPrefab = farmer;
         }
 
         void Awake()
@@ -87,6 +95,8 @@ namespace SurvivalRts
             if (amount <= 0) return;
             if (type == ResourceType.Wood) Wood += amount;
             else if (type == ResourceType.Stone) Stone += amount;
+            else if (type == ResourceType.Iron) Iron += amount;
+            else if (type == ResourceType.Food) Food += amount;
             Changed?.Invoke();
         }
 
@@ -159,13 +169,24 @@ namespace SurvivalRts
             harvester = null;
             if (FreePopulation <= 0 || camp == null) return false;
 
-            var prefab = camp.ResourceType == ResourceType.Stone ? minerPrefab : lumberjackPrefab;
+            GameObject prefab = lumberjackPrefab;
+            string unitName = "Lumberjack";
+            if (camp.ResourceType == ResourceType.Stone || camp.ResourceType == ResourceType.Iron)
+            {
+                prefab = minerPrefab;
+                unitName = camp.ResourceType == ResourceType.Iron ? "IronMiner" : "Miner";
+            }
+            else if (camp.ResourceType == ResourceType.Food)
+            {
+                prefab = farmerPrefab;
+                unitName = "Farmer";
+            }
             if (prefab == null) prefab = builderPrefab;
             if (prefab == null) return false;
 
             AssignedWorkers++;
             var go = Instantiate(prefab, camp.GetDropOffPosition(slotIndex), Quaternion.identity, transform);
-            go.name = camp.ResourceType == ResourceType.Stone ? "Miner" : "Lumberjack";
+            go.name = unitName;
             harvester = go.GetComponent<HarvesterUnit>();
             if (harvester == null) harvester = go.AddComponent<HarvesterUnit>();
             harvester.Setup(camp, slotIndex);
