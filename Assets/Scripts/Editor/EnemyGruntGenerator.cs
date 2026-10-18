@@ -9,8 +9,8 @@ namespace SurvivalRts.Editor
     public static class EnemyGruntGenerator
     {
         const float BakeFps = 30f;
-        const string ModelDir = "Assets/Arts/Models";
-        const string AnimDir = "Assets/Arts/Animations";
+        const string ModelDir = "Assets/Arts/Models/EnemyGrunt";
+        const string AnimDir = "Assets/Arts/Animations/EnemyGrunt";
         const string TextureDir = "Assets/Arts/Textures";
         const string MaterialDir = "Assets/Arts/Materials";
         const string AnimDataDir = "Assets/ScriptableObjects/Animations";

@@ -31,6 +31,10 @@ namespace SurvivalRts
         [Tooltip("Material của ô bị chặn")]
         [SerializeField] Material cellBlocked;
 
+        [Header("Khung xây dựng")]
+        [Tooltip("3 prefab khung giàn giáo theo tiến độ (Stage 1, Stage 2, Stage 3)")]
+        [SerializeField] GameObject[] constructionStages;
+
         readonly Dictionary<BuildingData, int> savedTurns = new Dictionary<BuildingData, int>();
         readonly List<Renderer> cellRenderers = new List<Renderer>();
         readonly List<GameObject> cellObjects = new List<GameObject>();
@@ -43,6 +47,7 @@ namespace SurvivalRts
         GameObject ghost;
         Renderer[] ghostRenderers;
         Transform cellRoot;
+        LineRenderer radiusRing;
         int turns;
         bool lastValid;
         bool dirty;
@@ -50,6 +55,7 @@ namespace SurvivalRts
         int lastTurns;
 
         const string FrontMarkerName = "FrontMarker";
+        const int RingSegments = 48;
 
         public event System.Action<BuildingData> CurrentChanged;
         public event System.Action<BuildingCategory> CategoryChanged;
@@ -109,9 +115,26 @@ namespace SurvivalRts
         void Awake()
         {
             if (cam == null) cam = Camera.main;
-            cameraController = cam.GetComponent<CameraController>();
+            cameraController = cam != null ? cam.GetComponent<CameraController>() : null;
             cellRoot = new GameObject("PlacementCells").transform;
             cellRoot.SetParent(transform, false);
+            InitRadiusRing();
+        }
+
+        void InitRadiusRing()
+        {
+            var ringGo = new GameObject("HarvestRadiusRing");
+            ringGo.transform.SetParent(transform, false);
+            radiusRing = ringGo.AddComponent<LineRenderer>();
+            radiusRing.useWorldSpace = true;
+            radiusRing.loop = true;
+            radiusRing.positionCount = RingSegments;
+            radiusRing.startWidth = 0.08f;
+            radiusRing.endWidth = 0.08f;
+            radiusRing.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            radiusRing.receiveShadows = false;
+            if (cellFree != null) radiusRing.sharedMaterial = cellFree;
+            radiusRing.enabled = false;
         }
 
         void Update()
@@ -139,6 +162,7 @@ namespace SurvivalRts
             Cancel();
             if (data == null || data.prefab == null) return;
 
+            ResourceNode.EnsureSceneNodesRegistered();
             current = data;
             savedTurns.TryGetValue(data, out turns);
             dirty = true;
@@ -159,6 +183,7 @@ namespace SurvivalRts
             ghost = null;
             current = null;
             HideCells();
+            if (radiusRing != null) radiusRing.enabled = false;
             if (wasPlacing) CurrentChanged?.Invoke(null);
         }
 
@@ -173,6 +198,7 @@ namespace SurvivalRts
             {
                 ghost.SetActive(false);
                 HideCells();
+                if (radiusRing != null) radiusRing.enabled = false;
                 lastValid = false;
                 dirty = true;
                 return;
@@ -183,12 +209,23 @@ namespace SurvivalRts
             if (grid == null || !new Plane(Vector3.up, Vector3.zero).Raycast(ray, out float distance))
             {
                 ghost.SetActive(false);
+                if (radiusRing != null) radiusRing.enabled = false;
                 return;
             }
 
             var footprint = BuildGrid.RotatedFootprint(current.footprint, turns);
             var center = grid.Snap(ray.GetPoint(distance), footprint);
             center.y = 0f;
+
+            // Với Xưởng đá: tự động xoay hướng mặt trước về phía mỏ đá tiếp giáp nếu có.
+            if (current.harvestResource != ResourceType.None && current.requireAdjacentResource)
+            {
+                if (TryFindAdjacentResourceTurn(grid, center, current.footprint, current.harvestResource, turns, out int autoTurn))
+                {
+                    turns = autoTurn;
+                    footprint = BuildGrid.RotatedFootprint(current.footprint, turns);
+                }
+            }
 
             // Kẻ địch luôn di chuyển, nên khi còn kẻ địch thì kiểm tra lại mỗi frame.
             if (!dirty && center == lastCenter && turns == lastTurns && EnemyWorld.AliveCount == 0) return;
@@ -198,7 +235,9 @@ namespace SurvivalRts
 
             var states = grid.Evaluate(center, footprint, out float baseY);
             bool enemyInside = EnemyInside(grid, center, footprint);
-            lastValid = !enemyInside;
+            bool resourceValid = EvaluateResourceRule(grid, center, footprint, turns);
+
+            lastValid = !enemyInside && resourceValid;
             foreach (var state in states)
                 if (state != CellState.Free) lastValid = false;
 
@@ -207,7 +246,102 @@ namespace SurvivalRts
                 new Vector3(center.x, baseY, center.z),
                 Quaternion.Euler(0f, 90f * turns, 0f));
             ApplyGhostMaterial(lastValid ? ghostValid : ghostInvalid);
-            ShowCells(grid, center, footprint, states, baseY, enemyInside);
+            ShowCells(grid, center, footprint, states, baseY, enemyInside || !resourceValid);
+            UpdateRadiusRing(center, baseY, lastValid);
+        }
+
+        bool EvaluateResourceRule(BuildGrid grid, Vector3 center, Vector2Int footprint, int currentTurn)
+        {
+            if (current.harvestResource == ResourceType.None) return true;
+
+            if (current.requireAdjacentResource)
+            {
+                var min = grid.MinCell(center, footprint);
+                return IsFacingAdjacentResource(min, footprint, currentTurn, current.harvestResource);
+            }
+
+            return HasResourceInRadius(center, current.harvestResource, current.harvestRadius);
+        }
+
+        bool HasResourceInRadius(Vector3 center, ResourceType type, float radius)
+        {
+            float rSq = radius * radius;
+            var all = ResourceNode.All;
+            for (int i = 0; i < all.Count; i++)
+            {
+                var node = all[i];
+                if (node == null || node.resourceType != type) continue;
+                var diff = node.transform.position - center;
+                diff.y = 0f;
+                if (diff.sqrMagnitude <= rSq) return true;
+            }
+            return false;
+        }
+
+        bool TryFindAdjacentResourceTurn(BuildGrid grid, Vector3 center, Vector2Int baseFootprint,
+            ResourceType type, int preferredTurn, out int matchedTurn)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int t = (preferredTurn + i) & 3;
+                var fp = BuildGrid.RotatedFootprint(baseFootprint, t);
+                var min = grid.MinCell(center, fp);
+                if (IsFacingAdjacentResource(min, fp, t, type))
+                {
+                    matchedTurn = t;
+                    return true;
+                }
+            }
+            matchedTurn = preferredTurn;
+            return false;
+        }
+
+        // Kiểm tra cạnh phía trước (theo góc xoay turn) của công trình có nằm sát cạnh mỏ tài nguyên không.
+        bool IsFacingAdjacentResource(Vector2Int min, Vector2Int footprint, int turn, ResourceType type)
+        {
+            var all = ResourceNode.All;
+            for (int i = 0; i < all.Count; i++)
+            {
+                var node = all[i];
+                if (node == null || node.resourceType != type || node.Occupant == null) continue;
+
+                var nMin = node.Occupant.Min;
+                var nFp = node.Occupant.footprint;
+
+                bool overlapX = min.x < nMin.x + nFp.x && min.x + footprint.x > nMin.x;
+                bool overlapY = min.y < nMin.y + nFp.y && min.y + footprint.y > nMin.y;
+
+                // turn 0 (+Z): cạnh Bắc của nhà chạm cạnh Nam của mỏ
+                if (turn == 0 && overlapX && min.y + footprint.y == nMin.y) return true;
+                // turn 1 (+X): cạnh Đông của nhà chạm cạnh Tây của mỏ
+                if (turn == 1 && overlapY && min.x + footprint.x == nMin.x) return true;
+                // turn 2 (-Z): cạnh Nam của nhà chạm cạnh Bắc của mỏ
+                if (turn == 2 && overlapX && min.y == nMin.y + nFp.y) return true;
+                // turn 3 (-X): cạnh Tây của nhà chạm cạnh Đông của mỏ
+                if (turn == 3 && overlapY && min.x == nMin.x + nFp.x) return true;
+            }
+            return false;
+        }
+
+        void UpdateRadiusRing(Vector3 center, float baseY, bool valid)
+        {
+            if (radiusRing == null) return;
+            bool show = current != null
+                && current.harvestResource != ResourceType.None
+                && !current.requireAdjacentResource
+                && current.harvestRadius > 0f;
+
+            radiusRing.enabled = show;
+            if (!show) return;
+
+            radiusRing.sharedMaterial = valid ? cellFree : cellBlocked;
+            float r = current.harvestRadius;
+            float y = baseY + 0.08f;
+            for (int i = 0; i < RingSegments; i++)
+            {
+                float angle = i / (float)RingSegments * Mathf.PI * 2f;
+                radiusRing.SetPosition(i, new Vector3(center.x + Mathf.Cos(angle) * r, y, center.z + Mathf.Sin(angle) * r));
+            }
         }
 
         bool EnemyInside(BuildGrid grid, Vector3 center, Vector2Int footprint)
@@ -234,7 +368,7 @@ namespace SurvivalRts
             }
         }
 
-        void ShowCells(BuildGrid grid, Vector3 center, Vector2Int footprint, CellState[] states, float baseY, bool enemyInside)
+        void ShowCells(BuildGrid grid, Vector3 center, Vector2Int footprint, CellState[] states, float baseY, bool invalid)
         {
             int count = states.Length;
             while (cellObjects.Count < count)
@@ -253,7 +387,7 @@ namespace SurvivalRts
 
                 var cellPos = grid.CellCenter(new Vector2Int(min.x + i % footprint.x, min.y + i / footprint.x));
                 cellObjects[i].transform.position = new Vector3(cellPos.x, baseY + 0.05f, cellPos.z);
-                bool blocked = states[i] != CellState.Free || enemyInside;
+                bool blocked = states[i] != CellState.Free || invalid;
                 cellRenderers[i].sharedMaterial = blocked ? cellBlocked : cellFree;
             }
         }
@@ -273,7 +407,24 @@ namespace SurvivalRts
 
             building.AddComponent<Health>().SetMax(current.maxHealth);
             building.AddComponent<PlayerTarget>();
-            if (current.tower != null) building.AddComponent<Tower>().Setup(current.tower);
+
+            if (current.buildTime > 0f)
+            {
+                building.AddComponent<ConstructionSite>().Setup(current, footprint, constructionStages);
+            }
+            else
+            {
+                if (current.tower != null) building.AddComponent<Tower>().Setup(current.tower);
+                if (current.populationProvided > 0) building.AddComponent<HouseBuilding>().Setup(current.populationProvided);
+                if (current.harvestResource != ResourceType.None)
+                {
+                    building.AddComponent<ResourceCamp>().Setup(current);
+                }
+                else if (current.maxWorkers > 0)
+                {
+                    building.AddComponent<BuilderHut>().Setup(current.maxWorkers);
+                }
+            }
 
             var obstacle = building.AddComponent<NavMeshObstacle>();
             obstacle.shape = NavMeshObstacleShape.Box;

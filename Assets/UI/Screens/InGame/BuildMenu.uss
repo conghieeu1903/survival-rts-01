@@ -18,6 +18,60 @@
   padding-bottom: 20px;
 }
 
+.resource-hud {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.resource-badge {
+  flex-direction: row;
+  align-items: center;
+  min-width: 112px;
+  margin-left: 10px;
+  padding: 6px 12px 6px 8px;
+  background-color: var(--color-panel);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 6px;
+}
+
+.resource-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  -unity-background-scale-mode: scale-to-fit;
+}
+
+.resource-icon--wood {
+  background-image: url("/Assets/Arts/Textures/Icon_Wood.png");
+}
+
+.resource-icon--stone {
+  background-image: url("/Assets/Arts/Textures/Icon_Stone.png");
+}
+
+.resource-info {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.resource-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  -unity-font-style: bold;
+  color: var(--color-text-dim);
+  margin-bottom: 1px;
+}
+
+.resource-value {
+  font-size: 16px;
+  -unity-font-style: bold;
+  color: var(--color-text);
+}
+
 .build-panel {
   min-width: 440px;
   padding: 8px 12px 12px 12px;

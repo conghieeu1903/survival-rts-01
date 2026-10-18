@@ -370,12 +370,13 @@ namespace SurvivalRts
                 if (target.Health.IsDead) continue;
                 var position = target.transform.position;
                 var half = target.HalfExtents;
+                // Mọi công trình (kể cả Nhà chính) có cùng mức ưu tiên để quái đánh công trình gần nhất.
                 targets.Add(new TargetInfo
                 {
                     Id = target.Id,
                     Center = new float2(position.x, position.z),
                     HalfExtents = new float2(half.x, half.y),
-                    Priority = (int)target.Priority
+                    Priority = target.Priority == TargetPriority.Unit ? 0 : 1
                 });
             }
         }

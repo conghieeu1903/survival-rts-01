@@ -24,9 +24,17 @@ namespace SurvivalRts
             if (cam == null) cam = Camera.main;
         }
 
+        void OnDisable()
+        {
+            if (!ReferenceEquals(Selected, null)) Selected.Died -= OnSelectedDied;
+        }
+
         void Update()
         {
-            if (Selected != null && Selected.IsDead) Select(null);
+            if (!ReferenceEquals(Selected, null) && (Selected == null || Selected.IsDead))
+            {
+                Select(null);
+            }
 
             var mouse = Mouse.current;
             bool blocked = wasPlacing || placer.IsPlacing || UiPointerState.IsOverUI;
@@ -36,6 +44,7 @@ namespace SurvivalRts
             Health target = null;
             if (Physics.Raycast(ray, out var hit, 500f))
                 target = hit.collider.GetComponentInParent<Health>();
+            if (target != null && target.IsDead) target = null;
             Select(target);
         }
 
@@ -44,10 +53,17 @@ namespace SurvivalRts
             wasPlacing = placer.IsPlacing;
         }
 
+        void OnSelectedDied()
+        {
+            Select(null);
+        }
+
         void Select(Health target)
         {
-            if (Selected == target) return;
+            if (ReferenceEquals(Selected, target)) return;
+            if (!ReferenceEquals(Selected, null)) Selected.Died -= OnSelectedDied;
             Selected = target;
+            if (Selected != null) Selected.Died += OnSelectedDied;
             SelectionChanged?.Invoke(target);
         }
     }

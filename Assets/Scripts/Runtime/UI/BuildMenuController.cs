@@ -32,6 +32,10 @@ namespace SurvivalRts
         Label emptyLabel;
         VisualElement placingBar;
         Label placingLabel;
+        Label popLabel;
+        Label woodValueLabel;
+        Label stoneValueLabel;
+        PopulationManager subscribedPop;
 
         void OnEnable()
         {
@@ -40,6 +44,9 @@ namespace SurvivalRts
             emptyLabel = root.Q<Label>("emptyLabel");
             placingBar = root.Q<VisualElement>("placingBar");
             placingLabel = root.Q<Label>("placingLabel");
+            popLabel = root.Q<Label>("popLabel");
+            woodValueLabel = root.Q<Label>("woodValueLabel");
+            stoneValueLabel = root.Q<Label>("stoneValueLabel");
             root.Q<Button>("rotateButton").clicked += placer.Rotate;
             root.Q<Button>("cancelButton").clicked += placer.Cancel;
             var panel = root.Q<VisualElement>("buildPanel");
@@ -52,6 +59,7 @@ namespace SurvivalRts
 
             placer.CurrentChanged += Refresh;
             placer.CategoryChanged += RebuildList;
+            RefreshPopulation();
         }
 
         void OnDisable()
@@ -61,7 +69,37 @@ namespace SurvivalRts
                 placer.CurrentChanged -= Refresh;
                 placer.CategoryChanged -= RebuildList;
             }
+            if (subscribedPop != null)
+            {
+                subscribedPop.Changed -= RefreshPopulation;
+                subscribedPop = null;
+            }
             UiPointerState.IsOverUI = false;
+        }
+
+        void Update()
+        {
+            if (subscribedPop == null && PopulationManager.Instance != null)
+            {
+                subscribedPop = PopulationManager.Instance;
+                subscribedPop.Changed += RefreshPopulation;
+                RefreshPopulation();
+            }
+        }
+
+        void RefreshPopulation()
+        {
+            var pop = PopulationManager.Instance;
+            if (woodValueLabel != null) woodValueLabel.text = pop != null ? pop.Wood.ToString() : "0";
+            if (stoneValueLabel != null) stoneValueLabel.text = pop != null ? pop.Stone.ToString() : "0";
+
+            if (popLabel == null) return;
+            if (pop == null)
+            {
+                popLabel.text = "";
+                return;
+            }
+            popLabel.text = $"Dân rỗi: {pop.FreePopulation}/{pop.TotalPopulation}  ·  Thợ xây: {pop.BuilderCount}";
         }
 
         void BuildTabs(VisualElement tabRow)

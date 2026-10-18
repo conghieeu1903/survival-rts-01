@@ -93,13 +93,18 @@ namespace SurvivalRts
             brain.AttackTimer = math.max(0f, brain.AttackTimer - DeltaTime);
             brain.Engaged = 0;
 
-            int target = FindTarget(position, stats.DetectRange, out float2 closest, out float distance);
+            // Giữ mục tiêu đang đánh nếu vẫn còn sống và trong tầm (cộng biên độ nhỏ tránh bị đồng bọn đẩy tuột).
+            float keepRange = stats.Radius + stats.AttackRange + 0.5f;
+            int target = TryKeepTarget(brain.TargetId, position, keepRange, out float2 closest, out float distance);
+            if (target < 0) target = FindTarget(position, stats.DetectRange, out closest, out distance);
+
             if (target >= 0)
             {
                 facing = closest - position;
                 if (distance <= stats.Radius + stats.AttackRange)
                 {
                     brain.Engaged = 1;
+                    brain.TargetId = Targets[target].Id;
                     if (brain.AttackTimer <= 0f)
                     {
                         Damage.Enqueue(new DamageEvent { TargetId = Targets[target].Id, Amount = stats.Damage });
@@ -108,11 +113,13 @@ namespace SurvivalRts
                 }
                 else
                 {
+                    brain.TargetId = 0;
                     desired = math.normalizesafe(facing) * stats.MoveSpeed;
                 }
             }
             else
             {
+                brain.TargetId = 0;
                 int cell = Grid.CellIndex(position);
                 if (cell >= 0) desired = Flow[cell] * stats.MoveSpeed;
             }
@@ -143,7 +150,29 @@ namespace SurvivalRts
             }
         }
 
-        // Ưu tiên đơn vị, rồi công trình, rồi Nhà chính; cùng loại thì chọn gần nhất.
+        int TryKeepTarget(int targetId, float2 position, float maxDistance, out float2 closest, out float distance)
+        {
+            closest = float2.zero;
+            distance = 0f;
+            if (targetId == 0) return -1;
+
+            for (int i = 0; i < Targets.Length; i++)
+            {
+                var t = Targets[i];
+                if (t.Id != targetId) continue;
+
+                float2 point = math.clamp(position, t.Center - t.HalfExtents, t.Center + t.HalfExtents);
+                float d = math.distance(position, point);
+                if (d > maxDistance) return -1;
+
+                closest = point;
+                distance = d;
+                return i;
+            }
+            return -1;
+        }
+
+        // Ưu tiên đơn vị trước, sau đó đến công trình (kể cả Nhà chính); cùng nhóm thì chọn gần nhất.
         int FindTarget(float2 position, float range, out float2 closest, out float distance)
         {
             int best = -1;

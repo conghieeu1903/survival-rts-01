@@ -1,9 +1,26 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
   <ui:Style src="BuildMenu.uss" />
   <ui:VisualElement name="buildMenuRoot" class="build-root" picking-mode="Ignore">
+    <ui:VisualElement name="resourceHud" class="resource-hud">
+      <ui:VisualElement name="woodBadge" class="resource-badge">
+        <ui:VisualElement name="woodIcon" class="resource-icon resource-icon--wood" />
+        <ui:VisualElement class="resource-info">
+          <ui:Label text="GỖ" class="resource-label" />
+          <ui:Label name="woodValueLabel" text="0" class="resource-value" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+      <ui:VisualElement name="stoneBadge" class="resource-badge">
+        <ui:VisualElement name="stoneIcon" class="resource-icon resource-icon--stone" />
+        <ui:VisualElement class="resource-info">
+          <ui:Label text="ĐÁ" class="resource-label" />
+          <ui:Label name="stoneValueLabel" text="0" class="resource-value" />
+        </ui:VisualElement>
+      </ui:VisualElement>
+    </ui:VisualElement>
     <ui:VisualElement name="buildPanel" class="build-panel">
       <ui:VisualElement name="headerRow" class="build-header">
         <ui:Label name="titleLabel" text="XÂY DỰNG" class="build-title" />
+        <ui:Label name="popLabel" text="Dân tự do: 0 / 0  ·  Thợ xây: 0" class="build-hint" />
         <ui:Label name="hintLabel" text="Chuột trái đặt  ·  Chuột phải hủy" class="build-hint" />
       </ui:VisualElement>
       <ui:VisualElement name="tabRow" class="build-tabs" />

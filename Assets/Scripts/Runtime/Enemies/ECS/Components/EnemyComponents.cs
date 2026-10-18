@@ -28,6 +28,7 @@ namespace SurvivalRts
     public struct EnemyBrain : IComponentData
     {
         public float AttackTimer;
+        public int TargetId;
         public byte Engaged;
         public byte Moving;
     }

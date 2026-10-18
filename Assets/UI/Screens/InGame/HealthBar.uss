@@ -1,24 +1,43 @@
 :root {
-  --color-track: rgba(11, 15, 11, 0.85);
+  --color-track: rgba(11, 15, 11, 0.88);
   --color-border: #4a4128;
+  --color-accent: #e0a33a;
   --color-health: #5fb34a;
   --color-health-low: #d9482f;
   --color-text: #e8ece6;
+  --color-btn: #242d24;
+  --color-btn-hover: #344234;
 }
 
 .health-root {
   flex-grow: 1;
 }
 
-.health-bar {
+.health-container {
   position: absolute;
+  align-items: center;
+  translate: -50% -100%;
+}
+
+.health-status {
+  margin-bottom: 3px;
+  padding: 2px 8px;
+  background-color: var(--color-track);
+  border-width: 1px;
+  border-color: var(--color-accent);
+  border-radius: 3px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: var(--color-accent);
+}
+
+.health-bar {
   width: 140px;
   height: 16px;
   background-color: var(--color-track);
   border-width: 1px;
   border-color: var(--color-border);
   border-radius: 3px;
-  translate: -50% -100%;
 }
 
 .health-fill {
@@ -41,6 +60,46 @@
   -unity-font-style: bold;
   -unity-text-align: middle-center;
   color: var(--color-text);
+}
+
+.worker-panel {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 4px;
+  padding: 3px 6px;
+  background-color: var(--color-track);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+}
+
+.worker-label {
+  margin: 0 8px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: var(--color-text);
+}
+
+.worker-btn {
+  padding: 2px 8px;
+  margin: 0;
+  background-color: var(--color-btn);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 3px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: var(--color-text);
+}
+
+.worker-btn:hover {
+  background-color: var(--color-btn-hover);
+  border-color: var(--color-accent);
+}
+
+.worker-btn--add {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .hidden {
