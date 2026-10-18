@@ -32,5 +32,22 @@ namespace SurvivalRts
             var system = System;
             return system != null && system.AnyInRect(center, halfExtents);
         }
+
+        public static Entity CreateTower(TowerData data, Vector3 basePosition)
+        {
+            var system = System;
+            return system != null ? system.CreateTower(data, basePosition) : Entity.Null;
+        }
+
+        public static void DestroyTower(Entity tower)
+        {
+            if (tower != Entity.Null) System?.DestroyTower(tower);
+        }
+
+        public static event System.Action<Vector3, Vector3> ShotFired
+        {
+            add { var system = System; if (system != null) system.ShotFired += value; }
+            remove { var system = System; if (system != null) system.ShotFired -= value; }
+        }
     }
 }

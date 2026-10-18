@@ -12,6 +12,7 @@ namespace SurvivalRts
 {
     // Điều phối toàn bộ kẻ địch: giữ lưới flow field, chụp vị trí, chạy job mô phỏng,
     // và là cầu nối với thế giới GameObject (mục tiêu phe mình, sát thương, yêu cầu spawn).
+    // Tháp phe mình cũng chạy ở đây vì cần dùng chung spatial hash của kẻ địch trong cùng frame.
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateBefore(typeof(TransformSystemGroup))]
     public partial class EnemySimulationSystem : SystemBase
@@ -36,6 +37,7 @@ namespace SurvivalRts
         readonly Dictionary<int, float> damageByTarget = new Dictionary<int, float>();
 
         EntityQuery enemyQuery;
+        EntityQuery towerQuery;
         Entity prefab;
         float heightOffset;
         Unity.Mathematics.Random random;
@@ -54,13 +56,20 @@ namespace SurvivalRts
         NativeArray<float3> positions;
         NativeArray<int> cells;
         NativeArray<int> sorted;
+        NativeArray<Entity> entities;
+        NativeArray<byte> alive;
         int positionCount;
 
         NativeList<TargetInfo> targets;
         NativeQueue<DamageEvent> damage;
+        NativeQueue<TowerShot> towerShots;
+        NativeList<TowerShot> firedShots;
         JobHandle lastHandle;
 
         public int AliveCount { get; private set; }
+
+        // Gọi trên main thread cho mỗi phát bắn của frame trước, dùng để vẽ tia đạn.
+        public event System.Action<Vector3, Vector3> ShotFired;
 
         protected override void OnCreate()
         {
@@ -70,8 +79,13 @@ namespace SurvivalRts
                 ComponentType.ReadOnly<EnemyStats>(),
                 ComponentType.ReadOnly<EnemyHealth>(),
                 ComponentType.ReadOnly<EnemyTag>());
+            towerQuery = GetEntityQuery(
+                ComponentType.ReadWrite<TowerState>(),
+                ComponentType.ReadOnly<TowerStats>());
             targets = new NativeList<TargetInfo>(64, Allocator.Persistent);
             damage = new NativeQueue<DamageEvent>(Allocator.Persistent);
+            towerShots = new NativeQueue<TowerShot>(Allocator.Persistent);
+            firedShots = new NativeList<TowerShot>(64, Allocator.Persistent);
             random = new Unity.Mathematics.Random(0x5EED1234u);
         }
 
@@ -80,6 +94,8 @@ namespace SurvivalRts
             lastHandle.Complete();
             if (targets.IsCreated) targets.Dispose();
             if (damage.IsCreated) damage.Dispose();
+            if (towerShots.IsCreated) towerShots.Dispose();
+            if (firedShots.IsCreated) firedShots.Dispose();
             DisposeGrid();
             DisposePositions();
         }
@@ -95,7 +111,8 @@ namespace SurvivalRts
             RenderMeshUtility.AddComponents(prefab, EntityManager, description, meshArray,
                 MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
 
-            heightOffset = data.mesh.bounds.extents.y * data.scale;
+            // Khoảng cách từ pivot của mesh xuống đáy (chân); mesh có pivot ở chân thì bằng 0.
+            heightOffset = -data.mesh.bounds.min.y * data.scale;
             EntityManager.AddComponentData(prefab, LocalTransform.FromScale(data.scale));
             EntityManager.AddComponentData(prefab, new EnemyHealth { Current = data.maxHealth, Max = data.maxHealth });
             EntityManager.AddComponentData(prefab, new EnemyStats
@@ -126,6 +143,24 @@ namespace SurvivalRts
             });
         }
 
+        public Entity CreateTower(TowerData data, Vector3 basePosition)
+        {
+            var tower = EntityManager.CreateEntity(typeof(TowerStats), typeof(TowerState));
+            EntityManager.SetComponentData(tower, new TowerStats
+            {
+                Muzzle = new float3(basePosition.x, basePosition.y + data.muzzleHeight, basePosition.z),
+                Damage = data.damage,
+                Range = data.range,
+                FireInterval = data.fireInterval
+            });
+            return tower;
+        }
+
+        public void DestroyTower(Entity tower)
+        {
+            if (EntityManager.Exists(tower)) EntityManager.DestroyEntity(tower);
+        }
+
         public bool AnyInRect(Vector2 center, Vector2 halfExtents)
         {
             lastHandle.Complete();
@@ -145,6 +180,7 @@ namespace SurvivalRts
         {
             lastHandle.Complete();
             ApplyDamageToPlayer();
+            PublishShots();
 
             var buildGrid = BuildGrid.Instance;
             if (buildGrid == null)
@@ -171,7 +207,9 @@ namespace SurvivalRts
             {
                 Grid = grid,
                 Positions = positions,
-                Cells = cells
+                Cells = cells,
+                Entities = entities,
+                Alive = alive
             }.ScheduleParallel(enemyQuery, Dependency);
 
             handle = new EnemySortJob
@@ -181,6 +219,27 @@ namespace SurvivalRts
                 CellStart = cellStart,
                 CellCount = cellCount,
                 Sorted = sorted
+            }.Schedule(handle);
+
+            // Tháp bắn trước khi kẻ địch di chuyển, để con vừa chết không còn đánh trong frame này.
+            handle = new TowerFireJob
+            {
+                Grid = grid,
+                DeltaTime = deltaTime,
+                Positions = positions,
+                Alive = alive,
+                CellStart = cellStart,
+                CellCount = cellCount,
+                Sorted = sorted,
+                Shots = towerShots.AsParallelWriter()
+            }.ScheduleParallel(towerQuery, handle);
+
+            handle = new TowerApplyShotsJob
+            {
+                Shots = towerShots,
+                Entities = entities,
+                Health = GetComponentLookup<EnemyHealth>(),
+                Fired = firedShots
             }.Schedule(handle);
 
             handle = new EnemySimulateJob
@@ -224,6 +283,16 @@ namespace SurvivalRts
             {
                 if (PlayerTarget.TryGet(pair.Key, out var target)) target.Health.TakeDamage(pair.Value);
             }
+        }
+
+        void PublishShots()
+        {
+            if (firedShots.Length == 0) return;
+            if (ShotFired != null)
+            {
+                foreach (var shot in firedShots) ShotFired((Vector3)shot.From, (Vector3)shot.To);
+            }
+            firedShots.Clear();
         }
 
         void InitGrid(BuildGrid buildGrid)
@@ -373,6 +442,8 @@ namespace SurvivalRts
             positions = new NativeArray<float3>(capacity, Allocator.Persistent);
             cells = new NativeArray<int>(capacity, Allocator.Persistent);
             sorted = new NativeArray<int>(capacity, Allocator.Persistent);
+            entities = new NativeArray<Entity>(capacity, Allocator.Persistent);
+            alive = new NativeArray<byte>(capacity, Allocator.Persistent);
         }
 
         void DisposePositions()
@@ -380,6 +451,8 @@ namespace SurvivalRts
             if (positions.IsCreated) positions.Dispose();
             if (cells.IsCreated) cells.Dispose();
             if (sorted.IsCreated) sorted.Dispose();
+            if (entities.IsCreated) entities.Dispose();
+            if (alive.IsCreated) alive.Dispose();
         }
 
         void DisposeGrid()

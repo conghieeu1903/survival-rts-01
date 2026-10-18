@@ -8,7 +8,7 @@ namespace SurvivalRts
     public class BuildingPlacer : MonoBehaviour
     {
         [Header("Dữ liệu")]
-        [Tooltip("Danh sách công trình có thể xây, phím 1-9 chọn theo thứ tự")]
+        [Tooltip("Danh sách công trình có thể xây, hiện trên menu xây dựng theo nhóm và đúng thứ tự này")]
         [SerializeField] BuildingData[] buildings;
 
         [Tooltip("Camera dùng để bắn tia từ chuột xuống mặt đất, mặc định là Main Camera")]
@@ -34,8 +34,11 @@ namespace SurvivalRts
         readonly Dictionary<BuildingData, int> savedTurns = new Dictionary<BuildingData, int>();
         readonly List<Renderer> cellRenderers = new List<Renderer>();
         readonly List<GameObject> cellObjects = new List<GameObject>();
+        readonly List<BuildingData> visible = new List<BuildingData>();
 
         CameraController cameraController;
+        BuildingCategory category;
+        bool visibleDirty = true;
         BuildingData current;
         GameObject ghost;
         Renderer[] ghostRenderers;
@@ -49,15 +52,58 @@ namespace SurvivalRts
         const string FrontMarkerName = "FrontMarker";
 
         public event System.Action<BuildingData> CurrentChanged;
+        public event System.Action<BuildingCategory> CategoryChanged;
 
         public bool IsPlacing => current != null;
         public BuildingData Current => current;
         public IReadOnlyList<BuildingData> Buildings => buildings;
+        public BuildingCategory Category => category;
+
+        // Công trình thuộc nhóm đang mở, theo thứ tự trong danh sách.
+        public IReadOnlyList<BuildingData> Visible
+        {
+            get
+            {
+                if (visibleDirty)
+                {
+                    visible.Clear();
+                    foreach (var data in buildings)
+                        if (data != null && data.category == category) visible.Add(data);
+                    visibleDirty = false;
+                }
+                return visible;
+            }
+        }
+
+        public int CountIn(BuildingCategory value)
+        {
+            int count = 0;
+            foreach (var data in buildings)
+                if (data != null && data.category == value) count++;
+            return count;
+        }
 
         public void Toggle(BuildingData data)
         {
             if (current == data) Cancel();
             else Begin(data);
+        }
+
+        public void SetCategory(BuildingCategory value)
+        {
+            if (category == value) return;
+            category = value;
+            visibleDirty = true;
+            CategoryChanged?.Invoke(category);
+        }
+
+        // Xoay bóng mờ 90°, hướng được nhớ cho lần đặt sau cùng loại công trình.
+        public void Rotate()
+        {
+            if (current == null) return;
+            turns = (turns + 1) & 3;
+            savedTurns[current] = turns;
+            dirty = true;
         }
 
         void Awake()
@@ -70,31 +116,17 @@ namespace SurvivalRts
 
         void Update()
         {
-            var keyboard = Keyboard.current;
+            // Chưa có phím tắt: chọn, xoay, hủy đều qua nút trên menu xây dựng; chuột phải vẫn hủy.
             var mouse = Mouse.current;
-            if (keyboard == null || mouse == null) return;
-
-            for (int i = 0; i < buildings.Length && i < 9; i++)
-            {
-                if (keyboard[Key.Digit1 + i].wasPressedThisFrame) Begin(buildings[i]);
-            }
-
-            if (current == null) return;
+            if (mouse == null || current == null) return;
 
             bool rightClicked = mouse.rightButton.wasReleasedThisFrame
                 && !UiPointerState.IsOverUI
                 && (cameraController == null || !cameraController.RotatedWithRightButton);
-            if (keyboard.escapeKey.wasPressedThisFrame || rightClicked)
+            if (rightClicked)
             {
                 Cancel();
                 return;
-            }
-
-            if (keyboard.rKey.wasPressedThisFrame)
-            {
-                turns = (turns + 1) & 3;
-                savedTurns[current] = turns;
-                dirty = true;
             }
 
             UpdateGhost(mouse.position.ReadValue());
@@ -120,7 +152,7 @@ namespace SurvivalRts
             CurrentChanged?.Invoke(current);
         }
 
-        void Cancel()
+        public void Cancel()
         {
             bool wasPlacing = current != null;
             if (ghost != null) Destroy(ghost);
@@ -241,6 +273,7 @@ namespace SurvivalRts
 
             building.AddComponent<Health>().SetMax(current.maxHealth);
             building.AddComponent<PlayerTarget>();
+            if (current.tower != null) building.AddComponent<Tower>().Setup(current.tower);
 
             var obstacle = building.AddComponent<NavMeshObstacle>();
             obstacle.shape = NavMeshObstacleShape.Box;

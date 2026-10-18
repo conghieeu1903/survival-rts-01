@@ -1,3 +1,4 @@
+using Unity.Entities;
 using UnityEngine;
 
 namespace SurvivalRts
@@ -6,12 +7,15 @@ namespace SurvivalRts
     public class EnemyEcsConfig : MonoBehaviour
     {
         [Header("Dữ liệu")]
-        [Tooltip("Dữ liệu kẻ địch dùng để tạo prefab entity (mesh, material, chỉ số)")]
+        [Tooltip("Dữ liệu kẻ địch dùng để tạo prefab entity (mesh, material, chỉ số, animation)")]
         [SerializeField] EnemyData enemyData;
 
         void Awake()
         {
-            if (enemyData != null) EnemyWorld.Configure(enemyData);
+            if (enemyData == null) return;
+
+            EnemyWorld.Configure(enemyData);
+            World.DefaultGameObjectInjectionWorld?.GetExistingSystemManaged<EnemyAnimationSystem>()?.Configure(enemyData);
         }
     }
 }

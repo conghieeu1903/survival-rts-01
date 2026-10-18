@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 
 namespace SurvivalRts
 {
@@ -28,6 +29,42 @@ namespace SurvivalRts
     {
         public float AttackTimer;
         public byte Engaged;
+        public byte Moving;
+    }
+
+    // Giá trị gửi thẳng lên shader GpuSkinnedLit cho từng thực thể: x = hàng frame A, y = hàng frame B, z = tỉ lệ nội suy.
+    [MaterialProperty("_AnimData")]
+    public struct EnemyAnimData : IComponentData
+    {
+        public float4 Value;
+    }
+
+    public struct AnimClip
+    {
+        public int Start;
+        public int Frames;
+        public float Fps;
+        public byte Loop;
+
+        public float Length => Loop != 0 ? Frames / Fps : (Frames - 1) / Fps;
+    }
+
+    public enum EnemyAnimClip : byte
+    {
+        Idle,
+        Walk,
+        Attack,
+        Death
+    }
+
+    public struct EnemyAnimation : IComponentData
+    {
+        public AnimClip Idle;
+        public AnimClip Walk;
+        public AnimClip Attack;
+        public AnimClip Death;
+        public EnemyAnimClip Current;
+        public float Time;
     }
 
     public struct DamageEvent

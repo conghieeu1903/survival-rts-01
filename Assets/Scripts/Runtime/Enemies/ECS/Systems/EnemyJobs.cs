@@ -7,18 +7,22 @@ using Unity.Transforms;
 
 namespace SurvivalRts
 {
-    // Chụp vị trí và ô của mọi kẻ địch để các kẻ địch khác đọc khi né nhau.
+    // Chụp vị trí và ô của mọi kẻ địch để các kẻ địch khác đọc khi né nhau và tháp tìm mục tiêu.
     [BurstCompile]
     public partial struct EnemySnapshotJob : IJobEntity
     {
         public GridInfo Grid;
         [NativeDisableParallelForRestriction] public NativeArray<float3> Positions;
         [NativeDisableParallelForRestriction] public NativeArray<int> Cells;
+        [NativeDisableParallelForRestriction] public NativeArray<Entity> Entities;
+        [NativeDisableParallelForRestriction] public NativeArray<byte> Alive;
 
-        void Execute([EntityIndexInQuery] int index, in LocalTransform transform)
+        void Execute(Entity entity, [EntityIndexInQuery] int index, in LocalTransform transform, in EnemyHealth health)
         {
             Positions[index] = transform.Position;
             Cells[index] = Grid.CellIndexClamped(transform.Position.xz);
+            Entities[index] = entity;
+            Alive[index] = (byte)(health.Current > 0f ? 1 : 0);
         }
     }
 
@@ -58,6 +62,8 @@ namespace SurvivalRts
     public partial struct EnemySimulateJob : IJobEntity
     {
         const float RotationSharpness = 10f;
+        // Đi được dưới tỉ lệ này của tốc độ tối đa thì coi là đứng yên (để chọn animation).
+        const float MovingSpeedRatio = 0.25f;
 
         public GridInfo Grid;
         public float DeltaTime;
@@ -91,7 +97,7 @@ namespace SurvivalRts
             if (target >= 0)
             {
                 facing = closest - position;
-                if (distance <= stats.AttackRange)
+                if (distance <= stats.Radius + stats.AttackRange)
                 {
                     brain.Engaged = 1;
                     if (brain.AttackTimer <= 0f)
@@ -112,8 +118,18 @@ namespace SurvivalRts
             }
 
             float2 push = Separation(index, position, stats.Radius * 2f);
+            if (brain.Engaged != 0)
+            {
+                // Đám đông phía sau không được ép con đang đánh lún vào mục tiêu.
+                float2 toward = math.normalizesafe(facing);
+                push -= toward * math.max(0f, math.dot(push, toward));
+            }
             float2 delta = desired * DeltaTime + push * math.min(1f, SeparationStrength * DeltaTime);
             float2 next = Move(position, delta);
+
+            // Tính theo quãng đường thật đã đi, để con bị tường hoặc đám đông chặn đứng yên thay vì bước tại chỗ.
+            float minStep = MovingSpeedRatio * stats.MoveSpeed * DeltaTime;
+            brain.Moving = (byte)(math.lengthsq(desired) > 0.01f && math.distancesq(next, position) > minStep * minStep ? 1 : 0);
 
             int nextCell = Grid.CellIndex(next);
             float ground = nextCell >= 0 ? Height[nextCell] : transform.Position.y - stats.HeightOffset;
@@ -223,7 +239,9 @@ namespace SurvivalRts
     }
 
     [BurstCompile]
+    // Kẻ địch có animation nằm lại cho xong clip Death; EnemyAnimationSystem hủy chúng sau.
     [WithAll(typeof(EnemyTag))]
+    [WithNone(typeof(EnemyAnimation))]
     public partial struct EnemyDeathJob : IJobEntity
     {
         public EntityCommandBuffer.ParallelWriter Commands;

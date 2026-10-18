@@ -18,6 +18,9 @@ namespace SurvivalRts
         [Tooltip("Đổ bóng. Tắt để giảm chi phí vẽ khi có rất nhiều kẻ địch")]
         public bool castShadows = true;
 
+        [Tooltip("Animation đã nướng thành bone texture (cần các clip Idle, Walk, Attack, Death). Để trống nếu mesh không có animation")]
+        public GpuAnimationData animation;
+
         [Header("Chỉ số")]
         [Tooltip("Máu tối đa")]
         public float maxHealth = 80f;
@@ -32,8 +35,8 @@ namespace SurvivalRts
         [Tooltip("Sát thương mỗi đòn")]
         public float damage = 10f;
 
-        [Tooltip("Tầm đánh (m), tính từ tâm kẻ địch tới mép mục tiêu")]
-        public float attackRange = 1f;
+        [Tooltip("Tầm với (m), tính từ mép thân kẻ địch (tâm + bán kính) tới mép mục tiêu. Nhỏ hơn đường kính thân để con đứng sau không đánh xuyên qua con đứng trước")]
+        public float attackRange = 0.3f;
 
         [Tooltip("Số giây giữa hai đòn")]
         public float attackCooldown = 1f;

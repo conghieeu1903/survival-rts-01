@@ -8,6 +8,7 @@
   --color-text-dim: #8c978c;
   --color-key: #0b0f0b;
   --color-footprint: #6f8f5a;
+  --color-danger: #e0644a;
 }
 
 .build-root {
@@ -18,6 +19,7 @@
 }
 
 .build-panel {
+  min-width: 440px;
   padding: 8px 12px 12px 12px;
   background-color: var(--color-panel);
   border-width: 1px;
@@ -45,8 +47,101 @@
   color: var(--color-text-dim);
 }
 
+.build-tabs {
+  flex-direction: row;
+  margin-bottom: 8px;
+}
+
+.build-tab {
+  flex-direction: row;
+  align-items: center;
+  margin: 0 6px 0 0;
+  padding: 4px 10px;
+  background-color: var(--color-card);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--color-text-dim);
+  transition-duration: 0.12s;
+}
+
+.build-tab:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.build-tab--active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-key);
+  -unity-font-style: bold;
+}
+
+.build-tab--active:hover {
+  color: var(--color-key);
+}
+
+.build-tab-count {
+  margin-left: 6px;
+  padding: 0 5px;
+  background-color: var(--color-key);
+  border-radius: 3px;
+  font-size: 11px;
+  -unity-font-style: bold;
+  color: var(--color-accent);
+}
+
 .build-list {
   flex-direction: row;
+}
+
+.build-empty {
+  height: 108px;
+  -unity-text-align: middle-center;
+  font-size: 12px;
+  color: var(--color-text-dim);
+}
+
+.build-placing {
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top-width: 1px;
+  border-color: var(--color-border);
+}
+
+.build-placing-label {
+  flex-grow: 1;
+  font-size: 12px;
+  color: var(--color-text);
+}
+
+.build-action {
+  margin: 0 0 0 6px;
+  padding: 4px 12px;
+  background-color: var(--color-card);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--color-text);
+  transition-duration: 0.12s;
+}
+
+.build-action:hover {
+  background-color: var(--color-card-hover);
+  border-color: var(--color-accent);
+}
+
+.build-action--cancel:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.build-hidden {
+  display: none;
 }
 
 .build-card {
@@ -72,20 +167,6 @@
   border-color: var(--color-accent);
   border-width: 2px;
   padding: 5px;
-}
-
-.build-card-key {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 20px;
-  height: 20px;
-  background-color: var(--color-key);
-  border-radius: 3px;
-  font-size: 12px;
-  -unity-font-style: bold;
-  -unity-text-align: middle-center;
-  color: var(--color-accent);
 }
 
 .build-card-preview {

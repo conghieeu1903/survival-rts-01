@@ -24,6 +24,11 @@ Chuỗi job mỗi frame: `EnemySnapshotJob` → `EnemySortJob` (spatial grid the
 | 200 | 0,27 ms | — | — |
 | 10.005 | 0,59 ms | 0,74 ms | 31 ms (spawn 10.000 con cùng lúc, một lần) |
 
+**Animation (GPU, bone texture):**
+- Không dùng Animator. Animation được nướng thành bone texture (mỗi hàng một frame, mỗi xương 3 pixel), shader `SurvivalRts/GpuSkinnedLit` tự skin ở vertex stage.
+- `EnemyAnimationSystem` chọn clip theo trạng thái (chết → Death, `Engaged` → Attack, `Moving` → Walk, còn lại Idle) và ghi `EnemyAnimData` (`[MaterialProperty("_AnimData")]`) cho từng thực thể. Idle/Walk lệch pha theo thực thể. Quái chết nằm lại hết clip Death + 2 giây rồi mới bị hủy.
+- Nhân vật thử "Grunt" (192 tam giác, 11 xương, 4 clip) do menu **SurvivalRts → Tạo kẻ địch thử (Grunt)** sinh ra hoàn toàn bằng code. Bộ nướng `GpuAnimationBaker` dùng lại được cho model có rig thật (Mixamo, Asset Store): truyền root, danh sách xương theo chỉ số trong mesh, bindpose và các `AnimationClip`. Mesh cần chỉ số xương ở UV1.x (mỗi đỉnh gắn một xương).
+
 **Vấn đề đã thấy:** bản đồ thử 50x50 quá nhỏ cho 10.000 con. Chúng dồn thành một khối chồng lên nhau quanh HQ (né nhau bị giới hạn 16 hàng xóm và lực kéo về đích lớn hơn lực đẩy). Cần bản đồ lớn hơn và chỉnh lực né nhau (mục 11, câu hỏi 5).
 
 ---

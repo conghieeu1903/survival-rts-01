@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4725584caaabe54db560ecbf0be7b11, type: 3}
   m_Name: Enemy_Basic
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.EnemyData
-  mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-  material: {fileID: 2100000, guid: d0f97ba1929301740805bc854969d532, type: 2}
-  scale: 0.85
+  mesh: {fileID: 4300000, guid: 58d57bc4eb115c54591c3ac34d37be89, type: 2}
+  material: {fileID: 2100000, guid: bd9fcd4d9433b644592d84bdd411fc0b, type: 2}
+  scale: 0.9
   castShadows: 1
+  animation: {fileID: 11400000, guid: 3c2dcbb128b06c04e9bc3f963e987658, type: 2}
   maxHealth: 80
   moveSpeed: 3
   radius: 0.4
   damage: 10
-  attackRange: 1
+  attackRange: 0.3
   attackCooldown: 1
   detectRange: 6
