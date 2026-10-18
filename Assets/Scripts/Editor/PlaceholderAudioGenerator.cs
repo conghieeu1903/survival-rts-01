@@ -6,14 +6,14 @@ using UnityEngine;
 namespace SurvivalRts.Editor
 {
     // Tổng hợp âm thanh tạm (WAV 16-bit mono) bằng code để test hệ thống âm thanh khi chưa có âm thanh thật.
-    // File nằm ngoài Assets (thư mục FMOD/SourceAudio cạnh project Unity) để FMOD Studio import, Unity không import.
+    // File lưu tại thư mục Assets/Audio/FMOD/SourceAudio để FMOD Studio import.
     public static class PlaceholderAudioGenerator
     {
         const int SampleRate = 44100;
         const float PeakLevel = 0.89f; // khoảng -1 dBFS
 
         public static string OutputDirectory =>
-            Path.GetFullPath(Path.Combine(Application.dataPath, "..", "FMOD", "SourceAudio"));
+            Path.GetFullPath(Path.Combine(Application.dataPath, "Audio", "FMOD", "SourceAudio"));
 
         [MenuItem("SurvivalRts/Âm thanh/Tạo âm thanh tạm (WAV)")]
         public static void GenerateAll()

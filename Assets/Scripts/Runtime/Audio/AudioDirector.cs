@@ -14,6 +14,7 @@ namespace SurvivalRts
         {
             public SoundId Id;
             public Vector3 Sum;
+            public float ParamSum;
             public int Count;
         }
 
@@ -98,9 +99,9 @@ namespace SurvivalRts
         }
 
         // Gọi từ main thread (UI, công trình...). Job ECS thì ghi qua AudioEventSystem.Writer.
-        public static void Post(SoundId id, Vector3 position)
+        public static void Post(SoundId id, Vector3 position, float parameter = 0f)
         {
-            EventSystem?.Post(id, position);
+            EventSystem?.Post(id, position, parameter);
         }
 
         static AudioEventSystem EventSystem
@@ -204,15 +205,11 @@ namespace SurvivalRts
             groundPivot = cameraController.GroundPivot();
             float ortho = cameraController.OrthographicSize;
             float minOrtho = cameraController.ZoomRange.x;
-            if (ortho >= maxAudibleOrthoSize)
-            {
-                zoomVolumeFactor = 0f;
-            }
-            else
-            {
-                float t = Mathf.Clamp01((maxAudibleOrthoSize - ortho) / Mathf.Max(0.1f, maxAudibleOrthoSize - minOrtho));
-                zoomVolumeFactor = Mathf.SmoothStep(0.15f, 1f, t);
-            }
+            float zoomClarity = Mathf.Clamp01((maxAudibleOrthoSize - ortho) / Mathf.Max(0.1f, maxAudibleOrthoSize - minOrtho));
+            zoomVolumeFactor = ortho >= maxAudibleOrthoSize ? 0f : Mathf.SmoothStep(0.15f, 1f, zoomClarity);
+
+            // Điều khiển bộ lọc EQ trên bus Combat và Ambience trong FMOD: zoom xa nghe trầm đục, zoom sát mở sáng rõ.
+            backend.SetGlobalParameter("CameraZoom", zoomClarity);
 
             if (cameraController.GetGroundFrustumCorners(corners))
             {
@@ -290,6 +287,7 @@ namespace SurvivalRts
                 buckets.TryGetValue(key, out var bucket);
                 bucket.Id = e.Id;
                 bucket.Sum += p;
+                bucket.ParamSum += e.Parameter;
                 bucket.Count++;
                 buckets[key] = bucket;
             }
@@ -333,6 +331,7 @@ namespace SurvivalRts
                 }
 
                 Vector3 pos = bucket.Sum / bucket.Count;
+                float avgParam = bucket.ParamSum / bucket.Count;
                 float volume = Mathf.Min(rule.maxVolume, rule.volume * (1f + rule.mergeVolumeBoost * Mathf.Log(bucket.Count, 2f)));
                 if (rule.cullOutsideView)
                 {
@@ -346,7 +345,7 @@ namespace SurvivalRts
 
                 tokens[rule.id] -= 1f;
                 lastPlayed[rule.id] = now;
-                backend.PlayOneShot(rule, pos, volume);
+                backend.PlayOneShot(rule, pos, volume, avgParam);
                 started++;
             }
 
@@ -362,10 +361,16 @@ namespace SurvivalRts
             LastDensity = counts;
 
             float k = 1f - Mathf.Exp(-loopSmoothing * Time.unscaledDeltaTime);
-            float targetMarch = Mathf.Clamp01(counts.x / (float)marchFullCount) * zoomVolumeFactor;
-            float targetBattle = Mathf.Clamp01(counts.y / (float)battleFullCount) * zoomVolumeFactor;
+            float marchRatio = Mathf.Clamp01(counts.x / (float)marchFullCount);
+            float battleRatio = Mathf.Clamp01(counts.y / (float)battleFullCount);
+            float targetMarch = marchRatio * zoomVolumeFactor;
+            float targetBattle = battleRatio * zoomVolumeFactor;
             marchVolume = Mathf.Lerp(marchVolume, targetMarch, k);
             battleVolume = Mathf.Lerp(battleVolume, targetBattle, k);
+
+            // Truyền cường độ giao tranh vào FMOD để tự động biến đổi pitch và EQ của Ambience/Battle và Music/Battle.
+            float combatIntensity = Mathf.Clamp01(Mathf.Max(battleRatio, marchRatio * 0.6f));
+            backend.SetGlobalParameter("CombatIntensity", combatIntensity);
 
             var march = library.Get(SoundId.CrowdMarch);
             var battle = library.Get(SoundId.Battle);

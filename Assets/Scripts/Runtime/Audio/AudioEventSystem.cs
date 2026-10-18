@@ -42,10 +42,10 @@ namespace SurvivalRts
         }
 
         // Dùng từ main thread (MonoBehaviour).
-        public void Post(SoundId id, UnityEngine.Vector3 position)
+        public void Post(SoundId id, UnityEngine.Vector3 position, float parameter = 0f)
         {
             producers.Complete();
-            queue.Enqueue(new AudioEvent { Id = id, Position = position });
+            queue.Enqueue(new AudioEvent { Id = id, Position = position, Parameter = parameter });
         }
 
         public void Drain(List<AudioEvent> into)

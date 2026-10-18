@@ -77,7 +77,7 @@ namespace SurvivalRts
             if (hammerTimer <= 0f)
             {
                 hammerTimer = HammerInterval;
-                AudioDirector.Post(SoundId.BuilderHammer, transform.position);
+                AudioDirector.Post(SoundId.BuilderHammer, transform.position, targetSite.Progress);
             }
         }
 

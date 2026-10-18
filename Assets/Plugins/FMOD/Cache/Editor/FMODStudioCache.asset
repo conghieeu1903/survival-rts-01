@@ -27,6 +27,54 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1900
+--- !u!114 &-8335838681686199487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Battle/CombatIntensity
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: CombatIntensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 540424403
+    data2: 2036008273
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &-7863870788008219026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/CombatIntensity
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: CombatIntensity
+  StudioPath: parameter:/CombatIntensity
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 540424403
+    data2: 2036008273
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &-7150612450942375362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,10 +152,59 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: 441299032694882855}
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
+--- !u!114 &-3213631587098984697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Construct/BuildProgress
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: BuildProgress
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1940585092
+    data2: 1204446289
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3202379933003175453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/CameraZoom
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: CameraZoom
+  StudioPath: parameter:/CameraZoom
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 2312710274
+    data2: 1194025844
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &-3055108052578725849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,13 +371,15 @@ MonoBehaviour:
   - {fileID: 2642359015908685397}
   - {fileID: 7319995428639662095}
   - {fileID: 9155580518135276837}
-  EditorParameters: []
+  EditorParameters:
+  - {fileID: -7863870788008219026}
+  - {fileID: -3202379933003175453}
   MasterBanks:
   - {fileID: 6584965097963110442}
   StringsBanks:
   - {fileID: 2545034768554651728}
   cacheVersion: 131861
-  cacheTime: 639279783818054902
+  cacheTime: 639279797232140732
   SerializableEventsDict:
   - key: event:/Ambience/CrowdMarch
     index: 0
@@ -337,6 +436,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2000
+--- !u!114 &441299032694882855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Battle/CombatIntensity
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: CombatIntensity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 540424403
+    data2: 2036008273
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
 --- !u!114 &2545034768554651728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,10 +475,10 @@ MonoBehaviour:
   Path: ../../FMOD Studio 2.03.15/projects/unity-survival-rts/survival-rts/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639279783817462013
+  lastModified: 639279797231872908
   FileSizes:
   - Name: Desktop
-    Value: 1614
+    Value: 1778
   Exists: 1
 --- !u!114 &2642359015908685397
 MonoBehaviour:
@@ -380,7 +503,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: -8335838681686199487}
   MinDistance: 1
   MaxDistance: 20
   Length: 8000
@@ -399,10 +523,10 @@ MonoBehaviour:
   Path: ../../FMOD Studio 2.03.15/projects/unity-survival-rts/survival-rts/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639279783818054902
+  lastModified: 639279797232140732
   FileSizes:
   - Name: Desktop
-    Value: 287968
+    Value: 290528
   Exists: 1
 --- !u!114 &5299694655904050890
 MonoBehaviour:
@@ -446,10 +570,10 @@ MonoBehaviour:
   Path: ../../FMOD Studio 2.03.15/projects/unity-survival-rts/survival-rts/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639279783817462013
+  lastModified: 639279797231862792
   FileSizes:
   - Name: Desktop
-    Value: 1816
+    Value: 4368
   Exists: 1
 --- !u!114 &7319995428639662095
 MonoBehaviour:
@@ -501,7 +625,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: -3213631587098984697}
   MinDistance: 1
   MaxDistance: 20
   Length: 350

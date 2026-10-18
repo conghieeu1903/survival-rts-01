@@ -21,8 +21,11 @@ namespace SurvivalRts
         [SerializeField] Vector2 zoomRange = new Vector2(6f, 25f);
 
         [Header("Xoay")]
-        [Tooltip("Số độ xoay trên mỗi pixel chuột kéo ngang khi giữ chuột phải")]
+        [Tooltip("Số độ xoay trên mỗi pixel chuột kéo khi giữ chuột phải")]
         [SerializeField] float rotateSpeed = 0.2f;
+
+        [Tooltip("Giới hạn góc nghiêng camera nhìn xuống mặt đất (độ): nhỏ nhất (x) và lớn nhất (y)")]
+        [SerializeField] Vector2 pitchRange = new Vector2(20f, 80f);
 
         [Tooltip("Quãng kéo chuột phải (pixel) tối thiểu để tính là xoay camera thay vì click")]
         [SerializeField] float dragThreshold = 5f;
@@ -51,9 +54,12 @@ namespace SurvivalRts
             if (mouse.rightButton.wasPressedThisFrame) rotateDragDistance = 0f;
             if (mouse.rightButton.isPressed)
             {
-                float dx = mouse.delta.ReadValue().x;
-                rotateDragDistance += Mathf.Abs(dx);
-                if (RotatedWithRightButton) transform.RotateAround(GroundPivot(), Vector3.up, dx * rotateSpeed);
+                var delta = mouse.delta.ReadValue();
+                rotateDragDistance += delta.magnitude;
+                if (RotatedWithRightButton)
+                {
+                    OrbitAroundPivot(delta.x * rotateSpeed, -delta.y * rotateSpeed);
+                }
             }
 
             var input = Vector2.zero;
@@ -62,15 +68,16 @@ namespace SurvivalRts
             if (keyboard.dKey.isPressed) input.x += 1f;
             if (keyboard.aKey.isPressed) input.x -= 1f;
 
-            var forward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-            var right = Vector3.ProjectOnPlane(transform.right, Vector3.up).normalized;
+            var yawRotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+            var forward = yawRotation * Vector3.forward;
+            var right = yawRotation * Vector3.right;
             var move = (forward * input.y + right * input.x) * (moveSpeed * Time.unscaledDeltaTime);
 
             if (mouse.middleButton.isPressed)
             {
                 var drag = mouse.delta.ReadValue();
                 float worldPerPixel = 2f * cam.orthographicSize / Screen.height;
-                float pitch = transform.eulerAngles.x * Mathf.Deg2Rad;
+                float pitch = Mathf.Clamp(Mathf.DeltaAngle(0f, transform.eulerAngles.x), pitchRange.x, pitchRange.y) * Mathf.Deg2Rad;
                 move -= (right * drag.x + forward * (drag.y / Mathf.Sin(pitch))) * worldPerPixel;
             }
 
@@ -83,6 +90,17 @@ namespace SurvivalRts
                 cam.orthographicSize = Mathf.Clamp(
                     cam.orthographicSize - Mathf.Sign(scroll) * zoomStep, zoomRange.x, zoomRange.y);
             }
+        }
+
+        void OrbitAroundPivot(float yawDelta, float pitchDelta)
+        {
+            var pivot = GroundPivot();
+            float distance = Vector3.Distance(transform.position, pivot);
+            var euler = transform.eulerAngles;
+            float yaw = euler.y + yawDelta;
+            float pitch = Mathf.Clamp(Mathf.DeltaAngle(0f, euler.x) + pitchDelta, pitchRange.x, pitchRange.y);
+            var rotation = Quaternion.Euler(pitch, yaw, 0f);
+            transform.SetPositionAndRotation(pivot - rotation * Vector3.forward * distance, rotation);
         }
 
         // Điểm trên mặt đất mà camera đang nhìn vào (giữa màn hình).

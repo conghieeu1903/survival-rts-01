@@ -26,5 +26,6 @@ namespace SurvivalRts
     {
         public SoundId Id;
         public float3 Position;
+        public float Parameter;
     }
 }

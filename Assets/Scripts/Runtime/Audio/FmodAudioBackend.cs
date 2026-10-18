@@ -10,6 +10,7 @@ namespace SurvivalRts
         readonly Dictionary<SoundId, EventDescription> descriptions = new Dictionary<SoundId, EventDescription>();
         readonly Dictionary<SoundId, EventInstance> loops = new Dictionary<SoundId, EventInstance>();
         readonly Dictionary<string, Bus> buses = new Dictionary<string, Bus>();
+        readonly Dictionary<string, float> globalParams = new Dictionary<string, float>();
 
         public bool IsReady { get; private set; }
 
@@ -58,12 +59,16 @@ namespace SurvivalRts
             if (IsReady) RuntimeManager.SetListenerLocation(listener.gameObject);
         }
 
-        public void PlayOneShot(SoundLibrary.Rule rule, Vector3 position, float volume)
+        public void PlayOneShot(SoundLibrary.Rule rule, Vector3 position, float volume, float parameter = 0f)
         {
             if (!IsReady || !descriptions.TryGetValue(rule.id, out var description)) return;
             if (description.createInstance(out var instance) != FMOD.RESULT.OK) return;
 
             if (rule.kind == SoundKind.OneShot3D) instance.set3DAttributes(position.To3DAttributes());
+            if (rule.id == SoundId.BuilderHammer)
+            {
+                instance.setParameterByName("BuildProgress", Mathf.Clamp01(parameter));
+            }
             instance.setVolume(volume);
             instance.start();
             instance.release();
@@ -102,6 +107,14 @@ namespace SurvivalRts
             instance.setVolume(volume);
         }
 
+        public void SetGlobalParameter(string parameterName, float value)
+        {
+            if (!IsReady) return;
+            if (globalParams.TryGetValue(parameterName, out float prev) && Mathf.Abs(prev - value) < 0.002f) return;
+            globalParams[parameterName] = value;
+            RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+        }
+
         public void SetBusVolume(string busPath, float volume)
         {
             if (IsReady && TryGetBus(busPath, out var bus)) bus.setVolume(volume);
@@ -134,6 +147,7 @@ namespace SurvivalRts
             loops.Clear();
             descriptions.Clear();
             buses.Clear();
+            globalParams.Clear();
             IsReady = false;
         }
     }
