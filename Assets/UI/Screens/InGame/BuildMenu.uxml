@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="BuildMenu.uss" />
+  <ui:VisualElement name="buildMenuRoot" class="build-root" picking-mode="Ignore">
+    <ui:VisualElement name="buildPanel" class="build-panel">
+      <ui:VisualElement name="headerRow" class="build-header">
+        <ui:Label name="titleLabel" text="XÂY DỰNG" class="build-title" />
+        <ui:Label name="hintLabel" text="1-6 chọn  ·  R xoay  ·  Chuột phải / Esc hủy" class="build-hint" />
+      </ui:VisualElement>
+      <ui:VisualElement name="buildList" class="build-list" />
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

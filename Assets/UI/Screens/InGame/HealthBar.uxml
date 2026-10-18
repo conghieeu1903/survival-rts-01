@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:Style src="HealthBar.uss" />
+  <ui:VisualElement name="healthRoot" class="health-root" picking-mode="Ignore">
+    <ui:VisualElement name="healthBar" class="health-bar hidden" picking-mode="Ignore">
+      <ui:VisualElement name="fill" class="health-fill" picking-mode="Ignore" />
+      <ui:Label name="valueLabel" text="0 / 0" class="health-value" picking-mode="Ignore" />
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

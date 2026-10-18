@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e2325885a8e454781e018eb9ceb811, type: 3}
+  m_Name: Building_4x4
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.BuildingData
+  displayName: Building 4x4
+  footprint: {x: 4, y: 4}
+  height: 3
+  maxHealth: 800
+  prefab: {fileID: 5938995799688907603, guid: bc672b8c247610045a8f3cc4250cf782, type: 3}

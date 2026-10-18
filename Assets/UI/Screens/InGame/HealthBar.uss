@@ -1,0 +1,48 @@
+:root {
+  --color-track: rgba(11, 15, 11, 0.85);
+  --color-border: #4a4128;
+  --color-health: #5fb34a;
+  --color-health-low: #d9482f;
+  --color-text: #e8ece6;
+}
+
+.health-root {
+  flex-grow: 1;
+}
+
+.health-bar {
+  position: absolute;
+  width: 140px;
+  height: 16px;
+  background-color: var(--color-track);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 3px;
+  translate: -50% -100%;
+}
+
+.health-fill {
+  height: 100%;
+  background-color: var(--color-health);
+  border-radius: 2px;
+}
+
+.health-fill--low {
+  background-color: var(--color-health-low);
+}
+
+.health-value {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  font-size: 11px;
+  -unity-font-style: bold;
+  -unity-text-align: middle-center;
+  color: var(--color-text);
+}
+
+.hidden {
+  display: none;
+}

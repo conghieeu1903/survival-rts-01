@@ -1,0 +1,130 @@
+:root {
+  --color-panel: rgba(16, 20, 16, 0.88);
+  --color-card: #1c231c;
+  --color-card-hover: #283228;
+  --color-border: #4a4128;
+  --color-accent: #e0a33a;
+  --color-text: #e8ece6;
+  --color-text-dim: #8c978c;
+  --color-key: #0b0f0b;
+  --color-footprint: #6f8f5a;
+}
+
+.build-root {
+  flex-grow: 1;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.build-panel {
+  padding: 8px 12px 12px 12px;
+  background-color: var(--color-panel);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 6px;
+}
+
+.build-header {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.build-title {
+  font-size: 13px;
+  letter-spacing: 3px;
+  -unity-font-style: bold;
+  color: var(--color-accent);
+}
+
+.build-hint {
+  margin-left: 24px;
+  font-size: 12px;
+  color: var(--color-text-dim);
+}
+
+.build-list {
+  flex-direction: row;
+}
+
+.build-card {
+  width: 96px;
+  height: 108px;
+  margin: 0 8px 0 0;
+  padding: 6px;
+  align-items: center;
+  background-color: var(--color-card);
+  border-width: 1px;
+  border-color: var(--color-border);
+  border-radius: 4px;
+  transition-duration: 0.12s;
+}
+
+.build-card:hover {
+  background-color: var(--color-card-hover);
+  border-color: var(--color-accent);
+}
+
+.build-card--selected {
+  background-color: var(--color-card-hover);
+  border-color: var(--color-accent);
+  border-width: 2px;
+  padding: 5px;
+}
+
+.build-card-key {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-key);
+  border-radius: 3px;
+  font-size: 12px;
+  -unity-font-style: bold;
+  -unity-text-align: middle-center;
+  color: var(--color-accent);
+}
+
+.build-card-preview {
+  width: 72px;
+  height: 56px;
+  justify-content: center;
+  align-items: center;
+}
+
+.build-card-footprint {
+  background-color: var(--color-footprint);
+  border-width: 1px;
+  border-color: var(--color-text);
+}
+
+.build-card-name {
+  margin-top: 6px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.build-card-size {
+  font-size: 11px;
+  color: var(--color-text-dim);
+}
+
+.fp-w-1 { width: 12px; }
+.fp-w-2 { width: 24px; }
+.fp-w-3 { width: 36px; }
+.fp-w-4 { width: 48px; }
+.fp-w-5 { width: 60px; }
+.fp-w-6 { width: 72px; }
+
+.fp-d-1 { height: 12px; }
+.fp-d-2 { height: 24px; }
+.fp-d-3 { height: 36px; }
+.fp-d-4 { height: 48px; }
+.fp-d-5 { height: 60px; }
+.fp-d-6 { height: 72px; }
