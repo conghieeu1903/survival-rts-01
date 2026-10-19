@@ -11,22 +11,38 @@ namespace SurvivalRts
         Ui
     }
 
-    // Âm lượng người chơi chọn (0..1) cho từng nhóm, lưu bằng PlayerPrefs để giữ giữa các lần chơi.
+    // Âm lượng người chơi chọn (0..1) cho từng nhóm, lưu bằng PlayerPrefs và ánh xạ sang tham số dB của AudioMixer.
     public static class AudioVolumeSettings
     {
         const float DefaultVolume = 0.8f;
 
         public static event Action Changed;
 
-        public static string BusPath(VolumeChannel channel)
+        public static string MixerParameterName(VolumeChannel channel)
         {
             switch (channel)
             {
-                case VolumeChannel.Music: return "bus:/Music";
-                case VolumeChannel.Sfx: return "bus:/SFX";
-                case VolumeChannel.Ui: return "bus:/UI";
-                default: return "bus:/";
+                case VolumeChannel.Music: return "MusicVolume";
+                case VolumeChannel.Sfx: return "SFXVolume";
+                case VolumeChannel.Ui: return "UIVolume";
+                default: return "MasterVolume";
             }
+        }
+
+        public static string MixerGroupName(VolumeChannel channel)
+        {
+            switch (channel)
+            {
+                case VolumeChannel.Music: return "Music";
+                case VolumeChannel.Sfx: return "SFX";
+                case VolumeChannel.Ui: return "UI";
+                default: return "Master";
+            }
+        }
+
+        public static float ToDecibels(float linear)
+        {
+            return linear <= 0.0001f ? -80f : Mathf.Log10(Mathf.Clamp01(linear)) * 20f;
         }
 
         public static float Get(VolumeChannel channel)

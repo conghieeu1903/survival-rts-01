@@ -120,20 +120,20 @@ namespace SurvivalRts
             listener = new GameObject("AudioListenerPivot").transform;
             listener.SetParent(transform, false);
 
-            backend = new FmodAudioBackend();
+            backend = new UnityAudioBackend();
             backend.Initialize(library);
         }
 
         // Tạm dừng tiếng hiệu ứng (ví dụ khi mở menu cài đặt); nhạc và giao diện vẫn chạy.
         public void SetGameplayPaused(bool paused)
         {
-            backend.SetBusPaused(AudioVolumeSettings.BusPath(VolumeChannel.Sfx), paused);
+            backend.SetChannelPaused(VolumeChannel.Sfx, paused);
         }
 
         void ApplyVolumes()
         {
             foreach (VolumeChannel channel in System.Enum.GetValues(typeof(VolumeChannel)))
-                backend.SetBusVolume(AudioVolumeSettings.BusPath(channel), AudioVolumeSettings.Get(channel));
+                backend.SetChannelVolume(channel, AudioVolumeSettings.Get(channel));
         }
 
         void Start()

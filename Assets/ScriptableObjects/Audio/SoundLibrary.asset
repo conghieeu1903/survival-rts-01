@@ -12,143 +12,213 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69d22d5b33492340b3c330d50d2612f, type: 3}
   m_Name: SoundLibrary
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.SoundLibrary
+  mixer: {fileID: 24100000, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  masterGroup: {fileID: 24300002, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  musicGroup: {fileID: -4396302909953645342, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  sfxGroup: {fileID: 6100479008724021535, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  uiGroup: {fileID: 6026922665621198667, guid: 70209848918674b4db810d2241b140a8, type: 2}
   rules:
   - id: 1
-    eventPath: event:/Enemy/Hit
+    clips:
+    - {fileID: 8300000, guid: feed6c9e47926c14f9ce30e648889d90, type: 3}
+    - {fileID: 8300000, guid: 7d9053840bc9f954c8bc6820c37fc39d, type: 3}
+    - {fileID: 8300000, guid: d2eeb3f13cead3847935121ccc70d751, type: 3}
+    - {fileID: 8300000, guid: 1cde9dc172d8f4447920ebb67e6cfe0c, type: 3}
+    channel: 2
     kind: 0
     cullOutsideView: 1
     mergeCellSize: 6
     maxStartsPerSecond: 12
+    maxSimultaneous: 8
+    pitchRandom: 0.08
     cooldown: 0
     volume: 1
     mergeVolumeBoost: 0.3
     maxVolume: 1.6
   - id: 2
-    eventPath: event:/Enemy/Death
+    clips:
+    - {fileID: 8300000, guid: 893368c3580a4544ea5323eb65f3f2a2, type: 3}
+    - {fileID: 8300000, guid: 75077922ff7f856428e2c7d45c5659d6, type: 3}
+    - {fileID: 8300000, guid: e7be5e8082815ae4694c9e0097fc6ae3, type: 3}
+    channel: 2
     kind: 0
     cullOutsideView: 1
     mergeCellSize: 6
     maxStartsPerSecond: 8
+    maxSimultaneous: 6
+    pitchRandom: 0.08
     cooldown: 0
     volume: 1
     mergeVolumeBoost: 0.25
     maxVolume: 1.6
   - id: 3
-    eventPath: event:/Tower/Shot
+    clips:
+    - {fileID: 8300000, guid: 7e56378b36c78394b956661eec5e66d9, type: 3}
+    - {fileID: 8300000, guid: 9460e8bc2e2701145a2907104e7b5254, type: 3}
+    - {fileID: 8300000, guid: 3eb17461c5716a840851375765c6a56c, type: 3}
+    channel: 2
     kind: 0
     cullOutsideView: 1
     mergeCellSize: 4
     maxStartsPerSecond: 15
+    maxSimultaneous: 8
+    pitchRandom: 0.06
     cooldown: 0
     volume: 1.15
     mergeVolumeBoost: 0.15
     maxVolume: 1.6
   - id: 4
-    eventPath: event:/Building/Collapse
+    clips:
+    - {fileID: 8300000, guid: 702268664f98e4247aa91ad533bdfeac, type: 3}
+    channel: 2
     kind: 0
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 3
+    maxSimultaneous: 3
+    pitchRandom: 0.05
     cooldown: 0
     volume: 1
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 5
-    eventPath: event:/Ambience/CrowdMarch
+    clips:
+    - {fileID: 8300000, guid: 1a1b95aee2a85f3479db0d59a58dfcb6, type: 3}
+    channel: 2
     kind: 2
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 0
+    maxSimultaneous: 1
+    pitchRandom: 0
     cooldown: 0
     volume: 0.6
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 6
-    eventPath: event:/Ambience/Battle
+    clips:
+    - {fileID: 8300000, guid: 6b83fb0407ea62b4381a33f42765bedd, type: 3}
+    channel: 2
     kind: 2
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 0
+    maxSimultaneous: 1
+    pitchRandom: 0
     cooldown: 0
     volume: 0.8
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 7
-    eventPath: event:/UI/Click
+    clips:
+    - {fileID: 8300000, guid: a7edff92206aa3e42bc18f4e0e477f54, type: 3}
+    channel: 3
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 10
+    maxSimultaneous: 2
+    pitchRandom: 0.03
     cooldown: 0
     volume: 0.8
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 8
-    eventPath: event:/UI/Place
+    clips:
+    - {fileID: 8300000, guid: 0a344ae4e7399584d8b7baeed7c4f47d, type: 3}
+    channel: 3
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 5
+    maxSimultaneous: 2
+    pitchRandom: 0.04
     cooldown: 0
     volume: 1.1
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 9
-    eventPath: event:/UI/AlertHQ
+    clips:
+    - {fileID: 8300000, guid: 46662f38f3fa27641a6db058fddac4d5, type: 3}
+    channel: 3
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 1
+    maxSimultaneous: 1
+    pitchRandom: 0
     cooldown: 8
     volume: 1
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 10
-    eventPath: event:/UI/Open
+    clips:
+    - {fileID: 8300000, guid: 03c0861e3046c27478ac14ff11ed6d91, type: 3}
+    channel: 3
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 5
+    maxSimultaneous: 2
+    pitchRandom: 0
     cooldown: 0
     volume: 0.9
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 11
-    eventPath: event:/UI/Close
+    clips:
+    - {fileID: 8300000, guid: e4860b14488867e45992be3df88966f3, type: 3}
+    channel: 3
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 5
+    maxSimultaneous: 2
+    pitchRandom: 0
     cooldown: 0
     volume: 0.9
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 12
-    eventPath: event:/Music/Calm
+    clips:
+    - {fileID: 8300000, guid: f2e2576b1136b0e41a83982b11ab4be6, type: 3}
+    channel: 1
     kind: 2
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 0
+    maxSimultaneous: 1
+    pitchRandom: 0
     cooldown: 0
     volume: 0.5
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 13
-    eventPath: event:/Music/Battle
+    clips:
+    - {fileID: 8300000, guid: 79bb22fbdb476b845bdf8b48b1cf690a, type: 3}
+    channel: 1
     kind: 2
     cullOutsideView: 0
     mergeCellSize: 0
     maxStartsPerSecond: 0
+    maxSimultaneous: 1
+    pitchRandom: 0
     cooldown: 0
     volume: 0.55
     mergeVolumeBoost: 0
     maxVolume: 1.6
   - id: 14
-    eventPath: event:/Building/Construct
+    clips:
+    - {fileID: 8300000, guid: d2543dab25e62a14f9acb8fe6dfbad66, type: 3}
+    - {fileID: 8300000, guid: 267091e9b78e70342aa9c38016bc82d8, type: 3}
+    - {fileID: 8300000, guid: 80792dccbe920234092cfbecd8e3027a, type: 3}
+    channel: 2
     kind: 0
     cullOutsideView: 1
     mergeCellSize: 3
     maxStartsPerSecond: 10
+    maxSimultaneous: 6
+    pitchRandom: 0.06
     cooldown: 0
     volume: 1
     mergeVolumeBoost: 0.2

@@ -1,19 +1,22 @@
 using System;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace SurvivalRts.Editor
 {
-    // Tổng hợp âm thanh tạm (WAV 16-bit mono) bằng code để test hệ thống âm thanh khi chưa có âm thanh thật.
-    // File lưu tại thư mục Assets/Audio/FMOD/SourceAudio để FMOD Studio import.
+    // Tổng hợp âm thanh tạm (WAV 16-bit mono), tạo AudioMixer và gán trực tiếp vào SoundLibrary.asset.
     public static class PlaceholderAudioGenerator
     {
         const int SampleRate = 44100;
         const float PeakLevel = 0.89f; // khoảng -1 dBFS
+        const string MixerAssetPath = "Assets/Audio/GameAudioMixer.mixer";
+        const string LibraryAssetPath = "Assets/ScriptableObjects/Audio/SoundLibrary.asset";
 
         public static string OutputDirectory =>
-            Path.GetFullPath(Path.Combine(Application.dataPath, "Audio", "FMOD", "SourceAudio"));
+            Path.GetFullPath(Path.Combine(Application.dataPath, "Audio"));
 
         [MenuItem("SurvivalRts/Âm thanh/Tạo âm thanh tạm (WAV)")]
         public static void GenerateAll()
@@ -21,12 +24,12 @@ namespace SurvivalRts.Editor
             Directory.CreateDirectory(OutputDirectory);
             int count = 0;
 
-            for (int i = 0; i < 4; i++) count += Save("Enemy", $"Enemy_Hit_{i + 1:00}", Hit(0.9f + i * 0.07f, 100 + i));
-            for (int i = 0; i < 3; i++) count += Save("Enemy", $"Enemy_Death_{i + 1:00}", Death(0.9f + i * 0.1f, 200 + i));
-            for (int i = 0; i < 3; i++) count += Save("Tower", $"Tower_Shot_{i + 1:00}", Shot(0.92f + i * 0.08f, 300 + i));
-            count += Save("Building", "Building_Collapse_01", Collapse(400));
-            count += Save("Ambience", "Crowd_March_Loop", MarchLoop(500));
-            count += Save("Ambience", "Battle_Loop", BattleLoop(600));
+            for (int i = 0; i < 4; i++) count += Save("SFX/Enemy", $"Enemy_Hit_{i + 1:00}", Hit(0.9f + i * 0.07f, 100 + i));
+            for (int i = 0; i < 3; i++) count += Save("SFX/Enemy", $"Enemy_Death_{i + 1:00}", Death(0.9f + i * 0.1f, 200 + i));
+            for (int i = 0; i < 3; i++) count += Save("SFX/Tower", $"Tower_Shot_{i + 1:00}", Shot(0.92f + i * 0.08f, 300 + i));
+            count += Save("SFX/Building", "Building_Collapse_01", Collapse(400));
+            count += Save("SFX/Ambience", "Crowd_March_Loop", MarchLoop(500));
+            count += Save("SFX/Ambience", "Battle_Loop", BattleLoop(600));
             count += Save("UI", "UI_Click", Click());
             count += Save("UI", "UI_Place", Place(700));
             count += Save("UI", "UI_Open", Chime(true));
@@ -34,9 +37,193 @@ namespace SurvivalRts.Editor
             count += Save("UI", "Alert_HQ", Alert());
             count += Save("Music", "Music_Calm_Loop", MusicCalm());
             count += Save("Music", "Music_Battle_Loop", MusicBattle(800));
-            for (int i = 0; i < 3; i++) count += Save("Building", $"Builder_Hammer_{i + 1:00}", Hammer(0.92f + i * 0.08f, 900 + i));
+            for (int i = 0; i < 3; i++) count += Save("SFX/Building", $"Builder_Hammer_{i + 1:00}", Hammer(0.92f + i * 0.08f, 900 + i));
 
-            Debug.Log($"Đã tạo {count} file WAV tại {OutputDirectory}");
+            AssetDatabase.Refresh();
+            BindSoundLibrary();
+            Debug.Log($"Đã tạo {count} file WAV tại {OutputDirectory}, thiết lập AudioMixer và gán vào SoundLibrary.");
+        }
+
+        [MenuItem("SurvivalRts/Âm thanh/Thiết lập AudioMixer & Gán SoundLibrary")]
+        public static void BindSoundLibrary()
+        {
+            var mixer = EnsureAudioMixer();
+            var library = AssetDatabase.LoadAssetAtPath<SoundLibrary>(LibraryAssetPath);
+            if (library == null || library.rules == null) return;
+
+            library.mixer = mixer;
+            var subAssets = AssetDatabase.LoadAllAssetsAtPath(MixerAssetPath);
+            foreach (var asset in subAssets)
+            {
+                if (asset is AudioMixerGroup grp)
+                {
+                    if (grp.name == "Master") library.masterGroup = grp;
+                    else if (grp.name == "Music") library.musicGroup = grp;
+                    else if (grp.name == "SFX") library.sfxGroup = grp;
+                    else if (grp.name == "UI") library.uiGroup = grp;
+                }
+            }
+
+            foreach (var rule in library.rules)
+            {
+                switch (rule.id)
+                {
+                    case SoundId.EnemyHit:
+                        rule.clips = LoadClips("SFX/Enemy/Enemy_Hit_01", "SFX/Enemy/Enemy_Hit_02", "SFX/Enemy/Enemy_Hit_03", "SFX/Enemy/Enemy_Hit_04");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 8;
+                        rule.pitchRandom = 0.08f;
+                        break;
+                    case SoundId.EnemyDeath:
+                        rule.clips = LoadClips("SFX/Enemy/Enemy_Death_01", "SFX/Enemy/Enemy_Death_02", "SFX/Enemy/Enemy_Death_03");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 6;
+                        rule.pitchRandom = 0.08f;
+                        break;
+                    case SoundId.TowerShot:
+                        rule.clips = LoadClips("SFX/Tower/Tower_Shot_01", "SFX/Tower/Tower_Shot_02", "SFX/Tower/Tower_Shot_03");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 8;
+                        rule.pitchRandom = 0.06f;
+                        break;
+                    case SoundId.BuildingCollapse:
+                        rule.clips = LoadClips("SFX/Building/Building_Collapse_01");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 3;
+                        rule.pitchRandom = 0.05f;
+                        break;
+                    case SoundId.BuilderHammer:
+                        rule.clips = LoadClips("SFX/Building/Builder_Hammer_01", "SFX/Building/Builder_Hammer_02", "SFX/Building/Builder_Hammer_03");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 6;
+                        rule.pitchRandom = 0.06f;
+                        break;
+                    case SoundId.CrowdMarch:
+                        rule.clips = LoadClips("SFX/Ambience/Crowd_March_Loop");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 1;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.Battle:
+                        rule.clips = LoadClips("SFX/Ambience/Battle_Loop");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.maxSimultaneous = 1;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.UiClick:
+                        rule.clips = LoadClips("UI/UI_Click");
+                        rule.channel = VolumeChannel.Ui;
+                        rule.maxSimultaneous = 2;
+                        rule.pitchRandom = 0.03f;
+                        break;
+                    case SoundId.UiPlace:
+                        rule.clips = LoadClips("UI/UI_Place");
+                        rule.channel = VolumeChannel.Ui;
+                        rule.maxSimultaneous = 2;
+                        rule.pitchRandom = 0.04f;
+                        break;
+                    case SoundId.AlertHq:
+                        rule.clips = LoadClips("UI/Alert_HQ");
+                        rule.channel = VolumeChannel.Ui;
+                        rule.maxSimultaneous = 1;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.UiOpen:
+                        rule.clips = LoadClips("UI/UI_Open");
+                        rule.channel = VolumeChannel.Ui;
+                        rule.maxSimultaneous = 2;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.UiClose:
+                        rule.clips = LoadClips("UI/UI_Close");
+                        rule.channel = VolumeChannel.Ui;
+                        rule.maxSimultaneous = 2;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.MusicCalm:
+                        rule.clips = LoadClips("Music/Music_Calm_Loop");
+                        rule.channel = VolumeChannel.Music;
+                        rule.maxSimultaneous = 1;
+                        rule.pitchRandom = 0f;
+                        break;
+                    case SoundId.MusicBattle:
+                        rule.clips = LoadClips("Music/Music_Battle_Loop");
+                        rule.channel = VolumeChannel.Music;
+                        rule.maxSimultaneous = 1;
+                        rule.pitchRandom = 0f;
+                        break;
+                }
+            }
+
+            EditorUtility.SetDirty(library);
+            AssetDatabase.SaveAssets();
+        }
+
+        public static AudioMixer EnsureAudioMixer()
+        {
+            if (AssetDatabase.LoadAssetAtPath<AudioMixer>(MixerAssetPath) != null)
+            {
+                AssetDatabase.DeleteAsset(MixerAssetPath);
+            }
+
+            var asm = typeof(UnityEditor.Editor).Assembly;
+            var ctrlType = asm.GetType("UnityEditor.Audio.AudioMixerController");
+            var groupType = asm.GetType("UnityEditor.Audio.AudioMixerGroupController");
+            var expType = asm.GetType("UnityEditor.Audio.ExposedAudioParameter");
+
+            var createAtPath = ctrlType.GetMethod("CreateMixerControllerAtPath", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            var createNewGroup = ctrlType.GetMethod("CreateNewGroup", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var addChildToParent = ctrlType.GetMethod("AddChildToParent", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var onSubAssetChanged = ctrlType.GetMethod("OnSubAssetChanged", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var sanitizeViews = ctrlType.GetMethod("SanitizeGroupViews", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var masterGroupProp = ctrlType.GetProperty("masterGroup", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var exposedParamsProp = ctrlType.GetProperty("exposedParameters", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var getGuidForVol = groupType.GetMethod("GetGUIDForVolume", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            var controller = createAtPath.Invoke(null, new object[] { MixerAssetPath });
+            var masterGroup = masterGroupProp.GetValue(controller);
+
+            var groupNames = new[] { "Music", "SFX", "UI" };
+            var paramNames = new[] { "MasterVolume", "MusicVolume", "SFXVolume", "UIVolume" };
+            var groups = new object[4];
+            groups[0] = masterGroup;
+
+            for (int i = 0; i < groupNames.Length; i++)
+            {
+                var child = createNewGroup.Invoke(controller, new object[] { groupNames[i], false });
+                addChildToParent.Invoke(controller, new[] { child, masterGroup });
+                groups[i + 1] = child;
+            }
+
+            var expArray = Array.CreateInstance(expType, 4);
+            var guidField = expType.GetField("guid", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var nameField = expType.GetField("name", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            for (int i = 0; i < 4; i++)
+            {
+                var entry = Activator.CreateInstance(expType);
+                guidField.SetValue(entry, getGuidForVol.Invoke(groups[i], null));
+                nameField.SetValue(entry, paramNames[i]);
+                expArray.SetValue(entry, i);
+            }
+
+            exposedParamsProp.SetValue(controller, expArray);
+            sanitizeViews?.Invoke(controller, null);
+            onSubAssetChanged?.Invoke(controller, null);
+            EditorUtility.SetDirty((UnityEngine.Object)controller);
+            AssetDatabase.SaveAssets();
+            return (AudioMixer)controller;
+        }
+
+        static AudioClip[] LoadClips(params string[] relativePaths)
+        {
+            var list = new System.Collections.Generic.List<AudioClip>(relativePaths.Length);
+            foreach (var rel in relativePaths)
+            {
+                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/" + rel + ".wav");
+                if (clip != null) list.Add(clip);
+            }
+            return list.ToArray();
         }
 
         // ---------- Các âm thanh ----------
