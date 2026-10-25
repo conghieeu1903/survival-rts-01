@@ -75,7 +75,7 @@ namespace SurvivalRts
 
             var mouse = Mouse.current;
             bool activeTool = placer != null && (placer.IsPlacing || placer.IsDemolishing);
-            bool blocked = wasPlacing || activeTool || UiPointerState.IsOverUI;
+            bool blocked = wasPlacing || activeTool || UiPointerState.IsOverUI || UnitCommandController.BlocksSelection;
             if (mouse == null || blocked || !mouse.leftButton.wasPressedThisFrame) return;
 
             var ray = cam.ScreenPointToRay(mouse.position.ReadValue());

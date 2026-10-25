@@ -73,7 +73,13 @@ AudioMixerController:
     name: SFXLowpassCutoff
   - guid: c8c23e904ed339c4cbde7b7c5544565d
     name: UIVolume
-  m_AudioMixerGroupViews: []
+  m_AudioMixerGroupViews:
+  - guids:
+    - 7f256cc006cef8849837d74eeac6d29e
+    - abc44de8e980d374db52d6ee0002d686
+    - 8eaebd0b306373f41b3afebbf629a600
+    - 715ae2a1aa92cdb40aaf94fd872986a9
+    name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
 --- !u!243 &24300002

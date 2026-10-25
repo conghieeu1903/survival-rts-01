@@ -1,0 +1,2 @@
+đọc .agents/rules
+

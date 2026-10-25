@@ -38,6 +38,10 @@ namespace SurvivalRts
         [Tooltip("Gán nếu công trình là tháp tự bắn kẻ địch, để trống với công trình thường")]
         public TowerData tower;
 
+        [Header("Quân sự")]
+        [Tooltip("Gán nếu công trình là trại lính: đào tạo dân tự do thành loại lính này. Số lính tối đa lấy từ maxWorkers")]
+        public SoldierData soldier;
+
         [Header("Chi phí xây dựng")]
         [Tooltip("Số gỗ cần để xây công trình này")]
         public int woodCost;

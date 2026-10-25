@@ -159,6 +159,56 @@ namespace SurvivalRts
             Changed?.Invoke();
         }
 
+        // Kiểm tra / trừ / hoàn tài nguyên theo số lượng cụ thể (dùng cho chi phí đào tạo lính).
+        public bool CanAfford(int wood, int stone, int iron, int food, int gold)
+        {
+            return Wood >= wood && Stone >= stone && Iron >= iron && Food >= food && Gold >= gold;
+        }
+
+        public bool TrySpend(int wood, int stone, int iron, int food, int gold)
+        {
+            if (!CanAfford(wood, stone, iron, food, gold)) return false;
+            Wood -= wood;
+            Stone -= stone;
+            Iron -= iron;
+            Food -= food;
+            Gold -= gold;
+            Changed?.Invoke();
+            return true;
+        }
+
+        public void Refund(int wood, int stone, int iron, int food, int gold)
+        {
+            Wood += Mathf.Max(0, wood);
+            Stone += Mathf.Max(0, stone);
+            Iron += Mathf.Max(0, iron);
+            Food += Mathf.Max(0, food);
+            Gold += Mathf.Max(0, gold);
+            Changed?.Invoke();
+        }
+
+        // Giữ chỗ một dân tự do cho nghề khác (ví dụ đang đào tạo lính); công trình tự sinh đơn vị của nó.
+        public bool TryReserveWorker()
+        {
+            if (FreePopulation <= 0) return false;
+            AssignedWorkers++;
+            UpdateVillagerVisibility();
+            Changed?.Invoke();
+            return true;
+        }
+
+        // Trả lại một dân đã giữ chỗ. died = true khi đơn vị đó chết, dân số giảm đi một.
+        public void ReleaseWorker(bool died)
+        {
+            if (AssignedWorkers > 0) AssignedWorkers--;
+            if (died) TotalPopulation = Mathf.Max(0, TotalPopulation - 1);
+            UpdateVillagerVisibility();
+            Changed?.Invoke();
+        }
+
+        // Cha chung của các đơn vị do công trình sinh ra, để chúng không bị xoá theo công trình.
+        public Transform UnitRoot => transform;
+
         public List<GameObject> AddPopulation(int amount, Vector3 homePosition)
         {
             var spawned = new List<GameObject>();

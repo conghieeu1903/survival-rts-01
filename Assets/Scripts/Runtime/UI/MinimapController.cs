@@ -1,39 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SurvivalRts
 {
-    // Điều khiển Minimap góc dưới bên trái: nướng lớp địa hình từ BuildGrid, vẽ tài nguyên, công trình,
-    // dân, kẻ địch ECS, khung nhìn camera và cho phép click/kéo chuột để di chuyển camera trên bản đồ.
-    [RequireComponent(typeof(UIDocument))]
+    // Điều khiển Minimap góc dưới bên trái bằng uGUI RawImage và cho phép kéo chuột di chuyển camera.
     public class MinimapController : MonoBehaviour
     {
         const int MapResolution = 180;
         const float RefreshInterval = 0.065f;
 
-        static readonly Color32 GroundBase = new Color32(34, 45, 32, 255);
-        static readonly Color32 GroundAlt = new Color32(38, 50, 35, 255);
-        static readonly Color32 GroundHigh = new Color32(56, 66, 46, 255);
-        static readonly Color32 SteepColor = new Color32(72, 66, 56, 255);
-        static readonly Color32 WaterColor = new Color32(36, 78, 108, 255);
-        static readonly Color32 BorderGridColor = new Color32(26, 34, 24, 255);
+        static readonly Color32 GroundBase = new Color32(42, 42, 42, 255);
+        static readonly Color32 GroundAlt = new Color32(48, 48, 48, 255);
+        static readonly Color32 GroundHigh = new Color32(72, 72, 72, 255);
+        static readonly Color32 SteepColor = new Color32(92, 92, 92, 255);
+        static readonly Color32 WaterColor = new Color32(26, 26, 26, 255);
+        static readonly Color32 BorderGridColor = new Color32(32, 32, 32, 255);
 
-        static readonly Color32 WoodDot = new Color32(68, 148, 58, 255);
-        static readonly Color32 StoneDot = new Color32(168, 176, 186, 255);
-        static readonly Color32 IronDot = new Color32(116, 168, 218, 255);
-        static readonly Color32 FoodDot = new Color32(226, 152, 54, 255);
+        static readonly Color32 WoodDot = new Color32(140, 140, 140, 255);
+        static readonly Color32 StoneDot = new Color32(185, 185, 185, 255);
+        static readonly Color32 IronDot = new Color32(160, 160, 160, 255);
+        static readonly Color32 FoodDot = new Color32(205, 205, 205, 255);
 
-        static readonly Color32 HqColor = new Color32(245, 202, 68, 255);
-        static readonly Color32 BuildingColor = new Color32(78, 214, 138, 255);
-        static readonly Color32 ConstructionColor = new Color32(232, 178, 72, 255);
-        static readonly Color32 WallColor = new Color32(118, 122, 114, 255);
-        static readonly Color32 UnitDot = new Color32(158, 242, 112, 255);
-        static readonly Color32 EnemyDot = new Color32(238, 62, 54, 255);
-        static readonly Color32 CameraFrameColor = new Color32(242, 245, 240, 245);
+        static readonly Color32 HqColor = new Color32(245, 245, 245, 255);
+        static readonly Color32 BuildingColor = new Color32(210, 210, 210, 255);
+        static readonly Color32 ConstructionColor = new Color32(150, 150, 150, 255);
+        static readonly Color32 WallColor = new Color32(115, 115, 115, 255);
+        static readonly Color32 UnitDot = new Color32(230, 230, 230, 255);
+        static readonly Color32 EnemyDot = new Color32(95, 95, 95, 255);
+        static readonly Color32 CameraFrameColor = new Color32(250, 250, 250, 245);
 
-        VisualElement minimapPanel;
-        VisualElement minimapCanvas;
+        [Header("Tham chiếu uGUI")]
+        [SerializeField] RectTransform minimapPanel;
+        [SerializeField] RawImage minimapCanvas;
+
         Texture2D mapTexture;
         Color32[] terrainPixels;
         Color32[] framePixels;
@@ -42,54 +43,52 @@ namespace SurvivalRts
         float nextRefreshTime;
 
         CameraController camController;
-        readonly List<Vector2> enemyPositions = new List<Vector2>(256);
-        readonly Vector3[] frustumCorners = new Vector3[4];
+        readonly List<Vector2> enemyPositions = new List<Vector2>(256); // Danh sách vị trí kẻ địch ECS còn sống
+        readonly Vector3[] frustumCorners = new Vector3[4]; // 4 góc khung nhìn camera chiếu xuống mặt đất
 
+        // Khởi tạo texture minimap và đăng ký sự kiện chuột trên RawImage.
         void OnEnable()
         {
-            var doc = GetComponent<UIDocument>();
-            if (doc == null || doc.rootVisualElement == null) return;
-
-            var root = doc.rootVisualElement;
-            minimapPanel = root.Q<VisualElement>("minimapPanel");
-            minimapCanvas = root.Q<VisualElement>("minimapCanvas");
+            ResolveReferences();
             if (minimapCanvas == null) return;
 
             if (mapTexture == null)
             {
                 mapTexture = new Texture2D(MapResolution, MapResolution, TextureFormat.RGBA32, false)
                 {
-                    filterMode = FilterMode.Bilinear,
+                    filterMode = FilterMode.Point,
                     wrapMode = TextureWrapMode.Clamp
                 };
                 terrainPixels = new Color32[MapResolution * MapResolution];
                 framePixels = new Color32[MapResolution * MapResolution];
             }
 
-            minimapCanvas.style.backgroundImage = new StyleBackground(mapTexture);
+            minimapCanvas.texture = mapTexture;
 
-            if (minimapPanel != null)
+            if (minimapPanel != null && minimapPanel.GetComponent<UiPointerBlocker>() == null)
             {
-                minimapPanel.RegisterCallback<PointerEnterEvent>(_ => UiPointerState.IsOverUI = true);
-                minimapPanel.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    if (!draggingMap) UiPointerState.IsOverUI = false;
-                });
+                minimapPanel.gameObject.AddComponent<UiPointerBlocker>();
             }
 
-            minimapCanvas.RegisterCallback<PointerDownEvent>(OnPointerDown);
-            minimapCanvas.RegisterCallback<PointerMoveEvent>(OnPointerMove);
-            minimapCanvas.RegisterCallback<PointerUpEvent>(OnPointerUp);
+            var trigger = minimapCanvas.GetComponent<EventTrigger>();
+            if (trigger == null) trigger = minimapCanvas.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            AddTrigger(trigger, EventTriggerType.PointerDown, OnPointerDown);
+            AddTrigger(trigger, EventTriggerType.Drag, OnDrag);
+            AddTrigger(trigger, EventTriggerType.PointerUp, OnPointerUp);
 
             terrainReady = false;
             nextRefreshTime = 0f;
         }
 
+        // Đặt lại trạng thái kéo bản đồ khi tắt component.
         void OnDisable()
         {
             draggingMap = false;
         }
 
+        // Giải phóng bộ nhớ Texture2D khi hủy đối tượng.
         void OnDestroy()
         {
             if (mapTexture != null)
@@ -99,6 +98,42 @@ namespace SurvivalRts
             }
         }
 
+        // Tự động tìm các thành phần UI theo tên nếu chưa được gán trong Inspector.
+        void ResolveReferences()
+        {
+            if (minimapPanel == null)
+            {
+                var t = FindChildRecursive(transform, "minimapPanel");
+                if (t != null) minimapPanel = t.GetComponent<RectTransform>();
+            }
+            if (minimapCanvas == null)
+            {
+                var t = FindChildRecursive(transform, "minimapCanvas");
+                if (t != null) minimapCanvas = t.GetComponent<RawImage>();
+            }
+        }
+
+        // Tìm Transform con theo tên không phân biệt cấp bậc.
+        static Transform FindChildRecursive(Transform parent, string targetName)
+        {
+            if (parent.name == targetName) return parent;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var found = FindChildRecursive(parent.GetChild(i), targetName);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        // Thêm sự kiện chuột vào EventTrigger của RawImage.
+        static void AddTrigger(EventTrigger trigger, EventTriggerType type, UnityEngine.Events.UnityAction<BaseEventData> action)
+        {
+            var entry = new EventTrigger.Entry { eventID = type };
+            entry.callback.AddListener(action);
+            trigger.triggers.Add(entry);
+        }
+
+        // Cập nhật lớp địa hình và vẽ lại minimap theo chu kỳ.
         void Update()
         {
             if (minimapCanvas == null || mapTexture == null) return;
@@ -116,41 +151,43 @@ namespace SurvivalRts
             }
         }
 
-        void OnPointerDown(PointerDownEvent evt)
+        // Bắt đầu di chuyển camera khi nhấn chuột trái lên minimap.
+        void OnPointerDown(BaseEventData data)
         {
-            if (evt.button != 0) return;
+            var evt = (PointerEventData)data;
+            if (evt.button != PointerEventData.InputButton.Left) return;
             draggingMap = true;
             UiPointerState.IsOverUI = true;
-            minimapCanvas.CapturePointer(evt.pointerId);
-            MoveCameraToPointer(evt.localPosition);
-            evt.StopPropagation();
+            MoveCameraToPointer(evt);
         }
 
-        void OnPointerMove(PointerMoveEvent evt)
+        // Di chuyển camera theo chuột khi kéo trên minimap.
+        void OnDrag(BaseEventData data)
         {
-            if (!draggingMap || !minimapCanvas.HasPointerCapture(evt.pointerId)) return;
-            MoveCameraToPointer(evt.localPosition);
-            evt.StopPropagation();
+            if (!draggingMap) return;
+            MoveCameraToPointer((PointerEventData)data);
         }
 
-        void OnPointerUp(PointerUpEvent evt)
+        // Kết thúc kéo chuột trên minimap.
+        void OnPointerUp(BaseEventData data)
         {
-            if (evt.button != 0 || !draggingMap) return;
+            var evt = (PointerEventData)data;
+            if (evt.button != PointerEventData.InputButton.Left || !draggingMap) return;
             draggingMap = false;
-            if (minimapCanvas.HasPointerCapture(evt.pointerId))
-                minimapCanvas.ReleasePointer(evt.pointerId);
-            evt.StopPropagation();
+            UiPointerState.IsOverUI = false;
         }
 
-        void MoveCameraToPointer(Vector2 localPos)
+        // Chuyển tọa độ chuột trên RawImage sang tọa độ mặt đất để đưa camera tới.
+        void MoveCameraToPointer(PointerEventData evt)
         {
-            if (camController == null) return;
-            float rectW = Mathf.Max(1f, minimapCanvas.contentRect.width);
-            float rectH = Mathf.Max(1f, minimapCanvas.contentRect.height);
+            if (camController == null || minimapCanvas == null) return;
+            var rectTransform = minimapCanvas.rectTransform;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, evt.position, evt.pressEventCamera, out Vector2 localPos))
+                return;
 
-            // Trong UI Toolkit, gốc (0,0) ở góc trên-trái nên trục Y đi từ trên xuống, cần đảo lại cho trục Z thế giới.
-            float u = Mathf.Clamp01(localPos.x / rectW);
-            float v = 1f - Mathf.Clamp01(localPos.y / rectH);
+            var rect = rectTransform.rect;
+            float u = Mathf.Clamp01((localPos.x - rect.xMin) / Mathf.Max(1f, rect.width));
+            float v = Mathf.Clamp01((localPos.y - rect.yMin) / Mathf.Max(1f, rect.height));
 
             GetWorldBounds(out Vector2 minWorld, out Vector2 sizeWorld);
             float worldX = minWorld.x + u * sizeWorld.x;
@@ -159,6 +196,7 @@ namespace SurvivalRts
             RenderMinimap();
         }
 
+        // Lấy tọa độ góc dưới trái và kích thước bản đồ thế giới từ BuildGrid.
         void GetWorldBounds(out Vector2 min, out Vector2 size)
         {
             var grid = BuildGrid.Instance;
@@ -172,6 +210,7 @@ namespace SurvivalRts
             size = new Vector2(50f, 50f);
         }
 
+        // Quy đổi tọa độ thế giới sang tọa độ điểm ảnh trên texture minimap.
         Vector2Int WorldToPixel(float worldX, float worldZ, Vector2 minWorld, Vector2 sizeWorld)
         {
             int px = Mathf.Clamp(Mathf.RoundToInt((worldX - minWorld.x) / sizeWorld.x * (MapResolution - 1)), 0, MapResolution - 1);
@@ -179,6 +218,7 @@ namespace SurvivalRts
             return new Vector2Int(px, py);
         }
 
+        // Nướng dữ liệu mặt đất, độ dốc và vùng nước từ BuildGrid vào mảng điểm ảnh nền.
         void BakeTerrainLayer()
         {
             var grid = BuildGrid.Instance;
@@ -189,7 +229,6 @@ namespace SurvivalRts
             int gxCount = grid.Size.x;
             int gzCount = grid.Size.y;
 
-            // Tìm vị trí hồ nước nếu có trong scene để tô màu nước chính xác.
             Bounds waterBounds = default;
             bool hasWater = false;
             var waterGo = GameObject.Find("Water_Pond");
@@ -241,7 +280,6 @@ namespace SurvivalRts
                         col = WaterColor;
                     }
 
-                    // Vẽ đường chia lưới mờ cứ mỗi 10m để dễ định vị khu vực.
                     if ((px % 36 == 0 || py % 36 == 0) && col.r != WaterColor.r)
                     {
                         col = Color32.Lerp(col, BorderGridColor, 0.35f);
@@ -254,6 +292,7 @@ namespace SurvivalRts
             terrainReady = true;
         }
 
+        // Vẽ toàn bộ tài nguyên, công trình, đơn vị và khung nhìn camera lên texture.
         void RenderMinimap()
         {
             if (!terrainReady)
@@ -267,7 +306,6 @@ namespace SurvivalRts
 
             GetWorldBounds(out Vector2 minWorld, out Vector2 sizeWorld);
 
-            // 1. Vẽ các mỏ tài nguyên (Gỗ, Đá, Sắt, Nông sản)
             var nodes = ResourceNode.All;
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -285,7 +323,6 @@ namespace SurvivalRts
                 DrawFilledRect(p.x, p.y, radius, c);
             }
 
-            // 2. Vẽ công trình phe mình và vật cản tĩnh
             var occupants = FindObjectsByType<GridOccupant>(FindObjectsSortMode.None);
             for (int i = 0; i < occupants.Length; i++)
             {
@@ -313,7 +350,6 @@ namespace SurvivalRts
                 }
             }
 
-            // 3. Vẽ các đơn vị dân / thợ xây / người thu hoạch
             var villagers = FindObjectsByType<VillagerUnit>(FindObjectsSortMode.None);
             for (int i = 0; i < villagers.Length; i++)
             {
@@ -339,7 +375,6 @@ namespace SurvivalRts
                 DrawFilledRect(p.x, p.y, 1, UnitDot);
             }
 
-            // 4. Vẽ chấm đỏ cho toàn bộ kẻ địch ECS đang sống
             EnemyWorld.CopyAlivePositions(enemyPositions);
             for (int i = 0; i < enemyPositions.Count; i++)
             {
@@ -348,7 +383,6 @@ namespace SurvivalRts
                 DrawFilledRect(p.x, p.y, 1, EnemyDot);
             }
 
-            // 5. Vẽ khung trắng thể hiện vùng nhìn hiện tại của Camera trên mặt đất
             if (camController != null && camController.GetGroundFrustumCorners(frustumCorners))
             {
                 var c0 = WorldToPixel(frustumCorners[0].x, frustumCorners[0].z, minWorld, sizeWorld);
@@ -366,6 +400,7 @@ namespace SurvivalRts
             mapTexture.Apply(false);
         }
 
+        // Tô một hình vuông đặc tâm (cx, cy) bán kính radius trên mảng điểm ảnh.
         void DrawFilledRect(int cx, int cy, int radius, Color32 color)
         {
             int xMin = Mathf.Max(0, cx - radius);
@@ -383,6 +418,7 @@ namespace SurvivalRts
             }
         }
 
+        // Vẽ đoạn thẳng nối 2 điểm ảnh bằng thuật toán Bresenham.
         void DrawLine(int x0, int y0, int x1, int y1, Color32 color)
         {
             int dx = Mathf.Abs(x1 - x0);

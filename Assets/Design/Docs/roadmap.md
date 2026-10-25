@@ -1,153 +1,98 @@
 # LỘ TRÌNH PHÁT TRIỂN — MVP
 ## After the Fall — Survival RTS
 
-**Nguồn:** `prototype.md` (thứ tự giai đoạn), `mechanics.md` (chi tiết cơ chế)
-**Mục đích:** thứ tự các chức năng cần làm, mỗi bước có tiêu chí test để biết khi nào được sang bước kế tiếp.
-
-**Quy tắc:** mỗi bước phải chạy được và test được trước khi làm bước sau. Chỉ thêm tính năng mới khi vòng lặp hiện tại đã ổn định.
-
----
-
-## Tổng quan
-
-| Giai đoạn | Nội dung | Bước |
-|---|---|---|
-| 0 | Nền tảng | 1–4 |
-| 0.5 | Đặt và xoay công trình (làm sớm) | 0.5a–0.5f |
-| 1 | Điều khiển | 5–7 |
-| 2 | Kinh tế | 8–13 |
-| 3 | Chiến đấu | 14–20 |
-| 4 | Hoàn thiện vòng lặp | 21–26 |
-| 5 | Art pass & cân bằng | 27–28 |
+Ký hiệu: ✅ đã xong · trống = chưa làm · "Một phần" = đã có một phần, ghi rõ ở cột ghi chú.
 
 ---
 
 ## Giai đoạn 0 — Nền tảng
 
-Làm một lần, các giai đoạn sau đều dựa vào.
-
-| # | Việc | Ghi chú |
-|---|---|---|
-| 1 | Scene thử nghiệm | Mặt đất, bake NavMesh, ánh sáng cơ bản |
-| 2 | Cấu trúc code | Thư mục `Scripts/`, ScriptableObject: `UnitData`, `BuildingData`, `ResourceNodeData`, `WaveConfig` |
-| 3 | `GameManager` + `GameState` | `Preparing`, `Playing`, `Won`, `Lost`, `Paused` |
-| 4 | Hệ thống event | `OnResourceChanged`, `OnUnitDied`, `OnWaveStarted`... để HUD và logic tách rời |
-
-**Xong khi:** scene chạy được, có thể đổi `GameState` và các hệ thống khác nhận được event.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 1 | Scene thử nghiệm | ✅ | Scene `prototype`: mặt đất, NavMesh, ánh sáng, khu vật cản thử |
+| 2 | Cấu trúc code | ✅ | Thư mục `Scripts/Runtime`, `Scripts/SO`, `Scripts/Editor`; SO: `BuildingData`, `EnemyData`, `TowerData`, `SoldierData`, `GpuAnimationData`, `SoundLibrary` |
+| 3 | `GameManager` + `GameState` |  | Chưa có |
 
 ---
 
-## Giai đoạn 0.5 — Ưu tiên: đặt và xoay công trình
+## Giai đoạn 0.5 — Đặt và xoay công trình
 
-Đây là cơ chế đặc trưng và rủi ro kỹ thuật cao nhất (lưới, NavMesh, kiểm tra ô), nên làm sớm để biết sớm có khả thi không. Bước 12 của giai đoạn 2 được **kéo lên đây**, chỉ làm phần đặt và xoay, các phần phụ thuộc kinh tế tạm giả lập.
-
-| # | Việc | Ghi chú |
-|---|---|---|
-| 0.5a | Camera tối thiểu | Chỉ cần WASD và zoom để nhìn được chỗ đặt (bước 5 rút gọn) |
-| 0.5b | `BuildingData` + prefab thử | 3 khối: 2x2, 3x3, 2x3 (để thử xoay chiều) |
-| 0.5c | `BuildGrid` | Lưới 1m, mảng `occupied[x, y]`, vẽ lưới khi đang đặt |
-| 0.5d | `BuildingPlacer` | Bóng mờ bám chuột, snap theo footprint chẵn/lẻ, xanh/đỏ, chuột trái đặt, chuột phải/Esc hủy |
-| 0.5e | Xoay bằng R | Xoay 90°, footprint đổi chiều, giữ hướng cho lần đặt sau |
-| 0.5f | Kiểm tra ô | Công trình đã có, ngoài NavMesh, dốc; chỉ một ô hỏng là đỏ |
-
-Tạm bỏ qua ở giai đoạn này: kiểm tra và trừ tài nguyên (luôn coi là đủ), chống chặn kín đường (làm sau khi có điểm spawn và HQ), đẩy đơn vị ra khỏi khung (chưa có đơn vị).
-
-**Xong khi:** chọn một công trình thử, bóng bám chuột và nhảy theo ô, nhấn R xoay đúng, ô bị block hiện đỏ và không đặt được, đặt xong thì ô đó bị chiếm.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 0.5a | `BuildingData` + prefab thử | ✅ | Khối thử 1x1, 2x2, 3x3, 4x4, 2x3, 1x4 |
+| 0.5b | `BuildGrid` | ✅ | Lưới 1m; chiếm ô, địa hình, độ cao lưu bằng `NativeArray` |
+| 0.5c | `BuildingPlacer` | ✅ | Bóng mờ bám chuột, snap theo footprint chẵn/lẻ, xanh/đỏ, hủy |
+| 0.5d | Xoay 90° | ✅ | Footprint đổi chiều theo hướng xoay |
+| 0.5e | Kiểm tra ô | ✅ | Ô bị chiếm, ngoài NavMesh, dốc, chênh độ cao; một ô hỏng là đỏ |
 
 ---
 
 ## Giai đoạn 1 — Điều khiển
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 5 | Camera | WASD, zoom bằng con lăn, giới hạn trong biên bản đồ |
-| 6 | `Selectable` + chọn | Chọn một đơn vị, chọn khung, Shift thêm/bớt, vòng chọn dưới chân |
-| 7 | Di chuyển + NavMesh | `NavMeshAgent`, lệnh chuột phải, đội hình rải khi chọn nhiều đơn vị |
-
-**Xong khi:** chọn một nhóm quân, ra lệnh đi qua vật cản mà không đè lên nhau.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 4 | Camera | ✅ | WASD, zoom con lăn, kéo chuột giữa, xoay chuột phải, giới hạn biên, bấm minimap để di chuyển |
+| 5 | Chọn đối tượng | ✅ | Click chọn công trình/đơn vị (`BuildingSelector`), hiện thanh máu và vòng tầm |
 
 ---
 
 ## Giai đoạn 2 — Kinh tế
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 8 | `ResourceManager` | Kho chung, thêm/trừ, kiểm tra đủ trước khi trừ |
-| 9 | `ResourceNode` | Cây, mỏ đá, bụi quả có trữ lượng, biến mất khi cạn |
-| 10 | Worker thu thập | Chuột phải vào điểm tài nguyên, thu theo chu kỳ, tự tìm điểm gần khi cạn |
-| 11 | HUD thanh tài nguyên | Gỗ, đá, thức ăn |
-| 12 | Hoàn thiện đặt công trình | Phần đặt/xoay đã làm ở giai đoạn 0.5; thêm kiểm tra và trừ tài nguyên, chống chặn kín đường, đẩy đơn vị ra khỏi khung |
-| 13 | Menu xây dựng + Lumber Camp | Nút công trình có giá, tô xám khi thiếu tài nguyên, Lumber Camp tăng thu gỗ |
-
-**Xong khi:** Worker thu gỗ, đủ tài nguyên thì đặt được Lumber Camp và tốc độ thu gỗ tăng.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 6 | Kho tài nguyên chung | ✅ | Trong `PopulationManager`: gỗ, đá, sắt, lúa, vàng; kiểm tra, trừ, hoàn |
+| 7 | `ResourceNode` |  | Một phần: cây, đá, quặng sắt, bụi quả có `ResourceNode`; chưa có trữ lượng và cạn |
+| 8 | Thu thập tài nguyên | ✅ | Gán thợ vào nhà khai thác bằng nút +/−; `HarvesterUnit` tự đi thu và mang về |
+| 9 | HUD thanh tài nguyên | ✅ | Dân rỗi/tổng, gỗ, đá, sắt, lúa, vàng |
+| 10 | Hoàn thiện đặt công trình |  | Một phần: đã kiểm tra và trừ tài nguyên; chưa đẩy đơn vị ra khỏi khung khi đặt |
+| 11 | Menu xây dựng + Lumber Camp | ✅ | Tab Kinh tế/Quân sự/Phòng thủ, thẻ hiện giá, tô xám khi thiếu tài nguyên; Trại gỗ có bán kính khai thác |
 
 ---
 
 ## Giai đoạn 3 — Chiến đấu
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 14 | `Health` | Máu, nhận sát thương, chết, event `OnUnitDied` |
-| 15 | `Attacker` | Đuổi mục tiêu, vào tầm thì đánh, tốc độ đánh |
-| 16 | Rifleman và Heavy Guard | Đặt sẵn trong scene để test |
-| 17 | Tự phản công | Đơn vị `Idle` tự đánh kẻ địch trong tầm phát hiện, quay về nếu bị kéo xa |
-| 18 | Watchtower | Tự chọn mục tiêu và bắn, dùng lại `Attacker` |
-| 19 | `EnemyAI` | `Advance` về HQ, `Engage` khi có mục tiêu trong tầm |
-| 20 | Thanh máu | Hiện trên đầu đối tượng khi bị thương hoặc đang chọn |
-
-**Xong khi:** 5 kẻ địch tiến vào căn cứ, quân và tháp canh chống lại được, HQ bị đánh thì máu giảm.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 12 | `Health` | ✅ | `Health` (GameObject) và `EnemyHealth` (ECS), sự kiện `Died` |
+| 13 | Tấn công | ✅ | Quái ECS đuổi và đánh mục tiêu; lính kiếm đuổi và chém quái |
+| 14 | Tự phản công | ✅ | Lính kiếm tự đánh quái trong tầm canh gác, quay về khi đuổi quá xa |
+| 15 | Watchtower | ✅ | Tháp ECS tự chọn mục tiêu và bắn, có tia đạn |
+| 16 | AI kẻ địch | ✅ | ECS: flow field về HQ, đánh mục tiêu trong tầm (ưu tiên đơn vị > công trình > HQ) |
+| 17 | Thanh máu | ✅ | Hiện khi chọn công trình hoặc lính |
 
 ---
 
 ## Giai đoạn 4 — Hoàn thiện vòng lặp
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 21 | `ProductionQueue` | Hàng đợi tối đa 5, trừ tiền khi vào hàng, hoàn tiền khi hủy, rally point |
-| 22 | Barracks + tuyển quân | Tuyển Worker từ HQ, lính từ Barracks, giới hạn dân số |
-| 23 | Bảng thông tin | Tên, máu, nút hành động, hàng đợi của đối tượng đang chọn |
-| 24 | `WaveManager` | Thời gian chuẩn bị, 3 đợt, spawn rải theo thời gian, cảnh báo trước đợt |
-| 25 | Thắng/thua | Màn hình kết thúc, chơi lại |
-| 26 | Hoàn thiện UI | Minimap, thông báo, tạm dừng, màn hình loading, menu chính |
-
-**Xong khi:** chơi trọn một ván từ đầu đến kết quả thắng hoặc thua mà không lỗi nghiêm trọng.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 18 | Trại lính + đào tạo lính | ✅ | Đào tạo dân tự do thành Lính kiếm, có thời gian đào tạo và hàng chờ, tối đa 6 lính mỗi trại; dân số tăng nhờ Nhà dân |
+| 19 | Bảng thông tin |  | Một phần: thanh máu, trạng thái xây, bảng thợ +/− kèm tiến độ đào tạo; chưa có tên và nút hành động chung |
+| 20 | `WaveManager` |  | Chưa có (mới có `EnemySpawner` spawn thử theo vùng tròn) |
+| 21 | Thắng/thua |  | Chưa có màn hình (đã có sự kiện `Headquarters.Destroyed`) |
+| 22 | Hoàn thiện UI |  | Một phần: đã có minimap, menu cài đặt và tạm dừng (Esc); có UXML màn hình loading nhưng chưa dùng; chưa có thông báo, menu chính |
 
 ---
 
 ## Giai đoạn 5 — Art pass & cân bằng
 
-| # | Việc | Ghi chú |
-|---|---|---|
-| 27 | Art pass | Thay asset thử nghiệm bằng low poly thống nhất, ánh sáng, bóng đổ, hiệu ứng cơ bản |
-| 28 | Cân bằng | Chỉnh máu, giá, thời gian, số lượng kẻ địch theo playtest (qua ScriptableObject) |
-
-**Xong khi:** đạt tiêu chí hoàn thành trong `prototype.md`, một ván khoảng 10–15 phút.
+| # | Việc | Trạng thái | Ghi chú |
+|---|---|---|---|
+| 23 | Art pass |  | Đang dùng khối hộp thử và nhân vật sinh bằng code |
+| 24 | Cân bằng |  | |
 
 ---
 
-## Vì sao theo thứ tự này
+## Đã làm thêm (ngoài danh sách ban đầu)
 
-| Thứ tự | Lý do |
-|---|---|
-| Điều khiển trước kinh tế | Mọi thứ sau đều cần chọn và ra lệnh |
-| Kinh tế trước chiến đấu | Có tài nguyên thì mới có lý do xây và tuyển quân |
-| Chiến đấu trước wave | Phải đánh được kẻ địch thì mới thiết kế được đợt tấn công |
-| Wave và thắng/thua ở cuối | Chúng ghép các hệ thống ở trên lại với nhau |
-| Art pass sau cùng | Chỉ làm đẹp khi vòng lặp đã ổn |
-
-## Mốc chơi thử đầu tiên
-
-Hết **bước 7** là có bản chơi thử được: camera, chọn quân, di chuyển. Nên dừng tại đây để kiểm tra cảm giác điều khiển trước khi làm kinh tế.
-
-## Rủi ro cần để ý
-
-| Rủi ro | Cách giảm |
-|---|---|
-| NavMesh bị bake lại khi đặt công trình | Dùng `NavMeshObstacle` carving hoặc cập nhật NavMesh cục bộ, thử sớm ở bước 12 |
-| Đơn vị chen nhau, kẹt ở cổng | Test với nhóm lớn ở bước 7, chỉnh avoidance |
-| Cân bằng lệch | Mọi con số nằm trong ScriptableObject, không hard-code |
-| Tính năng phình ra | Đối chiếu mục 3 của `prototype.md` và mục 10 của `mechanics.md` trước khi thêm |
-
-## Câu hỏi còn mở
-
-Các câu hỏi ở mục 11 của `mechanics.md` (Worker có đánh trả không, có sương mù chiến tranh không, công trình xây tức thì hay có thanh tiến độ, nguồn thức ăn, giới hạn dân số) cần chốt trước **giai đoạn 2** và **giai đoạn 3**.
+| Việc | Trạng thái | Ghi chú |
+|---|---|---|
+| Kẻ địch ECS | ✅ | Entities + Burst: spawn theo vùng tròn, flow field, né nhau bằng spatial grid; đã đo 10.000–100.000 con |
+| Animation GPU | ✅ | Bone texture cho quái, dân, lính; công cụ sinh nhân vật và nướng animation |
+| Nhà chính (HQ) | ✅ | Có máu, là đích của quái, phát sự kiện khi bị phá |
+| Hệ thống dân | ✅ | `PopulationManager`, Nhà dân, dân tự do, thợ xây (Builder's Hut) |
+| Công trường xây dựng | ✅ | 3 giai đoạn khung, thợ xây đến xây, thời gian xây theo `BuildingData` |
+| Tháo dỡ công trình | ✅ | Có thời gian tháo dỡ, hoàn lại chi phí |
+| Nhà khai thác | ✅ | Trại gỗ, Xưởng đá, Mỏ sắt, Nông trại |
+| Âm thanh | ✅ | Unity Audio + AudioMixer (Music/SFX/UI); hàng đợi sự kiện từ ECS, lọc theo camera, gộp theo ô, giới hạn số tiếng, ưu tiên giọng; loop đám đông; nhạc yên/trận; Lowpass theo zoom |
+| Menu cài đặt âm lượng | ✅ | Tổng, Nhạc nền, Hiệu ứng, Giao diện; lưu bằng PlayerPrefs |

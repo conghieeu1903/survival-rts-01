@@ -6,7 +6,7 @@ namespace SurvivalRts.Editor
 {
     // Sinh tự động bộ model và animation cho Người dân (Villager), Thợ xây (Builder),
     // 3 giai đoạn khung xây dựng (Construction Stage 1-3) và 2 công trình (House, BuilderHut).
-    public static class CivilianAssetGenerator
+    public static partial class CivilianAssetGenerator
     {
         const float BakeFps = 30f;
         const string ModelDir = "Assets/Arts/Models";

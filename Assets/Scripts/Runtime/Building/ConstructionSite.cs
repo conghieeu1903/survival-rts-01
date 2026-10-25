@@ -134,7 +134,11 @@ namespace SurvivalRts
             {
                 if (data.tower != null) gameObject.AddComponent<Tower>().Setup(data.tower);
                 if (data.populationProvided > 0) gameObject.AddComponent<HouseBuilding>().Setup(data.populationProvided);
-                if (data.harvestResource != ResourceType.None)
+                if (data.soldier != null)
+                {
+                    gameObject.AddComponent<Barracks>().Setup(data);
+                }
+                else if (data.harvestResource != ResourceType.None)
                 {
                     gameObject.AddComponent<ResourceCamp>().Setup(data);
                 }

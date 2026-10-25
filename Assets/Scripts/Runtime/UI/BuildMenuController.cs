@@ -1,22 +1,25 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 namespace SurvivalRts
 {
-    [RequireComponent(typeof(UIDocument))]
+    // Điều khiển giao diện xây dựng, thanh hiển thị tài nguyên và chế độ tháo dỡ bằng uGUI và TextMeshPro.
     public class BuildMenuController : MonoBehaviour
     {
-        const string ItemClass = "build-card";
-        const string SelectedClass = "build-card--selected";
-        const string DisabledClass = "build-card--disabled";
-        const string CostClass = "build-card-cost";
-        const string CostLackClass = "build-card-cost--lack";
-        const string TabClass = "build-tab";
-        const string ActiveTabClass = "build-tab--active";
-        const string DemolishTabClass = "build-tab--demolish";
-        const string ActiveDemolishTabClass = "build-tab--demolish-active";
-        const string HiddenClass = "build-hidden";
+        static readonly Color TabNormalBg = new Color(0.22f, 0.22f, 0.22f, 1f);
+        static readonly Color TabActiveBg = new Color(0.88f, 0.88f, 0.88f, 1f);
+        static readonly Color TabNormalText = new Color(0.86f, 0.86f, 0.86f, 1f);
+        static readonly Color TabActiveText = new Color(0.08f, 0.08f, 0.08f, 1f);
+
+        static readonly Color CardNormalBg = new Color(0.22f, 0.22f, 0.22f, 1f);
+        static readonly Color CardSelectedBg = new Color(0.38f, 0.38f, 0.38f, 1f);
+        static readonly Color CardDisabledBg = new Color(0.16f, 0.16f, 0.16f, 0.92f);
+        static readonly Color BorderNormal = new Color(0.48f, 0.48f, 0.48f, 1f);
+        static readonly Color BorderSelected = new Color(0.95f, 0.95f, 0.95f, 1f);
+        static readonly Color CostNormalText = new Color(0.92f, 0.92f, 0.92f, 1f);
+        static readonly Color CostLackText = new Color(0.62f, 0.62f, 0.62f, 1f);
 
         static readonly Dictionary<BuildingCategory, string> CategoryNames = new Dictionary<BuildingCategory, string>
         {
@@ -30,28 +33,41 @@ namespace SurvivalRts
         [Tooltip("Placer cung cấp danh sách công trình và nhận lệnh chọn từ menu")]
         [SerializeField] BuildingPlacer placer;
 
-        readonly List<Button> items = new List<Button>();
-        readonly List<Label> itemCosts = new List<Label>();
-        readonly List<BuildingData> itemData = new List<BuildingData>();
-        readonly Dictionary<BuildingCategory, Button> tabs = new Dictionary<BuildingCategory, Button>();
+        [Header("Prefab thành phần uGUI")]
+        [SerializeField] GameObject tabButtonPrefab;
+        [SerializeField] GameObject buildCardPrefab;
 
-        VisualElement list;
-        Label emptyLabel;
-        VisualElement placingBar;
-        Label placingLabel;
-        Button rotateButton;
-        Button confirmDemolishButton;
-        Button cancelButton;
+        [Header("Phần tử giao diện")]
+        [SerializeField] RectTransform buildPanel;
+        [SerializeField] RectTransform tabRow;
+        [SerializeField] RectTransform buildList;
+        [SerializeField] GameObject emptyLabel;
+        [SerializeField] GameObject placingBar;
+        [SerializeField] TMP_Text placingLabel;
+        [SerializeField] Button rotateButton;
+        [SerializeField] Button confirmDemolishButton;
+        [SerializeField] Button cancelButton;
+        [SerializeField] TMP_Text popLabel;
+        [SerializeField] TMP_Text popValueLabel;
+        [SerializeField] TMP_Text woodValueLabel;
+        [SerializeField] TMP_Text stoneValueLabel;
+        [SerializeField] TMP_Text ironValueLabel;
+        [SerializeField] TMP_Text foodValueLabel;
+        [SerializeField] TMP_Text goldValueLabel;
+
+        readonly List<Button> items = new List<Button>();
+        readonly List<Image> itemBackgrounds = new List<Image>();
+        readonly List<Outline> itemOutlines = new List<Outline>();
+        readonly List<TMP_Text> itemCosts = new List<TMP_Text>();
+        readonly List<CanvasGroup> itemGroups = new List<CanvasGroup>();
+        readonly List<BuildingData> itemData = new List<BuildingData>();
+        readonly Dictionary<BuildingCategory, Button> tabs = new Dictionary<BuildingCategory, Button>(); // Map từng nhóm công trình với nút tab tương ứng
+
         Button demolishTabButton;
-        Label popLabel;
-        Label popValueLabel;
-        Label woodValueLabel;
-        Label stoneValueLabel;
-        Label ironValueLabel;
-        Label foodValueLabel;
-        Label goldValueLabel;
+        TMP_Text cancelButtonText;
         PopulationManager subscribedPop;
 
+        // Liên kết sự kiện và khởi tạo danh sách tab, thẻ công trình khi bật menu.
         void OnEnable()
         {
             if (GetComponent<MinimapController>() == null)
@@ -59,70 +75,119 @@ namespace SurvivalRts
                 gameObject.AddComponent<MinimapController>();
             }
 
-            var root = GetComponent<UIDocument>().rootVisualElement;
-            list = root.Q<VisualElement>("buildList");
-            emptyLabel = root.Q<Label>("emptyLabel");
-            placingBar = root.Q<VisualElement>("placingBar");
-            placingLabel = root.Q<Label>("placingLabel");
-            rotateButton = root.Q<Button>("rotateButton");
-            confirmDemolishButton = root.Q<Button>("confirmDemolishButton");
-            cancelButton = root.Q<Button>("cancelButton");
-            popLabel = root.Q<Label>("popLabel");
-            popValueLabel = root.Q<Label>("popValueLabel");
-            woodValueLabel = root.Q<Label>("woodValueLabel");
-            stoneValueLabel = root.Q<Label>("stoneValueLabel");
-            ironValueLabel = root.Q<Label>("ironValueLabel");
-            foodValueLabel = root.Q<Label>("foodValueLabel");
-            goldValueLabel = root.Q<Label>("goldValueLabel");
+            ResolveReferences();
 
-            if (rotateButton != null) rotateButton.clicked += placer.Rotate;
-            if (confirmDemolishButton != null) confirmDemolishButton.clicked += OnConfirmDemolishClicked;
-            if (cancelButton != null) cancelButton.clicked += OnCancelClicked;
-            var panel = root.Q<VisualElement>("buildPanel");
+            if (buildPanel != null && buildPanel.GetComponent<UiPointerBlocker>() == null)
+            {
+                buildPanel.gameObject.AddComponent<UiPointerBlocker>();
+            }
 
-            panel.RegisterCallback<PointerEnterEvent>(_ => UiPointerState.IsOverUI = true);
-            panel.RegisterCallback<PointerLeaveEvent>(_ => UiPointerState.IsOverUI = false);
+            if (rotateButton != null && placer != null) rotateButton.onClick.AddListener(placer.Rotate);
+            if (confirmDemolishButton != null) confirmDemolishButton.onClick.AddListener(OnConfirmDemolishClicked);
+            if (cancelButton != null) cancelButton.onClick.AddListener(OnCancelClicked);
 
-            BuildTabs(root.Q<VisualElement>("tabRow"));
-            RebuildList(placer.Category);
+            if (placer != null)
+            {
+                BuildTabs();
+                RebuildList(placer.Category);
+                placer.CurrentChanged += Refresh;
+                placer.CategoryChanged += RebuildList;
+                placer.DemolishStateChanged += RefreshDemolishState;
+            }
 
-            placer.CurrentChanged += Refresh;
-            placer.CategoryChanged += RebuildList;
-            placer.DemolishStateChanged += RefreshDemolishState;
             RefreshPopulation();
         }
 
+        // Hủy đăng ký sự kiện khi tắt menu.
         void OnDisable()
         {
-            if (rotateButton != null && placer != null) rotateButton.clicked -= placer.Rotate;
-            if (confirmDemolishButton != null) confirmDemolishButton.clicked -= OnConfirmDemolishClicked;
-            if (cancelButton != null) cancelButton.clicked -= OnCancelClicked;
+            if (rotateButton != null && placer != null) rotateButton.onClick.RemoveListener(placer.Rotate);
+            if (confirmDemolishButton != null) confirmDemolishButton.onClick.RemoveListener(OnConfirmDemolishClicked);
+            if (cancelButton != null) cancelButton.onClick.RemoveListener(OnCancelClicked);
+
             if (placer != null)
             {
                 placer.CurrentChanged -= Refresh;
                 placer.CategoryChanged -= RebuildList;
                 placer.DemolishStateChanged -= RefreshDemolishState;
             }
+
             if (subscribedPop != null)
             {
                 subscribedPop.Changed -= RefreshPopulation;
                 subscribedPop = null;
             }
+
             UiPointerState.IsOverUI = false;
         }
 
+        // Tự động tìm các đối tượng con theo tên nếu chưa được gán trong Inspector.
+        void ResolveReferences()
+        {
+            if (placer == null) placer = FindFirstObjectByType<BuildingPlacer>();
+            if (buildPanel == null) buildPanel = FindComponent<RectTransform>("buildPanel");
+            if (tabRow == null) tabRow = FindComponent<RectTransform>("tabRow");
+            if (buildList == null) buildList = FindComponent<RectTransform>("buildList");
+            if (emptyLabel == null)
+            {
+                var t = FindChildRecursive(transform, "emptyLabel");
+                if (t != null) emptyLabel = t.gameObject;
+            }
+            if (placingBar == null)
+            {
+                var t = FindChildRecursive(transform, "placingBar");
+                if (t != null) placingBar = t.gameObject;
+            }
+            if (placingLabel == null) placingLabel = FindComponent<TMP_Text>("placingLabel");
+            if (rotateButton == null) rotateButton = FindComponent<Button>("rotateButton");
+            if (confirmDemolishButton == null) confirmDemolishButton = FindComponent<Button>("confirmDemolishButton");
+            if (cancelButton == null) cancelButton = FindComponent<Button>("cancelButton");
+            if (cancelButton != null && cancelButtonText == null)
+                cancelButtonText = cancelButton.GetComponentInChildren<TMP_Text>(true);
+
+            if (popLabel == null) popLabel = FindComponent<TMP_Text>("popLabel");
+            if (popValueLabel == null) popValueLabel = FindComponent<TMP_Text>("popValueLabel");
+            if (woodValueLabel == null) woodValueLabel = FindComponent<TMP_Text>("woodValueLabel");
+            if (stoneValueLabel == null) stoneValueLabel = FindComponent<TMP_Text>("stoneValueLabel");
+            if (ironValueLabel == null) ironValueLabel = FindComponent<TMP_Text>("ironValueLabel");
+            if (foodValueLabel == null) foodValueLabel = FindComponent<TMP_Text>("foodValueLabel");
+            if (goldValueLabel == null) goldValueLabel = FindComponent<TMP_Text>("goldValueLabel");
+        }
+
+        // Tìm component trên đối tượng con theo tên.
+        T FindComponent<T>(string childName) where T : Component
+        {
+            var t = FindChildRecursive(transform, childName);
+            return t != null ? t.GetComponent<T>() : null;
+        }
+
+        // Đệ quy tìm Transform con theo tên.
+        static Transform FindChildRecursive(Transform parent, string targetName)
+        {
+            if (parent.name == targetName) return parent;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var found = FindChildRecursive(parent.GetChild(i), targetName);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
+        // Xử lý khi người dùng bấm nút xác nhận tháo dỡ công trình.
         void OnConfirmDemolishClicked()
         {
             AudioDirector.Post(SoundId.UiClick, Vector3.zero);
             if (placer != null) placer.ConfirmDemolish();
         }
 
+        // Xử lý khi người dùng bấm nút hủy đặt hoặc thoát tháo dỡ.
         void OnCancelClicked()
         {
             AudioDirector.Post(SoundId.UiClick, Vector3.zero);
             if (placer != null) placer.Cancel();
         }
 
+        // Đảm bảo đăng ký sự kiện với PopulationManager khi đối tượng này sẵn sàng.
         void Update()
         {
             if (subscribedPop == null && PopulationManager.Instance != null)
@@ -133,6 +198,7 @@ namespace SurvivalRts
             }
         }
 
+        // Cập nhật toàn bộ số liệu dân số và tài nguyên trên HUD.
         void RefreshPopulation()
         {
             var pop = PopulationManager.Instance;
@@ -155,126 +221,230 @@ namespace SurvivalRts
             popLabel.text = $"Dân rỗi: {pop.FreePopulation}/{pop.TotalPopulation}  ·  Thợ xây: {pop.BuilderCount}";
         }
 
+        // Đổi trạng thái hiển thị của các thẻ công trình tùy theo đủ hay thiếu tài nguyên.
         void RefreshAffordability()
         {
             var pop = PopulationManager.Instance;
             for (int i = 0; i < items.Count; i++)
             {
                 bool canAfford = pop == null || pop.CanAfford(itemData[i]);
-                items[i].EnableInClassList(DisabledClass, !canAfford);
-                itemCosts[i].EnableInClassList(CostLackClass, !canAfford);
+                if (itemGroups[i] != null) itemGroups[i].alpha = canAfford ? 1f : 0.78f;
+                if (itemCosts[i] != null) itemCosts[i].color = canAfford ? CostNormalText : CostLackText;
+                if (itemBackgrounds[i] != null && (placer == null || itemData[i] != placer.Current))
+                {
+                    itemBackgrounds[i].color = canAfford ? CardNormalBg : CardDisabledBg;
+                }
             }
         }
 
-        void BuildTabs(VisualElement tabRow)
+        // Tạo hàng nút tab danh mục công trình và nút chế độ tháo dỡ.
+        void BuildTabs()
         {
-            tabRow.Clear();
+            if (tabRow == null) return;
+            for (int i = tabRow.childCount - 1; i >= 0; i--)
+            {
+                Destroy(tabRow.GetChild(i).gameObject);
+            }
             tabs.Clear();
+
             foreach (BuildingCategory category in System.Enum.GetValues(typeof(BuildingCategory)))
             {
                 var value = category;
-                var tab = new Button(() =>
+                string labelText = CategoryNames.TryGetValue(value, out var name) ? name : value.ToString();
+                string countText = placer != null ? placer.CountIn(value).ToString() : "0";
+
+                var tab = CreateTabItem(labelText, countText, () =>
                 {
                     AudioDirector.Post(SoundId.UiClick, Vector3.zero);
-                    placer.SetCategory(value);
+                    if (placer != null) placer.SetCategory(value);
                 });
-                tab.AddToClassList(TabClass);
-
-                var title = new Label(CategoryNames.TryGetValue(value, out var name) ? name : value.ToString())
-                {
-                    pickingMode = PickingMode.Ignore
-                };
-                var count = new Label(placer.CountIn(value).ToString()) { pickingMode = PickingMode.Ignore };
-                count.AddToClassList("build-tab-count");
-
-                tab.Add(title);
-                tab.Add(count);
-                tabRow.Add(tab);
                 tabs[value] = tab;
             }
 
-            // Nút công cụ Tháo dỡ công trình nằm ở góc phải hàng tab.
-            demolishTabButton = new Button(() =>
+            var spacer = new GameObject("TabSpacer", typeof(RectTransform), typeof(LayoutElement));
+            spacer.transform.SetParent(tabRow, false);
+            var spacerLayout = spacer.GetComponent<LayoutElement>();
+            spacerLayout.flexibleWidth = 1f;
+
+            demolishTabButton = CreateTabItem("Tháo dỡ (X)", null, () =>
             {
                 AudioDirector.Post(SoundId.UiClick, Vector3.zero);
-                placer.ToggleDemolishMode();
+                if (placer != null) placer.ToggleDemolishMode();
             });
-            demolishTabButton.name = "demolishModeButton";
-            demolishTabButton.text = "Tháo dỡ (X)";
-            demolishTabButton.AddToClassList(TabClass);
-            demolishTabButton.AddToClassList(DemolishTabClass);
-            tabRow.Add(demolishTabButton);
+            demolishTabButton.gameObject.name = "demolishModeButton";
         }
 
-        void RebuildList(BuildingCategory category)
+        // Khởi tạo một nút tab từ Prefab hoặc tự dựng nếu chưa gán Prefab.
+        Button CreateTabItem(string title, string count, UnityEngine.Events.UnityAction onClick)
         {
-            foreach (var pair in tabs) pair.Value.EnableInClassList(ActiveTabClass, pair.Key == category);
+            GameObject go = tabButtonPrefab != null
+                ? Instantiate(tabButtonPrefab, tabRow)
+                : CreateFallbackTabObject(tabRow);
 
-            list.Clear();
-            items.Clear();
-            itemCosts.Clear();
-            itemData.Clear();
-            var buildings = placer.Visible;
-            foreach (var data in buildings)
+            var btn = go.GetComponent<Button>();
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(onClick);
+
+            var titleTf = FindChildRecursive(go.transform, "tabTitle");
+            if (titleTf != null && titleTf.TryGetComponent<TMP_Text>(out var titleLabel))
             {
-                var item = new Button(() =>
-                {
-                    AudioDirector.Post(SoundId.UiClick, Vector3.zero);
-                    placer.Toggle(data);
-                });
-                item.AddToClassList(ItemClass);
-
-                var preview = new VisualElement { pickingMode = PickingMode.Ignore };
-                preview.AddToClassList("build-card-preview");
-                var footprint = new VisualElement { pickingMode = PickingMode.Ignore };
-                footprint.AddToClassList("build-card-footprint");
-                footprint.AddToClassList("fp-w-" + Mathf.Clamp(data.footprint.x, 1, 6));
-                footprint.AddToClassList("fp-d-" + Mathf.Clamp(data.footprint.y, 1, 6));
-                preview.Add(footprint);
-
-                var title = new Label(data.displayName) { pickingMode = PickingMode.Ignore };
-                title.AddToClassList("build-card-name");
-                var size = new Label(data.footprint.x + "x" + data.footprint.y) { pickingMode = PickingMode.Ignore };
-                size.AddToClassList("build-card-size");
-                var cost = new Label(data.FormatCost()) { pickingMode = PickingMode.Ignore };
-                cost.AddToClassList(CostClass);
-
-                item.Add(preview);
-                item.Add(title);
-                item.Add(size);
-                item.Add(cost);
-                list.Add(item);
-                items.Add(item);
-                itemCosts.Add(cost);
-                itemData.Add(data);
+                titleLabel.text = title;
             }
 
-            emptyLabel.EnableInClassList(HiddenClass, items.Count > 0);
-            list.EnableInClassList(HiddenClass, items.Count == 0);
-            Refresh(placer.Current);
+            var countBadgeTf = FindChildRecursive(go.transform, "countBadge");
+            var countTf = FindChildRecursive(go.transform, "tabCount");
+            if (string.IsNullOrEmpty(count))
+            {
+                if (countBadgeTf != null) countBadgeTf.gameObject.SetActive(false);
+                else if (countTf != null) countTf.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (countBadgeTf != null) countBadgeTf.gameObject.SetActive(true);
+                if (countTf != null && countTf.TryGetComponent<TMP_Text>(out var countLabel))
+                {
+                    countLabel.text = count;
+                }
+            }
+
+            return btn;
+        }
+
+        // Tạo lại danh sách thẻ công trình khi đổi nhóm danh mục.
+        void RebuildList(BuildingCategory category)
+        {
+            foreach (var pair in tabs)
+            {
+                ApplyTabStyle(pair.Value, pair.Key == category);
+            }
+
+            if (buildList == null) return;
+            for (int i = buildList.childCount - 1; i >= 0; i--)
+            {
+                Destroy(buildList.GetChild(i).gameObject);
+            }
+
+            items.Clear();
+            itemBackgrounds.Clear();
+            itemOutlines.Clear();
+            itemCosts.Clear();
+            itemGroups.Clear();
+            itemData.Clear();
+
+            var buildings = placer != null ? placer.Visible : null;
+            if (buildings != null)
+            {
+                foreach (var data in buildings)
+                {
+                    CreateCardItem(data);
+                }
+            }
+
+            if (emptyLabel != null) emptyLabel.SetActive(items.Count == 0);
+            buildList.gameObject.SetActive(items.Count > 0);
+
+            Refresh(placer != null ? placer.Current : null);
             RefreshAffordability();
         }
 
+        // Tạo một thẻ công trình trong danh sách xây dựng.
+        void CreateCardItem(BuildingData data)
+        {
+            GameObject go = buildCardPrefab != null
+                ? Instantiate(buildCardPrefab, buildList)
+                : CreateFallbackCardObject(buildList);
+
+            go.name = "Card_" + data.name;
+            var btn = go.GetComponent<Button>();
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() =>
+            {
+                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
+                if (placer != null) placer.Toggle(data);
+            });
+
+            var bg = go.GetComponent<Image>();
+            var outline = go.GetComponent<Outline>();
+            var group = go.GetComponent<CanvasGroup>();
+            if (group == null) group = go.AddComponent<CanvasGroup>();
+
+            var fpTf = FindChildRecursive(go.transform, "cardFootprint");
+            if (fpTf != null && fpTf.TryGetComponent<RectTransform>(out var fpRect))
+            {
+                float w = Mathf.Clamp(data.footprint.x, 1, 6) * 10f;
+                float d = Mathf.Clamp(data.footprint.y, 1, 6) * 7.5f;
+                fpRect.sizeDelta = new Vector2(w, d);
+            }
+
+            var nameTf = FindChildRecursive(go.transform, "cardName");
+            if (nameTf != null && nameTf.TryGetComponent<TMP_Text>(out var nameText))
+                nameText.text = data.displayName;
+
+            var sizeTf = FindChildRecursive(go.transform, "cardSize");
+            if (sizeTf != null && sizeTf.TryGetComponent<TMP_Text>(out var sizeText))
+                sizeText.text = data.footprint.x + "x" + data.footprint.y;
+
+            TMP_Text costText = null;
+            var costTf = FindChildRecursive(go.transform, "cardCost");
+            if (costTf != null) costTf.TryGetComponent(out costText);
+            if (costText != null) costText.text = data.FormatCost();
+
+            items.Add(btn);
+            itemBackgrounds.Add(bg);
+            itemOutlines.Add(outline);
+            itemCosts.Add(costText);
+            itemGroups.Add(group);
+            itemData.Add(data);
+        }
+
+        // Áp dụng màu wireframe xám cho nút tab theo trạng thái đang mở hay không.
+        static void ApplyTabStyle(Button tab, bool active)
+        {
+            if (tab == null) return;
+            if (tab.TryGetComponent<Image>(out var bg))
+                bg.color = active ? TabActiveBg : TabNormalBg;
+            if (tab.TryGetComponent<Outline>(out var outline))
+                outline.effectColor = active ? BorderSelected : BorderNormal;
+
+            var titleTf = FindChildRecursive(tab.transform, "tabTitle");
+            if (titleTf != null && titleTf.TryGetComponent<TMP_Text>(out var titleText))
+            {
+                titleText.color = active ? TabActiveText : TabNormalText;
+                titleText.fontStyle = active ? FontStyles.Bold : FontStyles.Normal;
+            }
+        }
+
+        // Làm mới giao diện khi trạng thái tháo dỡ thay đổi.
         void RefreshDemolishState()
         {
             Refresh(placer != null ? placer.Current : null);
         }
 
+        // Cập nhật trạng thái chọn thẻ công trình và thanh hành động đặt/tháo dỡ.
         void Refresh(BuildingData current)
         {
+            var pop = PopulationManager.Instance;
             for (int i = 0; i < items.Count; i++)
-                items[i].EnableInClassList(SelectedClass, itemData[i] == current);
+            {
+                bool selected = itemData[i] == current;
+                bool canAfford = pop == null || pop.CanAfford(itemData[i]);
+                if (itemBackgrounds[i] != null)
+                {
+                    itemBackgrounds[i].color = selected ? CardSelectedBg : (canAfford ? CardNormalBg : CardDisabledBg);
+                }
+                if (itemOutlines[i] != null)
+                {
+                    itemOutlines[i].effectColor = selected ? BorderSelected : BorderNormal;
+                }
+            }
 
             bool isDemolishing = placer != null && placer.IsDemolishing;
-            if (demolishTabButton != null)
-            {
-                demolishTabButton.EnableInClassList(ActiveDemolishTabClass, isDemolishing);
-            }
+            ApplyTabStyle(demolishTabButton, isDemolishing);
 
             if (isDemolishing)
             {
-                placingBar.EnableInClassList(HiddenClass, false);
-                if (rotateButton != null) rotateButton.EnableInClassList(HiddenClass, true);
+                if (placingBar != null) placingBar.SetActive(true);
+                if (rotateButton != null) rotateButton.gameObject.SetActive(false);
 
                 var pending = placer.PendingDemolishTarget;
                 if (pending != null && DemolishSite.CanDemolish(pending))
@@ -283,26 +453,143 @@ namespace SurvivalRts
                     string name = occ != null ? occ.DisplayName : pending.name;
                     float time = occ != null ? occ.DemolishTime : 2.5f;
                     string refund = occ != null && occ.buildingData != null ? occ.buildingData.FormatCost() : "Miễn phí";
-                    placingLabel.text = $"Xác nhận phá: {name}  ·  Hoàn 100% ({refund})  ·  Thời gian: {time:0.#}s";
-                    if (confirmDemolishButton != null) confirmDemolishButton.EnableInClassList(HiddenClass, false);
-                    if (cancelButton != null) cancelButton.text = "Hủy";
+                    if (placingLabel != null)
+                        placingLabel.text = $"Xác nhận phá: {name}  ·  Hoàn 100% ({refund})  ·  Thời gian: {time:0.#}s";
+                    if (confirmDemolishButton != null) confirmDemolishButton.gameObject.SetActive(true);
+                    if (cancelButtonText != null) cancelButtonText.text = "Hủy";
                 }
                 else
                 {
-                    placingLabel.text = "Chế độ tháo dỡ: Click vào công trình cần phá (Chuột phải / Esc để thoát)";
-                    if (confirmDemolishButton != null) confirmDemolishButton.EnableInClassList(HiddenClass, true);
-                    if (cancelButton != null) cancelButton.text = "Thoát";
+                    if (placingLabel != null)
+                        placingLabel.text = "Chế độ tháo dỡ: Click vào công trình cần phá (Chuột phải / Esc để thoát)";
+                    if (confirmDemolishButton != null) confirmDemolishButton.gameObject.SetActive(false);
+                    if (cancelButtonText != null) cancelButtonText.text = "Thoát";
                 }
+                if (buildPanel != null) LayoutRebuilder.ForceRebuildLayoutImmediate(buildPanel);
                 return;
             }
 
-            if (rotateButton != null) rotateButton.EnableInClassList(HiddenClass, false);
-            if (confirmDemolishButton != null) confirmDemolishButton.EnableInClassList(HiddenClass, true);
-            if (cancelButton != null) cancelButton.text = "Hủy";
+            if (rotateButton != null) rotateButton.gameObject.SetActive(true);
+            if (confirmDemolishButton != null) confirmDemolishButton.gameObject.SetActive(false);
+            if (cancelButtonText != null) cancelButtonText.text = "Hủy";
 
-            placingBar.EnableInClassList(HiddenClass, current == null);
-            if (current != null)
+            if (placingBar != null) placingBar.SetActive(current != null);
+            if (current != null && placingLabel != null)
+            {
                 placingLabel.text = $"Đang đặt: {current.displayName} ({current.FormatCost()})";
+            }
+            if (buildPanel != null) LayoutRebuilder.ForceRebuildLayoutImmediate(buildPanel);
+        }
+
+        // Tạo nút tab dự phòng bằng code nếu chưa gán Prefab.
+        static GameObject CreateFallbackTabObject(Transform parent)
+        {
+            var go = new GameObject("BuildTabButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<Image>().color = TabNormalBg;
+            go.GetComponent<Outline>().effectColor = BorderNormal;
+
+            var layout = go.GetComponent<HorizontalLayoutGroup>();
+            layout.padding = new RectOffset(10, 10, 4, 4);
+            layout.spacing = 6f;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = false;
+            layout.childForceExpandHeight = false;
+
+            var le = go.GetComponent<LayoutElement>();
+            le.minHeight = 28f;
+            le.preferredHeight = 28f;
+            le.flexibleWidth = 0f;
+            le.flexibleHeight = 0f;
+
+            var titleGo = new GameObject("tabTitle", typeof(RectTransform), typeof(TextMeshProUGUI));
+            titleGo.transform.SetParent(go.transform, false);
+            var titleText = titleGo.GetComponent<TextMeshProUGUI>();
+            titleText.fontSize = 13f;
+            titleText.color = TabNormalText;
+            titleText.alignment = TextAlignmentOptions.Center;
+            titleText.raycastTarget = false;
+
+            var badgeGo = new GameObject("countBadge", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup));
+            badgeGo.transform.SetParent(go.transform, false);
+            badgeGo.GetComponent<Image>().color = new Color(0.12f, 0.12f, 0.12f, 1f);
+            var badgeLayout = badgeGo.GetComponent<HorizontalLayoutGroup>();
+            badgeLayout.padding = new RectOffset(5, 5, 1, 1);
+            badgeLayout.childControlWidth = true;
+            badgeLayout.childControlHeight = true;
+
+            var countGo = new GameObject("tabCount", typeof(RectTransform), typeof(TextMeshProUGUI));
+            countGo.transform.SetParent(badgeGo.transform, false);
+            var countText = countGo.GetComponent<TextMeshProUGUI>();
+            countText.fontSize = 12f;
+            countText.fontStyle = FontStyles.Bold;
+            countText.color = CostNormalText;
+            countText.alignment = TextAlignmentOptions.Center;
+            countText.raycastTarget = false;
+
+            return go;
+        }
+
+        // Tạo thẻ công trình dự phòng bằng code nếu chưa gán Prefab.
+        static GameObject CreateFallbackCardObject(Transform parent)
+        {
+            var go = new GameObject("BuildCardButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(VerticalLayoutGroup), typeof(LayoutElement), typeof(CanvasGroup));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<Image>().color = CardNormalBg;
+            go.GetComponent<Outline>().effectColor = BorderNormal;
+
+            var layout = go.GetComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(5, 5, 5, 5);
+            layout.spacing = 2f;
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlWidth = true;
+            layout.childControlHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = false;
+
+            var le = go.GetComponent<LayoutElement>();
+            le.minWidth = 108f;
+            le.preferredWidth = 108f;
+            le.minHeight = 122f;
+            le.preferredHeight = 122f;
+            le.flexibleWidth = 0f;
+            le.flexibleHeight = 0f;
+
+            var previewGo = new GameObject("cardPreview", typeof(RectTransform), typeof(Image));
+            previewGo.transform.SetParent(go.transform, false);
+            previewGo.GetComponent<RectTransform>().sizeDelta = new Vector2(96f, 48f);
+            previewGo.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.15f, 1f);
+            previewGo.GetComponent<Image>().raycastTarget = false;
+
+            var fpGo = new GameObject("cardFootprint", typeof(RectTransform), typeof(Image), typeof(Outline));
+            fpGo.transform.SetParent(previewGo.transform, false);
+            fpGo.GetComponent<RectTransform>().sizeDelta = new Vector2(24f, 24f);
+            fpGo.GetComponent<Image>().color = new Color(0.55f, 0.55f, 0.55f, 1f);
+            fpGo.GetComponent<Image>().raycastTarget = false;
+            fpGo.GetComponent<Outline>().effectColor = new Color(0.88f, 0.88f, 0.88f, 1f);
+
+            MakeCardLabel(go.transform, "cardName", 13f, FontStyles.Bold, new Color(0.95f, 0.95f, 0.95f, 1f), 19f);
+            MakeCardLabel(go.transform, "cardSize", 11f, FontStyles.Normal, new Color(0.78f, 0.78f, 0.78f, 1f), 16f);
+            MakeCardLabel(go.transform, "cardCost", 12f, FontStyles.Bold, CostNormalText, 19f);
+
+            return go;
+        }
+
+        // Tạo một dòng chữ TextMeshPro con bên trong thẻ công trình.
+        static void MakeCardLabel(Transform parent, string name, float size, FontStyles style, Color color, float height)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<RectTransform>().sizeDelta = new Vector2(98f, height);
+            var txt = go.GetComponent<TextMeshProUGUI>();
+            txt.fontSize = size;
+            txt.fontStyle = style;
+            txt.color = color;
+            txt.alignment = TextAlignmentOptions.Center;
+            txt.textWrappingMode = TextWrappingModes.NoWrap;
+            txt.raycastTarget = false;
         }
     }
 }
