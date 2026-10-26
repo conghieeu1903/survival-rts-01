@@ -15,4 +15,6 @@ quy tắc UI Toolkit bắt buộc để tránh lỗi lặp lại:
 
 - UI prototype hiện tại luôn thiết kế đơn giản không màu mè, dạng prototype này là wireframe màu xám, xóa các dạng style khác,đang ở trạng thái prototype nên giao diện nên lun thiết kế kiểu dạng style wireframe xám không màu mục tiêu chính là layout phải chuẩn
 
+- giao diện luồng game mới (loading, menu, multiplayer, HUD trận đại chiến) dựng bằng code với `BattleUiKit` (`Assets/Scripts/Runtime/UI/Battle/BattleUiKit.cs`) theo theme wireframe xám sáng lấy từ dự án Godot gd-01 (`D:\Godot\Projects\gd-01\Arts\UI\wireframe_theme.tres`): nền xám nhạt, panel trắng ngà viền 2px bo góc, nút chính nền tối chữ sáng, ô logo/hình nền là ô giữ chỗ xám. Màu và bo góc nằm ở một chỗ trong `BattleUiKit`, thêm màn mới thì dùng lại các hàm của nó (Panel, PushButton, Heading, Placeholder, ProgressBar, ConfirmDialog), không tự đặt màu riêng
+
 - luôn dùng TextMeshPro (TextMeshProUGUI / TMP_Text) cho mọi thành phần chữ trên UI, cấm dùng UnityEngine.UI.Text thường để tránh chữ bị mờ nhòe; font TMP_FontAsset phải bật chế độ Dynamic (hoặc nạp đủ bảng mã tiếng Việt) để hiển thị rõ nét tiếng Việt có dấu.

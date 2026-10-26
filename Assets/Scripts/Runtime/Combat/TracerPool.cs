@@ -80,6 +80,12 @@ namespace SurvivalRts
             if (subscribed) EnemyWorld.ShotFired -= OnShot;
         }
 
+        // Vẽ một tia từ nguồn khác ngoài kẻ địch ECS, ví dụ mũi tên của lính trong trận đại chiến.
+        public void Emit(Vector3 from, Vector3 to)
+        {
+            OnShot(from, to);
+        }
+
         void OnShot(Vector3 from, Vector3 to)
         {
             if (cam == null || !IsVisible(from, to)) return;

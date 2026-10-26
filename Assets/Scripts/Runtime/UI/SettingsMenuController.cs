@@ -37,6 +37,7 @@ namespace SurvivalRts
         void OnEnable()
         {
             ResolveReferences();
+            UiButtonFeedback.AttachAll(this);
 
             if (root != null && root.GetComponent<UiPointerBlocker>() == null)
             {
@@ -138,12 +139,12 @@ namespace SurvivalRts
             if (valueLabel != null) valueLabel.text = Mathf.RoundToInt(pct) + "%";
         }
 
-        // Lắng nghe phím Esc để đóng/mở menu cài đặt khi không bận đặt hoặc phá công trình.
+        // Lắng nghe phím Esc để đóng/mở menu cài đặt khi không bận đặt/phá công trình hoặc mở bản đồ lớn.
         void Update()
         {
             var keyboard = Keyboard.current;
-            bool placing = placer != null && (placer.IsPlacing || placer.IsDemolishing);
-            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame && !placing && !wasPlacing)
+            bool busy = (placer != null && (placer.IsPlacing || placer.IsDemolishing)) || MinimapController.IsFullMapOpen;
+            if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame && !busy && !wasPlacing)
             {
                 if (IsOpen) Close();
                 else Open();
@@ -152,10 +153,10 @@ namespace SurvivalRts
             if (IsOpen) UiPointerState.IsOverUI = true;
         }
 
-        // Ghi nhận trạng thái đang đặt/phá công trình ở cuối frame.
+        // Ghi nhận trạng thái đang bận thao tác ở cuối frame.
         void LateUpdate()
         {
-            wasPlacing = placer != null && (placer.IsPlacing || placer.IsDemolishing);
+            wasPlacing = (placer != null && (placer.IsPlacing || placer.IsDemolishing)) || MinimapController.IsFullMapOpen;
         }
 
         // Mở menu cài đặt và tạm dừng thời gian trong game.

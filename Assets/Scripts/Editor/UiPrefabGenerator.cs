@@ -11,8 +11,24 @@ using UnityEngine.UI;
 namespace SurvivalRts.Editor
 {
     // Công cụ dựng các Prefab giao diện uGUI và TextMeshPro wireframe xám và cập nhật vào Scene.
+    [InitializeOnLoad]
     public static class UiPrefabGenerator
     {
+        static UiPrefabGenerator()
+        {
+            EditorApplication.delayCall += EnsureUpdatedOnce;
+        }
+
+        // Tự động cập nhật lại Prefab nếu bản đồ vẫn còn cấu trúc khung cũ.
+        static void EnsureUpdatedOnce()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling) return;
+            var bmPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/Screens/BuildMenuScreen.prefab");
+            if (bmPrefab != null && bmPrefab.transform.Find("minimapPanel") != null)
+            {
+                BuildAllPrefabsAndSetupScene();
+            }
+        }
         static readonly Color PanelBg = new Color(0.14f, 0.14f, 0.14f, 0.95f);
         static readonly Color CardBg = new Color(0.22f, 0.22f, 0.22f, 1f);
         static readonly Color TrackBg = new Color(0.10f, 0.10f, 0.10f, 1f);
@@ -168,7 +184,7 @@ namespace SurvivalRts.Editor
         // Tạo Prefab nút tab danh mục công trình.
         static GameObject BuildTabButtonPrefab(TMP_FontAsset font)
         {
-            var root = new GameObject("BuildTabButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement), typeof(ContentSizeFitter));
+            var root = new GameObject("BuildTabButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(UiButtonFeedback), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement), typeof(ContentSizeFitter));
             root.GetComponent<Image>().color = CardBg;
             root.GetComponent<Outline>().effectColor = BorderCol;
 
@@ -214,7 +230,7 @@ namespace SurvivalRts.Editor
         // Tạo Prefab thẻ công trình trong danh sách xây dựng.
         static GameObject BuildCardButtonPrefab(TMP_FontAsset font)
         {
-            var root = new GameObject("BuildCardButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(VerticalLayoutGroup), typeof(LayoutElement), typeof(CanvasGroup));
+            var root = new GameObject("BuildCardButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(UiButtonFeedback), typeof(Outline), typeof(VerticalLayoutGroup), typeof(LayoutElement), typeof(CanvasGroup));
             root.GetComponent<RectTransform>().sizeDelta = new Vector2(106f, 120f);
             root.GetComponent<Image>().color = CardBg;
             root.GetComponent<Outline>().effectColor = BorderCol;
@@ -299,53 +315,26 @@ namespace SurvivalRts.Editor
             var stoneValueLabel = InstantiateResourceBadge(hudGo.transform, badgePrefab, "stoneBadge", "ĐÁ", "stoneValueLabel", "0");
             var ironValueLabel = InstantiateResourceBadge(hudGo.transform, badgePrefab, "ironBadge", "SẮT", "ironValueLabel", "0");
 
-            var mmPanel = new GameObject("minimapPanel", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter), typeof(UiPointerBlocker));
-            mmPanel.transform.SetParent(root.transform, false);
-            var mmRect = mmPanel.GetComponent<RectTransform>();
+            var mmCanvasGo = new GameObject("minimapCanvas", typeof(RectTransform), typeof(RawImage), typeof(Outline), typeof(UiPointerBlocker));
+            mmCanvasGo.transform.SetParent(root.transform, false);
+            var mmRect = mmCanvasGo.GetComponent<RectTransform>();
             mmRect.anchorMin = new Vector2(0f, 0f);
             mmRect.anchorMax = new Vector2(0f, 0f);
             mmRect.pivot = new Vector2(0f, 0f);
             mmRect.anchoredPosition = new Vector2(16f, 16f);
-            mmPanel.GetComponent<Image>().color = PanelBg;
-            mmPanel.GetComponent<Outline>().effectColor = BorderCol;
-            var mmVlg = mmPanel.GetComponent<VerticalLayoutGroup>();
-            mmVlg.padding = new RectOffset(6, 6, 6, 6);
-            mmVlg.spacing = 4f;
-            mmVlg.childControlWidth = true;
-            mmVlg.childControlHeight = true;
-            mmVlg.childForceExpandWidth = false;
-            mmVlg.childForceExpandHeight = false;
-            var mmCsf = mmPanel.GetComponent<ContentSizeFitter>();
-            mmCsf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            mmCsf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            var mmHeader = new GameObject("minimapHeader", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
-            mmHeader.transform.SetParent(mmPanel.transform, false);
-            var mmHeaderHlg = mmHeader.GetComponent<HorizontalLayoutGroup>();
-            mmHeaderHlg.childAlignment = TextAnchor.MiddleLeft;
-            mmHeaderHlg.childControlWidth = true;
-            mmHeaderHlg.childControlHeight = true;
-            mmHeaderHlg.childForceExpandWidth = true;
-            var mmHeaderLe = mmHeader.GetComponent<LayoutElement>();
-            mmHeaderLe.minWidth = 170f;
-            mmHeaderLe.preferredWidth = 170f;
-            mmHeaderLe.minHeight = 16f;
-            mmHeaderLe.preferredHeight = 16f;
-            mmHeaderLe.flexibleHeight = 0f;
-
-            CreateText(mmHeader.transform, "minimapTitle", font, "BẢN ĐỒ", 11f, FontStyles.Bold, TextMain, TextAlignmentOptions.MidlineLeft);
-            CreateText(mmHeader.transform, "minimapSub", font, "50x50", 10.5f, FontStyles.Normal, TextDim, TextAlignmentOptions.MidlineRight);
-
-            var mmCanvasGo = new GameObject("minimapCanvas", typeof(RectTransform), typeof(RawImage), typeof(Outline), typeof(LayoutElement));
-            mmCanvasGo.transform.SetParent(mmPanel.transform, false);
+            mmRect.sizeDelta = new Vector2(170f, 170f);
             mmCanvasGo.GetComponent<Outline>().effectColor = BorderCol;
-            var mmCanvasLe = mmCanvasGo.GetComponent<LayoutElement>();
-            mmCanvasLe.minWidth = 170f;
-            mmCanvasLe.preferredWidth = 170f;
-            mmCanvasLe.minHeight = 170f;
-            mmCanvasLe.preferredHeight = 170f;
-            mmCanvasLe.flexibleWidth = 0f;
-            mmCanvasLe.flexibleHeight = 0f;
+
+            var fullMapGo = new GameObject("fullMapCanvas", typeof(RectTransform), typeof(RawImage), typeof(Outline), typeof(UiPointerBlocker));
+            fullMapGo.transform.SetParent(root.transform, false);
+            var fmRect = fullMapGo.GetComponent<RectTransform>();
+            fmRect.anchorMin = new Vector2(0.5f, 0.5f);
+            fmRect.anchorMax = new Vector2(0.5f, 0.5f);
+            fmRect.pivot = new Vector2(0.5f, 0.5f);
+            fmRect.anchoredPosition = new Vector2(0f, 36f);
+            fmRect.sizeDelta = new Vector2(460f, 460f);
+            fullMapGo.GetComponent<Outline>().effectColor = BorderCol;
+            fullMapGo.SetActive(false);
 
             var buildPanel = new GameObject("buildPanel", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter), typeof(UiPointerBlocker));
             buildPanel.transform.SetParent(root.transform, false);
@@ -473,8 +462,8 @@ namespace SurvivalRts.Editor
             bmSo.ApplyModifiedPropertiesWithoutUndo();
 
             var mmSo = new SerializedObject(mmCtrl);
-            mmSo.FindProperty("minimapPanel").objectReferenceValue = mmRect;
             mmSo.FindProperty("minimapCanvas").objectReferenceValue = mmCanvasGo.GetComponent<RawImage>();
+            mmSo.FindProperty("fullMapCanvas").objectReferenceValue = fullMapGo.GetComponent<RawImage>();
             mmSo.ApplyModifiedPropertiesWithoutUndo();
 
             string path = "Assets/Prefabs/UI/Screens/BuildMenuScreen.prefab";
@@ -912,7 +901,7 @@ namespace SurvivalRts.Editor
         // Tạo nút bấm uGUI dùng nhãn TextMeshProUGUI có kích thước cố định.
         static Button CreateButton(Transform parent, string name, TMP_FontAsset font, string label, float width, float height, Color bgCol, Color textCol)
         {
-            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(LayoutElement));
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button), typeof(UiButtonFeedback), typeof(Outline), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             go.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
             go.GetComponent<Image>().color = bgCol;
@@ -1039,14 +1028,14 @@ namespace SurvivalRts.Editor
             var selector = Object.FindFirstObjectByType<BuildingSelector>();
             var mainCam = Camera.main;
 
-            var oldBm = GameObject.Find("BuildMenu");
-            if (oldBm != null) Object.DestroyImmediate(oldBm);
-            var oldHb = GameObject.Find("HealthBar");
-            if (oldHb != null) Object.DestroyImmediate(oldHb);
-            var oldUc = GameObject.Find("UnitCommand");
-            if (oldUc != null) Object.DestroyImmediate(oldUc);
-            var oldSm = GameObject.Find("SettingsMenu");
-            if (oldSm != null) Object.DestroyImmediate(oldSm);
+            DestroyAllByName("BuildMenu");
+            DestroyAllByName("HealthBar");
+            DestroyAllByName("UnitCommand");
+            DestroyAllByName("SettingsMenu");
+            foreach (var c in Object.FindObjectsByType<BuildMenuController>(FindObjectsSortMode.None))
+                if (c != null) Object.DestroyImmediate(c.gameObject);
+            foreach (var c in Object.FindObjectsByType<MinimapController>(FindObjectsSortMode.None))
+                if (c != null) Object.DestroyImmediate(c.gameObject);
 
             if (Object.FindFirstObjectByType<EventSystem>() == null)
             {
@@ -1082,6 +1071,17 @@ namespace SurvivalRts.Editor
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             EditorSceneManager.SaveOpenScenes();
+        }
+
+        // Xóa sạch mọi đối tượng trùng tên trong Scene hiện tại.
+        static void DestroyAllByName(string objName)
+        {
+            while (true)
+            {
+                var go = GameObject.Find(objName);
+                if (go == null) break;
+                Object.DestroyImmediate(go);
+            }
         }
     }
 }

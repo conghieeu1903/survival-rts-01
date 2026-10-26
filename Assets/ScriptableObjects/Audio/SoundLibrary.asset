@@ -116,8 +116,8 @@ MonoBehaviour:
     kind: 1
     cullOutsideView: 0
     mergeCellSize: 0
-    maxStartsPerSecond: 10
-    maxSimultaneous: 2
+    maxStartsPerSecond: 30
+    maxSimultaneous: 4
     pitchRandom: 0.03
     cooldown: 0
     volume: 0.8

@@ -53,6 +53,7 @@ namespace SurvivalRts
         void OnEnable()
         {
             ResolveReferences();
+            UiButtonFeedback.AttachAll(this);
 
             if (workerPanel != null && workerPanel.GetComponent<UiPointerBlocker>() == null)
                 workerPanel.AddComponent<UiPointerBlocker>();

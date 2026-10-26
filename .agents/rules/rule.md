@@ -12,3 +12,4 @@ comment bằng tiếng việt
 không đưa các nút test/cheat (như nút Teleport trên bản đồ) vào UI trong game nếu bản gốc SLS2 không có; mọi công cụ test nhanh phải đặt trong menu Editor `Debug` (`Assets/Scripts/Editor/DebugWindow.cs`)
 
 
+đừng đặt tên là test hay là viết code test hay muốn làm tính năng test mà lại ghi test đã viết là viết đúng foulder tree đúng cấu trúc thư mục viết code thật , sai thì tương lai sửa sau

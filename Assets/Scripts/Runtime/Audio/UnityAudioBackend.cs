@@ -239,6 +239,13 @@ namespace SurvivalRts
                 // Lúc mới đặt móng tiếng búa trầm, càng gần hoàn thành tiếng gõ càng đanh và cao hơn.
                 pitch += Mathf.Lerp(-0.12f, 0.22f, Mathf.Clamp01(parameter));
             }
+            else if (rule.id == SoundId.UiClick && parameter > 0f)
+            {
+                // Tiếng rê chuột vào nút nhẹ và cao hơn tiếng nhấn.
+                pitch += 0.28f;
+                volume *= 0.45f;
+                voice.BaseVolume = volume;
+            }
             voice.Source.pitch = Mathf.Clamp(pitch, 0.5f, 2f);
             voice.Source.volume = ComputeSourceVolume(rule.channel, volume, false);
             voice.Source.priority = PriorityFor(rule);

@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 5613076146767774748}
   - component: {fileID: 7745740082109255907}
   - component: {fileID: 296629497613880655}
+  - component: {fileID: 3558146713195818296}
   - component: {fileID: 4892916214803760712}
   - component: {fileID: 5323341270898238760}
   - component: {fileID: 326474056183450226}
@@ -503,6 +504,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3558146713195818296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032476828059495432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a263c43e54831e468841d3a27a30d7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.UiButtonFeedback
 --- !u!114 &4892916214803760712
 MonoBehaviour:
   m_ObjectHideFlags: 0

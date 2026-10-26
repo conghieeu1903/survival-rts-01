@@ -113,7 +113,8 @@ namespace SurvivalRts.Editor
                     case SoundId.UiClick:
                         rule.clips = LoadClips("UI/UI_Click");
                         rule.channel = VolumeChannel.Ui;
-                        rule.maxSimultaneous = 2;
+                        rule.maxStartsPerSecond = 30;
+                        rule.maxSimultaneous = 4;
                         rule.pitchRandom = 0.03f;
                         break;
                     case SoundId.UiPlace:

@@ -42,6 +42,7 @@ namespace SurvivalRts
         void OnEnable()
         {
             ResolveReferences();
+            UiButtonFeedback.AttachAll(this);
 
             if (commandPanel != null && commandPanel.GetComponent<UiPointerBlocker>() == null)
             {

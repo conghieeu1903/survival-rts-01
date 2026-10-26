@@ -72,11 +72,42 @@ namespace SurvivalRts
         bool inBattleMusic;
         float battleMusicHoldTimer;
         Vector4 view;
+        float4 densityRect;
         Vector3 groundPivot;
         float zoomVolumeFactor;
         bool shotSubscribed;
+        static int lastUiClickFrame = -1;
+        static int lastUiHoverFrame = -1;
 
         public static AudioDirector Instance { get; private set; }
+        public static SoundLibrary DefaultLibrary;
+
+        // Tự tạo AudioDirector nếu scene hiện tại chưa có sẵn.
+        public static void EnsureInstance(SoundLibrary fallbackLibrary = null)
+        {
+            if (fallbackLibrary != null) DefaultLibrary = fallbackLibrary;
+            if (Instance != null) return;
+#if UNITY_EDITOR
+            if (DefaultLibrary == null)
+                DefaultLibrary = UnityEditor.AssetDatabase.LoadAssetAtPath<SoundLibrary>("Assets/ScriptableObjects/Audio/SoundLibrary.asset");
+#endif
+            if (DefaultLibrary == null) return;
+            var go = new GameObject("AudioDirector");
+            go.AddComponent<AudioDirector>();
+        }
+
+        // Nguồn mật độ thay cho AudioDensitySystem (kẻ địch ECS): nhận vùng nghe (minX, minZ, maxX, maxZ), trả về số đang đi (x) và đang đánh (y).
+        public System.Func<float4, int2> DensityProvider { get; set; }
+
+        // Vị trí có nằm trong vùng đang nghe được không; bên phát sự kiện dùng để khỏi gửi những tiếng chắc chắn bị bỏ.
+        public bool IsAudible(Vector3 p)
+        {
+            if (zoomVolumeFactor <= 0.001f) return false;
+            if (p.x < view.x || p.z < view.y || p.x > view.z || p.z > view.w) return false;
+            float dx = p.x - groundPivot.x;
+            float dz = p.z - groundPivot.z;
+            return dx * dx + dz * dz <= audibleGroundRadius * audibleGroundRadius;
+        }
 
         // Thống kê của frame gần nhất, để kiểm tra bộ lọc hoạt động đúng.
         public int LastReceived { get; private set; }
@@ -101,6 +132,21 @@ namespace SurvivalRts
         // Gọi từ main thread (UI, công trình...). Job ECS thì ghi qua AudioEventSystem.Writer.
         public static void Post(SoundId id, Vector3 position, float parameter = 0f)
         {
+            if (Instance == null) EnsureInstance();
+            if (id == SoundId.UiClick)
+            {
+                int frame = Time.frameCount;
+                if (parameter > 0f)
+                {
+                    if (lastUiHoverFrame == frame) return;
+                    lastUiHoverFrame = frame;
+                }
+                else
+                {
+                    if (lastUiClickFrame == frame) return;
+                    lastUiClickFrame = frame;
+                }
+            }
             EventSystem?.Post(id, position, parameter);
         }
 
@@ -116,6 +162,12 @@ namespace SurvivalRts
         void Awake()
         {
             Instance = this;
+            if (library == null) library = DefaultLibrary;
+#if UNITY_EDITOR
+            if (library == null)
+                library = UnityEditor.AssetDatabase.LoadAssetAtPath<SoundLibrary>("Assets/ScriptableObjects/Audio/SoundLibrary.asset");
+#endif
+            if (library != null) DefaultLibrary = library;
             if (cameraController == null) cameraController = FindFirstObjectByType<CameraController>();
             listener = new GameObject("AudioListenerPivot").transform;
             listener.SetParent(transform, false);
@@ -200,7 +252,13 @@ namespace SurvivalRts
 
         void UpdateViewAndListener()
         {
-            if (cameraController == null) return;
+            if (cameraController == null)
+            {
+                var mainCam = Camera.main;
+                if (mainCam != null) listener.position = mainCam.transform.position;
+                backend.UpdateListener(listener);
+                return;
+            }
 
             groundPivot = cameraController.GroundPivot();
             float ortho = cameraController.OrthographicSize;
@@ -223,17 +281,15 @@ namespace SurvivalRts
                 }
                 view = new Vector4(minX - viewMargin, minZ - viewMargin, maxX + viewMargin, maxZ + viewMargin);
 
+                // Chỉ đếm mật độ quái trong bán kính nghe quanh điểm camera đang zoom vào.
+                float r = zoomVolumeFactor > 0f ? audibleGroundRadius : 0f;
+                densityRect = new float4(
+                    groundPivot.x - r,
+                    groundPivot.z - r,
+                    groundPivot.x + r,
+                    groundPivot.z + r);
                 var density = World.DefaultGameObjectInjectionWorld?.GetExistingSystemManaged<AudioDensitySystem>();
-                if (density != null)
-                {
-                    // Chỉ đếm mật độ quái trong bán kính nghe quanh điểm camera đang zoom vào.
-                    float r = zoomVolumeFactor > 0f ? audibleGroundRadius : 0f;
-                    density.ViewRect = new float4(
-                        groundPivot.x - r,
-                        groundPivot.z - r,
-                        groundPivot.x + r,
-                        groundPivot.z + r);
-                }
+                if (density != null) density.ViewRect = densityRect;
             }
 
             // Listener đặt ở điểm camera nhìn xuống mặt đất, xoay theo hướng camera để trái/phải khớp màn hình.
@@ -357,7 +413,8 @@ namespace SurvivalRts
         void UpdateLoops()
         {
             var density = World.DefaultGameObjectInjectionWorld?.GetExistingSystemManaged<AudioDensitySystem>();
-            var counts = density != null ? density.GetCounts() : int2.zero;
+            var counts = DensityProvider != null ? DensityProvider(densityRect)
+                : density != null ? density.GetCounts() : int2.zero;
             LastDensity = counts;
 
             float k = 1f - Mathf.Exp(-loopSmoothing * Time.unscaledDeltaTime);

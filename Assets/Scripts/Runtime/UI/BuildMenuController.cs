@@ -76,6 +76,7 @@ namespace SurvivalRts
             }
 
             ResolveReferences();
+            UiButtonFeedback.AttachAll(this);
 
             if (buildPanel != null && buildPanel.GetComponent<UiPointerBlocker>() == null)
             {
@@ -282,6 +283,7 @@ namespace SurvivalRts
                 : CreateFallbackTabObject(tabRow);
 
             var btn = go.GetComponent<Button>();
+            UiButtonFeedback.Attach(btn);
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(onClick);
 
@@ -356,6 +358,7 @@ namespace SurvivalRts
 
             go.name = "Card_" + data.name;
             var btn = go.GetComponent<Button>();
+            UiButtonFeedback.Attach(btn);
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() =>
             {
@@ -484,7 +487,7 @@ namespace SurvivalRts
         // Tạo nút tab dự phòng bằng code nếu chưa gán Prefab.
         static GameObject CreateFallbackTabObject(Transform parent)
         {
-            var go = new GameObject("BuildTabButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            var go = new GameObject("BuildTabButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(UiButtonFeedback), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             go.GetComponent<Image>().color = TabNormalBg;
             go.GetComponent<Outline>().effectColor = BorderNormal;
@@ -535,7 +538,7 @@ namespace SurvivalRts
         // Tạo thẻ công trình dự phòng bằng code nếu chưa gán Prefab.
         static GameObject CreateFallbackCardObject(Transform parent)
         {
-            var go = new GameObject("BuildCardButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(Outline), typeof(VerticalLayoutGroup), typeof(LayoutElement), typeof(CanvasGroup));
+            var go = new GameObject("BuildCardButton", typeof(RectTransform), typeof(Image), typeof(Button), typeof(UiButtonFeedback), typeof(Outline), typeof(VerticalLayoutGroup), typeof(LayoutElement), typeof(CanvasGroup));
             go.transform.SetParent(parent, false);
             go.GetComponent<Image>().color = CardNormalBg;
             go.GetComponent<Outline>().effectColor = BorderNormal;
