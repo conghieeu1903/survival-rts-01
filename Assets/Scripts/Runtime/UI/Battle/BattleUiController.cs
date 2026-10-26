@@ -6,13 +6,12 @@ using UnityEngine.UI;
 
 namespace SurvivalRts
 {
-    // Điều phối giao diện trận đại chiến: tự dựng Canvas + EventSystem, chuyển giữa màn chính, phòng chờ, HUD và kết quả
-    // theo trạng thái của LockstepNetwork.
+    // Điều phối giao diện trong scene battle: chỉ chứa HUD trận (06) và Kết quả trận (07a/07b);
+    // toàn bộ menu, danh sách phòng LAN/Online và Phòng chờ nằm ở scene menu.
     public class BattleUiController : MonoBehaviour
     {
         const float RefreshSeconds = 0.1f;
-        const float ConnectTimeoutSeconds = 12f;
-        const float IgnoreDisconnectSeconds = 1f; // sau khi tự rời phòng thì bỏ qua sự kiện Disconnected
+        const float IgnoreDisconnectSeconds = 1f; // sau khi tự rời trận thì bỏ qua sự kiện Disconnected
 
         [Header("Tham chiếu")]
         [Tooltip("Font TMP có đủ tiếng Việt (Dynamic); để trống thì dùng font mặc định của TMP")]
@@ -24,38 +23,39 @@ namespace SurvivalRts
         [Tooltip("Điều khiển chuột của người chơi; để trống thì tự tìm")]
         [SerializeField] BattleInput battleInput;
 
-        [Tooltip("Dò phòng LAN cho màn hình chính; để trống thì tự tìm, không có thì ẩn danh sách")]
-        [SerializeField] LanDiscovery lanDiscovery;
-
-        BattleMainMenuScreen menuScreen;
-        BattleLobbyScreen lobbyScreen;
         BattleHudScreen hudScreen;
         BattleResultScreen resultScreen;
         LockstepNetwork subscribedNet;
         BattleSimulation subscribedSimulation;
 
         string notice = "";
-        string connectingText = "";
-        float connectingSince;
         float ignoreDisconnectUntil;
         float nextRefresh;
         bool matchEnded;
         int winner = -1;
+        bool autoStartMatchOnLobby;
 
         void Awake()
         {
             if (simulation == null) simulation = FindFirstObjectByType<BattleSimulation>();
             if (battleInput == null) battleInput = FindFirstObjectByType<BattleInput>();
-            if (lanDiscovery == null) lanDiscovery = FindFirstObjectByType<LanDiscovery>();
 
             BattleUiKit.Font = fontAsset != null ? fontAsset : TMP_Settings.defaultFontAsset;
             EnsureEventSystem();
             BuildScreens();
+            if (FindFirstObjectByType<SettingsMenuController>() == null)
+                gameObject.AddComponent<SettingsMenuController>();
         }
 
         void Start()
         {
+            var net = LockstepNetwork.EnsureInstance();
             Subscribe();
+            if (!net.InMatch && !net.IsConnecting && net.LocalTeam < 0)
+            {
+                autoStartMatchOnLobby = true;
+                net.Host();
+            }
         }
 
         void OnDestroy()
@@ -71,6 +71,7 @@ namespace SurvivalRts
             {
                 Unsubscribe();
                 subscribedNet = net;
+                net.LobbyChanged += OnLobbyChanged;
                 net.Disconnected += OnDisconnected;
                 net.DesyncDetected += OnDesync;
             }
@@ -86,6 +87,7 @@ namespace SurvivalRts
         {
             if (subscribedNet != null)
             {
+                subscribedNet.LobbyChanged -= OnLobbyChanged;
                 subscribedNet.Disconnected -= OnDisconnected;
                 subscribedNet.DesyncDetected -= OnDesync;
             }
@@ -120,18 +122,12 @@ namespace SurvivalRts
             scaler.matchWidthOrHeight = 0.5f;
             canvasObject.AddComponent<GraphicRaycaster>();
 
-            menuScreen = new BattleMainMenuScreen(this, lanDiscovery);
-            lobbyScreen = new BattleLobbyScreen(this);
             hudScreen = new BattleHudScreen(this, simulation, battleInput);
             resultScreen = new BattleResultScreen(this, simulation);
             hudScreen.Build(canvasObject.transform);
             resultScreen.Build(canvasObject.transform);
-            lobbyScreen.Build(canvasObject.transform);
-            menuScreen.Build(canvasObject.transform);
-            lobbyScreen.Root.SetActive(false);
             hudScreen.Root.SetActive(false);
             resultScreen.Root.SetActive(false);
-            menuScreen.SetActive(true);
         }
 
         void Update()
@@ -140,21 +136,11 @@ namespace SurvivalRts
             var net = LockstepNetwork.Instance;
 
             bool inMatch = net != null && net.InMatch && simulation != null;
-            bool inLobby = net != null && !net.InMatch && net.LocalTeam >= 0;
-            if (inLobby || inMatch) connectingText = "";
             if (!inMatch) matchEnded = false;
-            if (connectingText.Length > 0 && Time.unscaledTime - connectingSince > ConnectTimeoutSeconds)
-            {
-                connectingText = "";
-                LeaveRoom();
-                notice = "Không kết nối được tới phòng";
-            }
 
             bool showResult = inMatch && (matchEnded || simulation.WinnerTeam >= 0);
-            lobbyScreen.Root.SetActive(inLobby);
             hudScreen.Root.SetActive(inMatch);
             resultScreen.Root.SetActive(showResult);
-            menuScreen.SetActive(!inMatch && !inLobby);
 
             if (Time.unscaledTime < nextRefresh) return;
             nextRefresh = Time.unscaledTime + RefreshSeconds;
@@ -164,8 +150,17 @@ namespace SurvivalRts
                 hudScreen.Refresh(net, notice);
                 if (showResult) resultScreen.Refresh(net, winner >= 0 ? winner : simulation.WinnerTeam);
             }
-            else if (inLobby) lobbyScreen.Refresh(net, simulation != null ? simulation.Data : null);
-            else menuScreen.Refresh(connectingText.Length > 0 ? connectingText : notice);
+        }
+
+        public void HostRoom()
+        {
+            LockstepNetwork.EnsureInstance().Host();
+        }
+
+        public void JoinRoom(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address)) return;
+            LockstepNetwork.EnsureInstance().Join(address.Trim());
         }
 
         public void SetNotice(string text)
@@ -173,22 +168,17 @@ namespace SurvivalRts
             notice = text ?? "";
         }
 
-        public void BeginConnecting(string text)
-        {
-            connectingText = text;
-            connectingSince = Time.unscaledTime;
-            notice = "";
-        }
-
-        // Tự rời phòng: bỏ qua thông báo mất kết nối do chính hành động này gây ra.
+        // Thoát ở màn kết quả: về lại sảnh multiplayer trên scene menu qua loading chuyển cảnh.
         public void LeaveRoom()
         {
-            var net = LockstepNetwork.Instance;
-            if (net == null) return;
+            ReturnToMultiplayerMenu("");
+        }
+
+        void ReturnToMultiplayerMenu(string message)
+        {
             ignoreDisconnectUntil = Time.unscaledTime + IgnoreDisconnectSeconds;
-            net.Leave();
             notice = "";
-            connectingText = "";
+            GameFlow.BackToMultiplayerMenu(message);
         }
 
         public void QuitGame()
@@ -200,11 +190,22 @@ namespace SurvivalRts
 #endif
         }
 
+        void OnLobbyChanged()
+        {
+            if (!autoStartMatchOnLobby) return;
+            var net = LockstepNetwork.Instance;
+            if (net != null && net.IsHost && !net.InMatch && net.LocalTeam >= 0)
+            {
+                autoStartMatchOnLobby = false;
+                net.StartMatch();
+            }
+        }
+
         void OnDisconnected(string reason)
         {
-            connectingText = "";
             if (Time.unscaledTime < ignoreDisconnectUntil) return;
-            notice = string.IsNullOrEmpty(reason) ? "Mất kết nối với phòng" : "Mất kết nối: " + reason;
+            string message = string.IsNullOrEmpty(reason) ? "Mất kết nối với phòng" : "Mất kết nối: " + reason;
+            ReturnToMultiplayerMenu(message);
         }
 
         void OnDesync(uint turn)

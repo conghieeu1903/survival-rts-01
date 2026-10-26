@@ -1,0 +1,107 @@
+{
+  "screen": "01_loading",
+  "title": "Loading (scene init)",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "Background",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": true,
+      "fill": { "color": "#E8E8E8", "opacity": 1 },
+      "children": [
+        {
+          "name": "CenterGroup",
+          "type": "FRAME",
+          "x": 510, "y": 310, "w": 900, "h": 360,
+          "visible": true,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 48, "padding": [0, 0, 0, 0], "align": "UpperCenter", "expandWidth": false, "expandHeight": false },
+          "children": [
+            {
+              "name": "Placeholder",
+              "type": "FRAME",
+              "x": 210, "y": 0, "w": 480, "h": 200,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - SURVIVAL RTS",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 480, "h": 200,
+                  "visible": true,
+                  "text": { "characters": "SURVIVAL RTS", "fontSize": 44, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Text - Mẹo: Lính cung đứng sau lính",
+              "type": "TEXT",
+              "x": 0, "y": 248, "w": 900, "h": 60,
+              "visible": true,
+              "text": { "characters": "Mẹo: Lính cung đứng sau lính kiếm sẽ sống lâu hơn.", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            }
+          ]
+        },
+        {
+          "name": "Footer",
+          "type": "FRAME",
+          "x": 120, "y": 930, "w": 1680, "h": 70,
+          "visible": true,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "children": [
+            {
+              "name": "ProgressBar",
+              "type": "FRAME",
+              "x": 0, "y": 0, "w": 1680, "h": 24,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 6,
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Fill",
+                  "type": "FRAME",
+                  "x": 4, "y": 4, "w": 748, "h": 16,
+                  "visible": true,
+                  "fill": { "color": "#686868", "opacity": 1 },
+                  "cornerRadius": 2
+                }
+              ]
+            },
+            {
+              "name": "StatusRow",
+              "type": "FRAME",
+              "x": 0, "y": 36, "w": 1680, "h": 30,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Nạp âm thanh...",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 1548, "h": 30,
+                  "visible": true,
+                  "text": { "characters": "Nạp âm thanh...", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                },
+                {
+                  "name": "Text - 45%",
+                  "type": "TEXT",
+                  "x": 1560, "y": 0, "w": 120, "h": 30,
+                  "visible": true,
+                  "text": { "characters": "45%", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "RIGHT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ namespace SurvivalRts
         Test
     }
 
+    // Dữ liệu cấu hình của một loại công trình có thể đặt trên bản đồ.
     [CreateAssetMenu(menuName = "SurvivalRts/Building Data", fileName = "BuildingData")]
     public class BuildingData : ScriptableObject
     {
@@ -30,6 +31,13 @@ namespace SurvivalRts
 
         [Tooltip("Chiều cao (m), dùng cho vật cản NavMesh")]
         public float height = 2f;
+
+        [Header("Điều kiện địa hình")]
+        [Tooltip("Chênh lệch độ cao tối đa (m) giữa điểm cao nhất và thấp nhất dưới đế công trình; <= 0 thì lấy mặc định của BuildGrid")]
+        public float maxHeightDelta = 1.0f;
+
+        [Tooltip("Độ dốc tối đa (độ) cho phép tại các điểm dưới đế công trình; <= 0 thì lấy mặc định của BuildGrid")]
+        public float maxSlopeAngle = 30f;
 
         [Header("Chiến đấu")]
         [Tooltip("Máu tối đa khi công trình được đặt xuống")]

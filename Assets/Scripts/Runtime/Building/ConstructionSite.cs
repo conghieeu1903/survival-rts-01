@@ -80,25 +80,53 @@ namespace SurvivalRts
             else ProgressChanged?.Invoke(Progress, StageIndex);
         }
 
-        // Trả về điểm đứng làm việc quanh rìa công trình cho thợ xây theo chỉ số vị trí.
+        // Trả về điểm đứng làm việc trên mặt đất phẳng quanh rìa công trình cho thợ xây theo chỉ số vị trí.
         public Vector3 GetWorkSlotPosition(int slotIndex)
         {
             var occupant = GetComponent<GridOccupant>();
-            float cellSize = BuildGrid.Instance != null ? BuildGrid.Instance.CellSize : 1f;
+            var grid = BuildGrid.Instance;
+            float cellSize = grid != null ? grid.CellSize : 1f;
             Vector2 half = occupant != null
-                ? (Vector2)occupant.footprint * (cellSize * 0.5f)
+                ? (Vector2)occupant.BaseFootprint * (cellSize * 0.5f)
                 : new Vector2(1f, 1f);
 
-            float angle = (slotIndex * 1.37f) % (Mathf.PI * 2f);
-            var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            var center2D = new Vector2(transform.position.x, transform.position.z);
-            var edge = new Vector2(
-                Mathf.Clamp(center2D.x + dir.x * (half.x + 2f), center2D.x - half.x, center2D.x + half.x),
-                Mathf.Clamp(center2D.y + dir.y * (half.y + 2f), center2D.y - half.y, center2D.y + half.y));
-            var outward = (edge - center2D).normalized;
-            if (outward.sqrMagnitude < 0.01f) outward = Vector2.up;
-            var pos2D = edge + outward * 0.45f;
-            return new Vector3(pos2D.x, transform.position.y, pos2D.y);
+            float baseAngle = (slotIndex * 1.37f) % (Mathf.PI * 2f);
+            Vector3 bestWorld = transform.position;
+            float bestDiff = float.MaxValue;
+
+            for (int attempt = 0; attempt < 8; attempt++)
+            {
+                float angle = baseAngle + attempt * (Mathf.PI * 0.25f);
+                var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                var edge = new Vector2(
+                    Mathf.Clamp(dir.x * (half.x + 2f), -half.x, half.x),
+                    Mathf.Clamp(dir.y * (half.y + 2f), -half.y, half.y));
+                var outward = edge.normalized;
+                if (outward.sqrMagnitude < 0.01f) outward = Vector2.up;
+                var local = edge + outward * 0.55f;
+                var candidate = transform.TransformPoint(new Vector3(local.x, 0f, local.y));
+
+                if (grid == null)
+                {
+                    return new Vector3(candidate.x, transform.position.y, candidate.z);
+                }
+
+                float groundY = grid.SampleWorldHeight(candidate);
+                candidate.y = groundY;
+                var cell = grid.MinCell(candidate, Vector2Int.one);
+                bool walkable = grid.InBounds(cell)
+                    && grid.Terrain[grid.Index(cell)] == CellState.Free
+                    && grid.GetOccupancy(cell) == CellOccupancy.None;
+                float diff = Mathf.Abs(groundY - transform.position.y) + (walkable ? 0f : 10f);
+                if (diff < bestDiff)
+                {
+                    bestDiff = diff;
+                    bestWorld = candidate;
+                    if (walkable && diff <= 0.35f) break;
+                }
+            }
+
+            return bestWorld;
         }
 
         void UpdateStageVisual()

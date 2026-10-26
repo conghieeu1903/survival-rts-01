@@ -65,6 +65,8 @@ namespace SurvivalRts
         NetworkManager manager;
         bool connecting; // đang kết nối, chưa lên được
         bool wasConnected; // đã kết nối thành công, dùng để phân biệt tự rời với bị mất kết nối
+        bool hasPendingStart; // gói bắt đầu trận đã nhận từ phòng chờ ở scene menu, chờ scene battle nạp xong mới chạy StartMatch
+        StartMatchMessage pendingStartMessage;
 
         // chỉ host dùng
         readonly Dictionary<int, byte> teamByConnection = new Dictionary<int, byte>();
@@ -82,14 +84,25 @@ namespace SurvivalRts
         // chỉ client dùng
         readonly Queue<TurnMessage> incoming = new Queue<TurnMessage>();
 
+        public static LockstepNetwork EnsureInstance()
+        {
+            if (Instance != null) return Instance;
+            var existing = FindFirstObjectByType<LockstepNetwork>();
+            if (existing != null) return existing;
+            var go = new GameObject("LockstepNetwork");
+            DontDestroyOnLoad(go);
+            return go.AddComponent<LockstepNetwork>();
+        }
+
         void Awake()
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+                Destroy(this);
                 return;
             }
             Instance = this;
+            if (transform.parent == null && GetComponent<BattleSimulation>() == null) DontDestroyOnLoad(gameObject);
             if (GetComponent<LanDiscovery>() == null) gameObject.AddComponent<LanDiscovery>();
         }
 
@@ -187,6 +200,7 @@ namespace SurvivalRts
             bool wasInMatch = InMatch;
             IsHost = false;
             InMatch = false;
+            hasPendingStart = false;
             connecting = false;
             wasConnected = false;
             LocalTeam = -1;
@@ -338,6 +352,7 @@ namespace SurvivalRts
             lastProgress.Clear();
             manager.ServerManager.Broadcast(new EndMatchMessage { Reason = 0 });
             // phía host đã tắt cờ InMatch nên tự dọn và báo sự kiện ở đây
+            hasPendingStart = false;
             CurrentTurn = 0;
             incoming.Clear();
             IsWaitingForPlayers = false;
@@ -345,6 +360,7 @@ namespace SurvivalRts
             MatchEnded?.Invoke();
             CompactTeams();
             BroadcastLobby();
+            GameFlow.ReturnToMultiplayerLobby();
         }
 
         void BeginMatch()
@@ -502,8 +518,10 @@ namespace SurvivalRts
             IsWaitingForPlayers = false;
             WaitingTeam = -1;
             LocalTeam = message.LocalTeam;
-            Simulation?.StartMatch(message.Seed, message.TeamCount, message.LocalTeam, message.AiMask);
+            hasPendingStart = true;
+            pendingStartMessage = message;
             MatchStarted?.Invoke();
+            GameFlow.EnterMultiplayerMatch();
         }
 
         void OnClientTurn(TurnMessage message, Channel channel)
@@ -529,12 +547,14 @@ namespace SurvivalRts
         {
             bool wasInMatch = InMatch;
             InMatch = false;
+            hasPendingStart = false;
             CurrentTurn = 0;
             incoming.Clear();
             IsWaitingForPlayers = false;
             WaitingTeam = -1;
             if (wasInMatch) MatchEnded?.Invoke();
             LobbyChanged?.Invoke();
+            GameFlow.ReturnToMultiplayerLobby();
         }
 
         public void SendCommand(LockstepCommand command)
@@ -546,8 +566,14 @@ namespace SurvivalRts
         void Update()
         {
             if (manager == null) return;
-            if (IsHost && InMatch) TickHost(Time.unscaledDeltaTime);
             if (!InMatch || Simulation == null) return;
+            if (hasPendingStart)
+            {
+                hasPendingStart = false;
+                Simulation.StartMatch(pendingStartMessage.Seed, pendingStartMessage.TeamCount,
+                    pendingStartMessage.LocalTeam, pendingStartMessage.AiMask);
+            }
+            if (IsHost) TickHost(Time.unscaledDeltaTime);
 
             // chạy nhiều lượt mỗi frame trong ngân sách thời gian để bắt kịp khi bị trễ mà không khựng
             var watch = System.Diagnostics.Stopwatch.StartNew();

@@ -17,6 +17,8 @@ MonoBehaviour:
   prefab: {fileID: 7079742308644545856, guid: 9c1bcd3e6d1c73046988e65b46e2be6e, type: 3}
   footprint: {x: 3, y: 3}
   height: 2.3
+  maxHeightDelta: 0.3
+  maxSlopeAngle: 22
   maxHealth: 600
   tower: {fileID: 0}
   soldier: {fileID: 11400000, guid: 3918b54a4f037b64680230172cb2c8b8, type: 2}

@@ -1,0 +1,335 @@
+{
+  "screen": "04_tham_gia_may_chu",
+  "title": "Tham gia máy chủ (Online)",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "MainMenu",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": true,
+      "fill": { "color": "#C6C6C6", "opacity": 1 },
+      "children": [
+        {
+          "name": "Panel",
+          "type": "FRAME",
+          "x": 530, "y": 312, "w": 860, "h": 456,
+          "visible": true,
+          "fill": { "color": "#FAFAFA", "opacity": 1 },
+          "stroke": { "color": "#808080", "width": 2 },
+          "cornerRadius": 6,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 12, "padding": [24, 24, 24, 24], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "hug": { "x": false, "y": true },
+          "children": [
+            {
+              "name": "Heading",
+              "type": "FRAME",
+              "x": 24, "y": 24, "w": 812, "h": 52,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 8, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+              "children": [
+                {
+                  "name": "Text - Tham gia máy chủ",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 812, "h": 42,
+                  "visible": true,
+                  "text": { "characters": "Tham gia máy chủ", "fontSize": 30, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                },
+                {
+                  "name": "Line",
+                  "type": "FRAME",
+                  "x": 0, "y": 50, "w": 812, "h": 2,
+                  "visible": true,
+                  "fill": { "color": "#C0C0C0", "opacity": 1 },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                }
+              ]
+            },
+            {
+              "name": "Header",
+              "type": "FRAME",
+              "x": 24, "y": 88, "w": 812, "h": 28,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 10, "padding": [8, 8, 8, 8], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Tên máy chủ",
+                  "type": "TEXT",
+                  "x": 8, "y": 8, "w": 417.52, "h": 12,
+                  "visible": true,
+                  "text": { "characters": "Tên máy chủ", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                },
+                {
+                  "name": "Text - Địa chỉ",
+                  "type": "TEXT",
+                  "x": 435.52, "y": 8, "w": 368.48, "h": 12,
+                  "visible": true,
+                  "text": { "characters": "Địa chỉ", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                }
+              ]
+            },
+            {
+              "name": "ServerList",
+              "type": "FRAME",
+              "x": 24, "y": 128, "w": 812, "h": 56,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 6, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+              "children": [
+                {
+                  "name": "Placeholder",
+                  "type": "FRAME",
+                  "x": 0, "y": 0, "w": 812, "h": 56,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Chưa có máy chủ nào, hãy thê",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 812, "h": 56,
+                      "visible": true,
+                      "text": { "characters": "Chưa có máy chủ nào, hãy thêm bên dưới", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24, "y": 196, "w": 812, "h": 2,
+              "visible": true,
+              "fill": { "color": "#C0C0C0", "opacity": 1 },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "AddRow",
+              "type": "FRAME",
+              "x": 24, "y": 210, "w": 812, "h": 48,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 10, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Input",
+                  "type": "FRAME",
+                  "x": 0, "y": 0, "w": 341, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#FAFAFA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 6,
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text Area",
+                      "type": "FRAME",
+                      "x": 12, "y": 4, "w": 317, "h": 40,
+                      "visible": true,
+                      "children": [
+                        {
+                          "name": "Text",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 317, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" }
+                        },
+                        {
+                          "name": "Placeholder",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 317, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Tên máy chủ", "fontSize": 20, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": true, "alignH": "LEFT", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Input",
+                  "type": "FRAME",
+                  "x": 351, "y": 0, "w": 341, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#FAFAFA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 6,
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text Area",
+                      "type": "FRAME",
+                      "x": 12, "y": 4, "w": 317, "h": 40,
+                      "visible": true,
+                      "children": [
+                        {
+                          "name": "Text",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 317, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" }
+                        },
+                        {
+                          "name": "Placeholder",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 317, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Địa chỉ IP hoặc IP:cổng", "fontSize": 20, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": true, "alignH": "LEFT", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Thêm",
+                  "type": "FRAME",
+                  "x": 702, "y": 0, "w": 110, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Thêm",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 110, "h": 48,
+                      "visible": true,
+                      "text": { "characters": "Thêm", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Text - Chưa có máy chủ trung tâm: n",
+              "type": "TEXT",
+              "x": 24, "y": 270, "w": 812, "h": 44,
+              "visible": true,
+              "text": { "characters": "Chưa có máy chủ trung tâm: nhập IP công khai của chủ phòng rồi lưu lại. Chủ phòng cần mở cổng UDP 7770 hoặc cùng dùng VPN.", "fontSize": 16, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Label",
+              "type": "TEXT",
+              "x": 24, "y": 326, "w": 812, "h": 28,
+              "visible": true,
+              "text": { "characters": "", "fontSize": 18, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24, "y": 366, "w": 812, "h": 2,
+              "visible": true,
+              "fill": { "color": "#C0C0C0", "opacity": 1 },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Actions",
+              "type": "FRAME",
+              "x": 24, "y": 380, "w": 812, "h": 52,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Button - Quay lại",
+                  "type": "FRAME",
+                  "x": 0, "y": 0, "w": 150, "h": 52,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Quay lại",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 150, "h": 52,
+                      "visible": true,
+                      "text": { "characters": "Quay lại", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                },
+                {
+                  "name": "Spacer",
+                  "type": "FRAME",
+                  "x": 162, "y": 0, "w": 154, "h": 52,
+                  "visible": true,
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                },
+                {
+                  "name": "Button - Xoá",
+                  "type": "FRAME",
+                  "x": 328, "y": 0, "w": 110, "h": 52,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Xoá",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 110, "h": 52,
+                      "visible": true,
+                      "text": { "characters": "Xoá", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Tạo phòng",
+                  "type": "FRAME",
+                  "x": 450, "y": 0, "w": 160, "h": 52,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Tạo phòng",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 160, "h": 52,
+                      "visible": true,
+                      "text": { "characters": "Tạo phòng", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Vào máy chủ",
+                  "type": "FRAME",
+                  "x": 622, "y": 0, "w": 190, "h": 52,
+                  "visible": true,
+                  "fill": { "color": "#505050", "opacity": 1 },
+                  "stroke": { "color": "#262626", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": false },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Vào máy chủ",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 190, "h": 52,
+                      "visible": true,
+                      "text": { "characters": "Vào máy chủ", "fontSize": 20, "color": "#E6E6E6", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

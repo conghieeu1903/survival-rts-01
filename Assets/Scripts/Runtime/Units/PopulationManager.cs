@@ -321,13 +321,37 @@ namespace SurvivalRts
         GameObject SpawnVillagerVisual(Vector3 homePos, int index)
         {
             if (villagerPrefab == null) return null;
-            float angle = index * 2.1f;
-            var pos = homePos + new Vector3(Mathf.Cos(angle) * 1.4f, 0f, Mathf.Sin(angle) * 1.4f);
+            var grid = BuildGrid.Instance;
+            Vector3 pos = homePos;
+            float baseAngle = index * 2.1f;
+
+            for (int attempt = 0; attempt < 8; attempt++)
+            {
+                float angle = baseAngle + attempt * (Mathf.PI * 0.25f);
+                var candidate = homePos + new Vector3(Mathf.Cos(angle) * 1.4f, 0f, Mathf.Sin(angle) * 1.4f);
+                if (grid == null)
+                {
+                    pos = candidate;
+                    break;
+                }
+                candidate.y = grid.SampleWorldHeight(candidate);
+                var cell = grid.MinCell(candidate, Vector2Int.one);
+                if (grid.InBounds(cell)
+                    && grid.GetOccupancy(cell) == CellOccupancy.None
+                    && grid.Terrain[grid.Index(cell)] == CellState.Free
+                    && Mathf.Abs(candidate.y - homePos.y) <= 0.65f)
+                {
+                    pos = candidate;
+                    break;
+                }
+                if (attempt == 0) pos = candidate;
+            }
+
             var go = Instantiate(villagerPrefab, pos, Quaternion.identity, transform);
             go.name = "Villager";
             var unit = go.GetComponent<VillagerUnit>();
             if (unit == null) unit = go.AddComponent<VillagerUnit>();
-            unit.Setup(homePos);
+            unit.Setup(pos);
             return go;
         }
 

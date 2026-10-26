@@ -11,7 +11,7 @@ namespace SurvivalRts
         static readonly string[] TabNames = { "Đồ họa", "Âm thanh", "Điều khiển" };
 
         // Phím và thao tác có thật của chế độ đại chiến
-        static readonly string[,] Controls =
+        public static readonly string[,] BattleControls =
         {
             { "Chọn tiểu đội", "Kéo chuột trái để chọn khung, Shift để thêm vào" },
             { "Chọn cùng loại", "Nhấp đúp vào một tiểu đội" },
@@ -21,7 +21,25 @@ namespace SurvivalRts
             { "Di chuyển", "Chuột phải" },
         };
 
+        // Phím và thao tác có thật của màn chơi offline
+        public static readonly string[,] OfflineControls =
+        {
+            { "Di chuyển camera", "W A S D" },
+            { "Phóng to / thu nhỏ", "Cuộn chuột" },
+            { "Đặt công trình", "Chuột trái" },
+            { "Xoay công trình 90°", "R" },
+            { "Xoay mịn từng độ", "Q / E (Shift: nhanh)" },
+            { "Hủy đặt / hủy phá", "Chuột phải" },
+            { "Chế độ tháo dỡ", "X" },
+            { "Bản đồ lớn", "M" },
+            { "Menu cài đặt", "Esc" },
+        };
+
         readonly System.Action onBack;
+        readonly string backLabel;
+        readonly System.Action onMainMenu;
+        readonly string[,] controls;
+        readonly Color? backdrop;
         RectTransform root;
         RectTransform tabBar;
         RectTransform list;
@@ -30,15 +48,21 @@ namespace SurvivalRts
 
         public GameObject Root => root.gameObject;
 
-        public SettingsPanel(System.Action onBack)
+        // onMainMenu khác null thì chân trang có thêm nút "Về menu chính"; backdrop khác null thì phủ lớp mờ thay nền xám (dùng khi mở đè lên game).
+        public SettingsPanel(System.Action onBack, string backLabel = "Quay lại", System.Action onMainMenu = null,
+            string[,] controls = null, Color? backdrop = null)
         {
             this.onBack = onBack;
+            this.backLabel = backLabel;
+            this.onMainMenu = onMainMenu;
+            this.controls = controls ?? BattleControls;
+            this.backdrop = backdrop;
         }
 
         public void Build(Transform parent)
         {
             DisplaySettings.Load();
-            var card = BattleUiKit.ScreenCard(parent, "Settings", "Cài đặt", "", 180f, 48f);
+            var card = BattleUiKit.ScreenCard(parent, "Settings", "Cài đặt", "", 180f, 48f, backdrop);
             root = card.parent as RectTransform;
             noteLabel = card.GetChild(0).GetChild(1).GetComponent<TMP_Text>();
 
@@ -52,7 +76,8 @@ namespace SurvivalRts
             var footer = BattleUiKit.Footer(card);
             BattleUiKit.PushButton(footer, "Mặc định", OnDefault, 160f, 48f);
             BattleUiKit.Size(BattleUiKit.Node(footer, "Spacer"), -1f, -1f, 1f);
-            BattleUiKit.PushButton(footer, "Quay lại", OnBack, 160f, 48f);
+            if (onMainMenu != null) BattleUiKit.PushButton(footer, "Về menu chính", () => onMainMenu(), 220f, 48f);
+            BattleUiKit.PushButton(footer, backLabel, OnBack, 160f, 48f);
             BattleUiKit.PushButton(footer, "Áp dụng", OnApply, 160f, 48f, 20f, true);
 
             ShowTab(0);
@@ -149,11 +174,11 @@ namespace SurvivalRts
         // Chỉ xem: dự án chưa có hệ thống đổi phím.
         void BuildControls()
         {
-            var group = Group("Điều khiển trong trận đại chiến");
-            for (int i = 0; i < Controls.GetLength(0); i++)
+            var group = Group(controls == BattleControls ? "Điều khiển trong trận đại chiến" : "Phím và thao tác");
+            for (int i = 0; i < controls.GetLength(0); i++)
             {
-                var row = BattleUiKit.SettingRow(group, Controls[i, 0]);
-                var key = BattleUiKit.Label(row, Controls[i, 1], 18f, TextAlignmentOptions.Right, BattleUiKit.DimTextColor);
+                var row = BattleUiKit.SettingRow(group, controls[i, 0]);
+                var key = BattleUiKit.Label(row, controls[i, 1], 18f, TextAlignmentOptions.Right, BattleUiKit.DimTextColor);
                 BattleUiKit.Size(key, -1f, -1f, 1f);
             }
             var note = BattleUiKit.Label(group, "Chưa hỗ trợ đổi phím.", 16f, TextAlignmentOptions.Left, BattleUiKit.DimTextColor);

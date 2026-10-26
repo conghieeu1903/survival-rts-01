@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace SurvivalRts
 {
+    // Điều khiển camera RTS dạng Perspective: di chuyển WASD, kéo chuột giữa, xoay quanh tâm nhìn và zoom xa gần theo tia nhìn.
     [RequireComponent(typeof(Camera))]
     public class CameraController : MonoBehaviour
     {
@@ -14,10 +15,10 @@ namespace SurvivalRts
         [SerializeField] float boundsHalfSize = 25f;
 
         [Header("Zoom")]
-        [Tooltip("Mức thay đổi orthographic size mỗi nấc con lăn")]
+        [Tooltip("Mức thay đổi độ cao khung nhìn mỗi nấc con lăn")]
         [SerializeField] float zoomStep = 2f;
 
-        [Tooltip("Orthographic size nhỏ nhất (x) và lớn nhất (y)")]
+        [Tooltip("Mức zoom nhỏ nhất (x) và lớn nhất (y) tính theo bán kính dọc khung nhìn tại mặt đất")]
         [SerializeField] Vector2 zoomRange = new Vector2(6f, 25f);
 
         [Header("Xoay")]
@@ -32,17 +33,48 @@ namespace SurvivalRts
 
         Camera cam;
         float rotateDragDistance;
+        float currentZoom; // Mức zoom hiện tại (bán kính dọc khung nhìn tại mặt đất, m)
 
         // True khi lần giữ chuột phải vừa rồi là xoay camera, dùng để không coi nó là click hủy.
         public bool RotatedWithRightButton => rotateDragDistance > dragThreshold;
 
-        public float OrthographicSize => cam != null ? cam.orthographicSize : zoomRange.y;
+        public float OrthographicSize => currentZoom > 0f ? currentZoom : (cam != null ? cam.orthographicSize : zoomRange.y);
 
         public Vector2 ZoomRange => zoomRange;
 
         void Awake()
         {
             cam = GetComponent<Camera>();
+            ApplyPerspectiveMode();
+        }
+
+        // Chuyển camera sang chế độ Perspective và đặt khoảng cách tới mặt đất khớp với mức zoom.
+        public void ApplyPerspectiveMode()
+        {
+            if (cam == null) cam = GetComponent<Camera>();
+            if (cam == null) return;
+
+            var pivot = GroundPivot();
+            cam.orthographic = false;
+            if (cam.fieldOfView <= 1f || cam.fieldOfView > 120f) cam.fieldOfView = 60f;
+            if (cam.nearClipPlane > 0.3f) cam.nearClipPlane = 0.3f;
+            if (cam.farClipPlane < 1500f) cam.farClipPlane = 1500f;
+
+            float initialZoom = currentZoom > 0f ? currentZoom : cam.orthographicSize;
+            if (initialZoom <= 0f) initialZoom = (zoomRange.x + zoomRange.y) * 0.5f;
+            currentZoom = Mathf.Clamp(initialZoom, zoomRange.x, zoomRange.y);
+            cam.orthographicSize = currentZoom;
+
+            transform.position = pivot - transform.forward * GetDistanceForZoom(currentZoom);
+            ClampToBounds();
+        }
+
+        // Tính khoảng cách từ camera tới tâm nhìn trên mặt đất ứng với mức zoom theo góc mở dọc FOV.
+        float GetDistanceForZoom(float zoom)
+        {
+            float halfFovRad = (cam != null ? cam.fieldOfView : 60f) * 0.5f * Mathf.Deg2Rad;
+            float tanHalfFov = Mathf.Max(0.1f, Mathf.Tan(halfFovRad));
+            return zoom / tanHalfFov;
         }
 
         void Update()
@@ -76,7 +108,7 @@ namespace SurvivalRts
             if (mouse.middleButton.isPressed)
             {
                 var drag = mouse.delta.ReadValue();
-                float worldPerPixel = 2f * cam.orthographicSize / Screen.height;
+                float worldPerPixel = 2f * currentZoom / Screen.height;
                 float pitch = Mathf.Clamp(Mathf.DeltaAngle(0f, transform.eulerAngles.x), pitchRange.x, pitchRange.y) * Mathf.Deg2Rad;
                 move -= (right * drag.x + forward * (drag.y / Mathf.Sin(pitch))) * worldPerPixel;
             }
@@ -87,15 +119,19 @@ namespace SurvivalRts
             float scroll = mouse.scroll.ReadValue().y;
             if (scroll != 0f)
             {
-                cam.orthographicSize = Mathf.Clamp(
-                    cam.orthographicSize - Mathf.Sign(scroll) * zoomStep, zoomRange.x, zoomRange.y);
+                var pivot = GroundPivot();
+                currentZoom = Mathf.Clamp(
+                    currentZoom - Mathf.Sign(scroll) * zoomStep, zoomRange.x, zoomRange.y);
+                cam.orthographicSize = currentZoom;
+                transform.position = pivot - transform.forward * GetDistanceForZoom(currentZoom);
+                ClampToBounds();
             }
         }
 
         void OrbitAroundPivot(float yawDelta, float pitchDelta)
         {
             var pivot = GroundPivot();
-            float distance = Vector3.Distance(transform.position, pivot);
+            float distance = GetDistanceForZoom(currentZoom);
             var euler = transform.eulerAngles;
             float yaw = euler.y + yawDelta;
             float pitch = Mathf.Clamp(Mathf.DeltaAngle(0f, euler.x) + pitchDelta, pitchRange.x, pitchRange.y);

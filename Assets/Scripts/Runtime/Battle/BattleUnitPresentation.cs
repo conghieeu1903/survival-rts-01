@@ -85,17 +85,23 @@ namespace SurvivalRts
             CompleteDependency();
         }
 
-        // Tạo (lại) entity cho toàn bộ lính của trận vừa bắt đầu.
-        public void Build(BattleData data, BattleSimulation sim)
+        // Xoá toàn bộ entity lính khi rời scene trận đại chiến.
+        public void Clear()
         {
             CompleteDependency();
             ready = false;
             if (units.IsCreated)
             {
-                EntityManager.DestroyEntity(units);
+                if (World.IsCreated) EntityManager.DestroyEntity(units);
                 units.Dispose();
             }
             if (clips.IsCreated) clips.Dispose();
+        }
+
+        // Tạo (lại) entity cho toàn bộ lính của trận vừa bắt đầu.
+        public void Build(BattleData data, BattleSimulation sim)
+        {
+            Clear();
 
             int typeCount = data.unitTypes.Length;
             int unitCount = sim.UnitCount;

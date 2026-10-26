@@ -21,6 +21,9 @@ MonoBehaviour:
   - {r: 0.4, g: 0.9, b: 0.45, a: 1}
   - {r: 1, g: 0.85, b: 0.3, a: 1}
   corpseLinger: 3
+  startGold: 400
+  goldPerSecond: 10
+  reserveSquadsPerTeam: 10
   unitTypes:
   - displayName: "L\xEDnh ki\u1EBFm"
     squadCount: 28
@@ -31,6 +34,9 @@ MonoBehaviour:
     castShadows: 0
     animation: {fileID: 11400000, guid: 1f24200cabfa1394b9274eaa23bd93e6, type: 2}
     tint: {r: 1, g: 1, b: 1, a: 1}
+    cost: 200
+    trainSeconds: 15
+    trainSquadSize: 0
     maxHealth: 140
     damage: 22
     attackInterval: 0.9
@@ -42,12 +48,15 @@ MonoBehaviour:
   - displayName: "L\xEDnh cung"
     squadCount: 12
     ranged: 1
-    mesh: {fileID: 4300000, guid: 0501ecd1d8a1f254fa230f86432aa206, type: 2}
-    material: {fileID: 2100000, guid: c3fc6a670ce849e46bdba2b9f3679847, type: 2}
-    scale: 0.72
+    mesh: {fileID: 4300000, guid: 81f3ae4d9b7f6ba43995d79bdb1cd18f, type: 2}
+    material: {fileID: 2100000, guid: d4605c5bedf554d4daa5649940485158, type: 2}
+    scale: 0.85
     castShadows: 0
-    animation: {fileID: 11400000, guid: 1f24200cabfa1394b9274eaa23bd93e6, type: 2}
-    tint: {r: 0.75, g: 0.9, b: 0.75, a: 1}
+    animation: {fileID: 11400000, guid: 4a4ed345ee8ab4b4684f84ec5f260be2, type: 2}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    cost: 200
+    trainSeconds: 15
+    trainSquadSize: 0
     maxHealth: 70
     damage: 12
     attackInterval: 1.4

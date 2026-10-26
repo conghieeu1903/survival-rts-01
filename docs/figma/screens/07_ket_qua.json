@@ -1,0 +1,906 @@
+{
+  "screen": "07_ket_qua",
+  "title": "Kết quả trận",
+  "frame": {
+    "width": 1920,
+    "height": 1080
+  },
+  "nodes": [
+    {
+      "name": "Result",
+      "type": "FRAME",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 1920.0,
+      "h": 1080.0,
+      "visible": true,
+      "fill": {
+        "color": "#262626",
+        "opacity": 0.45
+      },
+      "children": [
+        {
+          "name": "Panel",
+          "type": "FRAME",
+          "x": 610.0,
+          "y": 299.6,
+          "w": 700.0,
+          "h": 480.8,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "VERTICAL",
+            "spacing": 12,
+            "padding": [
+              24,
+              24,
+              24,
+              24
+            ],
+            "align": "UpperLeft"
+          },
+          "children": [
+            {
+              "name": "Heading",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 24.0,
+              "w": 652.0,
+              "h": 54.8,
+              "visible": true,
+              "autoLayout": {
+                "direction": "VERTICAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "UpperLeft"
+              },
+              "children": [
+                {
+                  "name": "Text - Bạn thắng!",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 652.0,
+                  "h": 44.8,
+                  "visible": true,
+                  "text": {
+                    "characters": "Bạn thắng!",
+                    "fontSize": 32,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Separator",
+                  "type": "FRAME",
+                  "x": 0.0,
+                  "y": 52.8,
+                  "w": 652.0,
+                  "h": 2.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#C0C0C0",
+                    "opacity": 1.0
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Header",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 90.8,
+              "w": 652.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#FAFAFA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 6,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 10,
+                "padding": [
+                  6,
+                  6,
+                  6,
+                  6
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "SwatchSpace",
+                  "type": "FRAME",
+                  "x": 6.0,
+                  "y": 6.0,
+                  "w": 24.0,
+                  "h": 28.0,
+                  "visible": true
+                },
+                {
+                  "name": "Text - Đội",
+                  "type": "TEXT",
+                  "x": 40.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội",
+                    "fontSize": 20,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - Còn sống",
+                  "type": "TEXT",
+                  "x": 194.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Còn sống",
+                    "fontSize": 20,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - Đã hạ",
+                  "type": "TEXT",
+                  "x": 348.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đã hạ",
+                    "fontSize": 20,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - Đã mất",
+                  "type": "TEXT",
+                  "x": 502.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đã mất",
+                    "fontSize": 20,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team0",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 142.8,
+              "w": 652.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 6,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 10,
+                "padding": [
+                  6,
+                  6,
+                  6,
+                  6
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 6.0,
+                  "y": 6.0,
+                  "w": 24.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#5A8CFF",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 1 (bạn)",
+                  "type": "TEXT",
+                  "x": 40.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 1 (bạn)",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 1250",
+                  "type": "TEXT",
+                  "x": 194.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "1250",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 3400",
+                  "type": "TEXT",
+                  "x": 348.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "3400",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 2750",
+                  "type": "TEXT",
+                  "x": 502.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "2750",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team1",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 194.8,
+              "w": 652.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 6,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 10,
+                "padding": [
+                  6,
+                  6,
+                  6,
+                  6
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 6.0,
+                  "y": 6.0,
+                  "w": 24.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#FF6659",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 2",
+                  "type": "TEXT",
+                  "x": 40.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 2",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 0",
+                  "type": "TEXT",
+                  "x": 194.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "0",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 1100",
+                  "type": "TEXT",
+                  "x": 348.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "1100",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 4000",
+                  "type": "TEXT",
+                  "x": 502.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "4000",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team2",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 246.8,
+              "w": 652.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 6,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 10,
+                "padding": [
+                  6,
+                  6,
+                  6,
+                  6
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 6.0,
+                  "y": 6.0,
+                  "w": 24.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#66E673",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 3",
+                  "type": "TEXT",
+                  "x": 40.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 3",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 0",
+                  "type": "TEXT",
+                  "x": 194.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "0",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 900",
+                  "type": "TEXT",
+                  "x": 348.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "900",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 4000",
+                  "type": "TEXT",
+                  "x": 502.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "4000",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team3",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 298.8,
+              "w": 652.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 6,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 10,
+                "padding": [
+                  6,
+                  6,
+                  6,
+                  6
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 6.0,
+                  "y": 6.0,
+                  "w": 24.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#FFD94D",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 4",
+                  "type": "TEXT",
+                  "x": 40.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 4",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 0",
+                  "type": "TEXT",
+                  "x": 194.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "0",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 700",
+                  "type": "TEXT",
+                  "x": 348.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "700",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                },
+                {
+                  "name": "Text - 4000",
+                  "type": "TEXT",
+                  "x": 502.0,
+                  "y": 6.0,
+                  "w": 144.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "4000",
+                    "fontSize": 20,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Text - Chờ chủ phòng chọn...",
+              "type": "TEXT",
+              "x": 24.0,
+              "y": 350.8,
+              "w": 652.0,
+              "h": 28.0,
+              "visible": true,
+              "text": {
+                "characters": "Chờ chủ phòng chọn...",
+                "fontSize": 18,
+                "color": "#6C6C6C",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "CENTER",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 390.8,
+              "w": 652.0,
+              "h": 2.0,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1.0
+              }
+            },
+            {
+              "name": "Actions",
+              "type": "FRAME",
+              "x": 24.0,
+              "y": 404.8,
+              "w": 652.0,
+              "h": 52.0,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 12,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleRight"
+              },
+              "children": [
+                {
+                  "name": "Button - Thoát",
+                  "type": "FRAME",
+                  "x": 158.0,
+                  "y": 0.0,
+                  "w": 130.0,
+                  "h": 52.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Thoát",
+                      "type": "TEXT",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "w": 130.0,
+                      "h": 52.0,
+                      "visible": true,
+                      "text": {
+                        "characters": "Thoát",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Về phòng chờ",
+                  "type": "FRAME",
+                  "x": 300.0,
+                  "y": 0.0,
+                  "w": 190.0,
+                  "h": 52.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Về phòng chờ",
+                      "type": "TEXT",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "w": 190.0,
+                      "h": 52.0,
+                      "visible": true,
+                      "text": {
+                        "characters": "Về phòng chờ",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Chơi lại",
+                  "type": "FRAME",
+                  "x": 502.0,
+                  "y": 0.0,
+                  "w": 150.0,
+                  "h": 52.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#505050",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#262626",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Chơi lại",
+                      "type": "TEXT",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "w": 150.0,
+                      "h": 52.0,
+                      "visible": true,
+                      "text": {
+                        "characters": "Chơi lại",
+                        "fontSize": 20,
+                        "color": "#FAFAFA",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -138,8 +138,7 @@ namespace SurvivalRts
             float minStep = MovingSpeedRatio * stats.MoveSpeed * DeltaTime;
             brain.Moving = (byte)(math.lengthsq(desired) > 0.01f && math.distancesq(next, position) > minStep * minStep ? 1 : 0);
 
-            int nextCell = Grid.CellIndex(next);
-            float ground = nextCell >= 0 ? Height[nextCell] : transform.Position.y - stats.HeightOffset;
+            float ground = SampleHeightBilinear(next);
             transform.Position = new float3(next.x, ground + stats.HeightOffset, next.y);
 
             float2 look = math.lengthsq(desired) > 1e-4f ? desired : facing;
@@ -148,6 +147,22 @@ namespace SurvivalRts
                 var rotation = quaternion.LookRotationSafe(new float3(look.x, 0f, look.y), math.up());
                 transform.Rotation = math.slerp(transform.Rotation, rotation, math.saturate(RotationSharpness * DeltaTime));
             }
+        }
+
+        float SampleHeightBilinear(float2 worldPos)
+        {
+            float2 local = (worldPos - Grid.Origin) / Grid.CellSize - 0.5f;
+            int2 c0 = (int2)math.floor(local);
+            float2 t = local - c0;
+            int x0 = math.clamp(c0.x, 0, Grid.Size.x - 1);
+            int x1 = math.clamp(c0.x + 1, 0, Grid.Size.x - 1);
+            int z0 = math.clamp(c0.y, 0, Grid.Size.y - 1);
+            int z1 = math.clamp(c0.y + 1, 0, Grid.Size.y - 1);
+            float h00 = Height[x0 + z0 * Grid.Size.x];
+            float h10 = Height[x1 + z0 * Grid.Size.x];
+            float h01 = Height[x0 + z1 * Grid.Size.x];
+            float h11 = Height[x1 + z1 * Grid.Size.x];
+            return math.lerp(math.lerp(h00, h10, t.x), math.lerp(h01, h11, t.x), t.y);
         }
 
         int TryKeepTarget(int targetId, float2 position, float maxDistance, out float2 closest, out float distance)

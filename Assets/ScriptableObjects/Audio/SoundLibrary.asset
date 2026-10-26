@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.SoundLibrary
   mixer: {fileID: 24100000, guid: 70209848918674b4db810d2241b140a8, type: 2}
   masterGroup: {fileID: 24300002, guid: 70209848918674b4db810d2241b140a8, type: 2}
-  musicGroup: {fileID: -4396302909953645342, guid: 70209848918674b4db810d2241b140a8, type: 2}
-  sfxGroup: {fileID: 6100479008724021535, guid: 70209848918674b4db810d2241b140a8, type: 2}
-  uiGroup: {fileID: 6026922665621198667, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  musicGroup: {fileID: -3536764862947377720, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  sfxGroup: {fileID: 7899106034209982836, guid: 70209848918674b4db810d2241b140a8, type: 2}
+  uiGroup: {fileID: -3388029168987168917, guid: 70209848918674b4db810d2241b140a8, type: 2}
   rules:
   - id: 1
     clips:
@@ -223,3 +223,36 @@ MonoBehaviour:
     volume: 1
     mergeVolumeBoost: 0.2
     maxVolume: 1.6
+  - id: 15
+    clips:
+    - {fileID: 8300000, guid: e704b7bafa77dcc45b239eabcb066ee7, type: 3}
+    - {fileID: 8300000, guid: 49e89805e71e9d24ebac17ce4e2e1987, type: 3}
+    - {fileID: 8300000, guid: a76f7c60e5a601b4bac4eef8c7e243ad, type: 3}
+    - {fileID: 8300000, guid: f76bb4ffeae6d194d8e5a944cd8b46b9, type: 3}
+    channel: 2
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 6
+    maxStartsPerSecond: 14
+    maxSimultaneous: 8
+    pitchRandom: 0.08
+    cooldown: 0
+    volume: 0.95
+    mergeVolumeBoost: 0.28
+    maxVolume: 1.5
+  - id: 16
+    clips:
+    - {fileID: 8300000, guid: ab00441dd3317294ebbe25aa42e85277, type: 3}
+    - {fileID: 8300000, guid: 3801d8b5cdbc56943aca2a72bc46299e, type: 3}
+    - {fileID: 8300000, guid: 9f17050b15acbed43bb1262e121f5cae, type: 3}
+    channel: 2
+    kind: 0
+    cullOutsideView: 1
+    mergeCellSize: 5
+    maxStartsPerSecond: 16
+    maxSimultaneous: 8
+    pitchRandom: 0.07
+    cooldown: 0
+    volume: 1
+    mergeVolumeBoost: 0.22
+    maxVolume: 1.5

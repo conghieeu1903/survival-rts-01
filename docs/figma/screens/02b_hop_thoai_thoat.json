@@ -1,0 +1,112 @@
+{
+  "screen": "02b_hop_thoai_thoat",
+  "title": "Hộp thoại Thoát game",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "DialogBackdrop",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": false,
+      "fill": { "color": "#262626", "opacity": 0.45 },
+      "children": [
+        {
+          "name": "Dialog",
+          "type": "FRAME",
+          "x": 680, "y": 420.6, "w": 560, "h": 238.8,
+          "visible": true,
+          "fill": { "color": "#FAFAFA", "opacity": 1 },
+          "stroke": { "color": "#808080", "width": 2 },
+          "cornerRadius": 6,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 20, "padding": [20, 20, 20, 20], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "hug": { "x": false, "y": true },
+          "children": [
+            {
+              "name": "Heading",
+              "type": "FRAME",
+              "x": 20, "y": 20, "w": 520, "h": 54.8,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 8, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+              "children": [
+                {
+                  "name": "Text - Thoát game?",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 520, "h": 44.8,
+                  "visible": true,
+                  "text": { "characters": "Thoát game?", "fontSize": 32, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                },
+                {
+                  "name": "Line",
+                  "type": "FRAME",
+                  "x": 0, "y": 52.8, "w": 520, "h": 2,
+                  "visible": true,
+                  "fill": { "color": "#C0C0C0", "opacity": 1 },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                }
+              ]
+            },
+            {
+              "name": "Text - Tiến trình chưa lưu sẽ bị mấ",
+              "type": "TEXT",
+              "x": 20, "y": 94.8, "w": 520, "h": 56,
+              "visible": true,
+              "text": { "characters": "Tiến trình chưa lưu sẽ bị mất.", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Actions",
+              "type": "FRAME",
+              "x": 20, "y": 170.8, "w": 520, "h": 48,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleRight", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Button - Không",
+                  "type": "FRAME",
+                  "x": 228, "y": 0, "w": 140, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Không",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 140, "h": 48,
+                      "visible": true,
+                      "text": { "characters": "Không", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Thoát",
+                  "type": "FRAME",
+                  "x": 380, "y": 0, "w": 140, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#505050", "opacity": 1 },
+                  "stroke": { "color": "#262626", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Thoát",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 140, "h": 48,
+                      "visible": true,
+                      "text": { "characters": "Thoát", "fontSize": 20, "color": "#FAFAFA", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

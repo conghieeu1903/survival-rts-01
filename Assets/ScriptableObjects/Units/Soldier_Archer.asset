@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db2e96ce8e62064a9886dab93012207, type: 3}
+  m_Name: Soldier_Archer
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.SoldierData
+  displayName: "L\xEDnh cung"
+  prefab: {fileID: 1671938947969773672, guid: 23a78424f52fdd449a33acd701771613, type: 3}
+  trainTime: 6
+  foodCost: 3
+  ironCost: 0
+  goldCost: 0
+  ranged: 1
+  maxHealth: 70
+  damage: 12
+  attackInterval: 1.4
+  strikeDelay: 0.7
+  attackRange: 14
+  moveSpeed: 3
+  detectRange: 16
+  leashRange: 20

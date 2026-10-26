@@ -138,7 +138,15 @@ namespace SurvivalRts
 
             strikePending = false;
             SoldierCombatSystem.QueueDamage(target, data.damage);
-            AudioDirector.Post(SoundId.EnemyHit, transform.position);
+            if (data.ranged)
+            {
+                AudioDirector.Post(SoundId.BowShot, transform.position);
+                TracerPool.Instance?.Emit(transform.position + Vector3.up * 1.1f, targetPosition + Vector3.up * 0.9f);
+            }
+            else
+            {
+                AudioDirector.Post(SoundId.SwordHit, transform.position);
+            }
         }
 
         void MoveTowards(Vector3 destination, float dt)
@@ -168,10 +176,8 @@ namespace SurvivalRts
         {
             var grid = BuildGrid.Instance;
             if (grid == null) return;
-            var cell = grid.MinCell(transform.position, Vector2Int.one);
-            if (!grid.InBounds(cell)) return;
             var position = transform.position;
-            position.y = grid.Heights[grid.Index(cell)];
+            position.y = grid.SampleWorldHeight(position);
             transform.position = position;
         }
 

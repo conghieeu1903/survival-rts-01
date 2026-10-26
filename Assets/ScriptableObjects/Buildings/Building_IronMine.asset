@@ -17,14 +17,18 @@ MonoBehaviour:
   prefab: {fileID: 3328939022777980452, guid: 19b9cef3da139e34dbe84efc1b431d02, type: 3}
   footprint: {x: 2, y: 2}
   height: 2.5
+  maxHeightDelta: 0.8
+  maxSlopeAngle: 30
   maxHealth: 380
   tower: {fileID: 0}
+  soldier: {fileID: 0}
   woodCost: 4
   stoneCost: 3
   ironCost: 0
   foodCost: 0
   goldCost: 0
   buildTime: 6
+  demolishTime: 2.5
   populationProvided: 0
   maxWorkers: 3
   harvestResource: 4

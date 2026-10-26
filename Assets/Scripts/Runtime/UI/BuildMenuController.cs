@@ -25,8 +25,7 @@ namespace SurvivalRts
         {
             { BuildingCategory.Economy, "Kinh tế" },
             { BuildingCategory.Military, "Quân sự" },
-            { BuildingCategory.Defense, "Phòng thủ" },
-            { BuildingCategory.Test, "Test" }
+            { BuildingCategory.Defense, "Phòng thủ" }
         };
 
         [Header("Tham chiếu")]
@@ -63,7 +62,6 @@ namespace SurvivalRts
         readonly List<BuildingData> itemData = new List<BuildingData>();
         readonly Dictionary<BuildingCategory, Button> tabs = new Dictionary<BuildingCategory, Button>(); // Map từng nhóm công trình với nút tab tương ứng
 
-        Button demolishTabButton;
         TMP_Text cancelButtonText;
         PopulationManager subscribedPop;
 
@@ -94,6 +92,7 @@ namespace SurvivalRts
                 placer.CurrentChanged += Refresh;
                 placer.CategoryChanged += RebuildList;
                 placer.DemolishStateChanged += RefreshDemolishState;
+                placer.BlockReasonChanged += OnBlockReasonChanged;
             }
 
             RefreshPopulation();
@@ -111,6 +110,7 @@ namespace SurvivalRts
                 placer.CurrentChanged -= Refresh;
                 placer.CategoryChanged -= RebuildList;
                 placer.DemolishStateChanged -= RefreshDemolishState;
+                placer.BlockReasonChanged -= OnBlockReasonChanged;
             }
 
             if (subscribedPop != null)
@@ -238,7 +238,7 @@ namespace SurvivalRts
             }
         }
 
-        // Tạo hàng nút tab danh mục công trình và nút chế độ tháo dỡ.
+        // Tạo hàng nút tab danh mục công trình.
         void BuildTabs()
         {
             if (tabRow == null) return;
@@ -248,10 +248,10 @@ namespace SurvivalRts
             }
             tabs.Clear();
 
-            foreach (BuildingCategory category in System.Enum.GetValues(typeof(BuildingCategory)))
+            foreach (var pair in CategoryNames)
             {
-                var value = category;
-                string labelText = CategoryNames.TryGetValue(value, out var name) ? name : value.ToString();
+                var value = pair.Key;
+                string labelText = pair.Value;
                 string countText = placer != null ? placer.CountIn(value).ToString() : "0";
 
                 var tab = CreateTabItem(labelText, countText, () =>
@@ -261,18 +261,6 @@ namespace SurvivalRts
                 });
                 tabs[value] = tab;
             }
-
-            var spacer = new GameObject("TabSpacer", typeof(RectTransform), typeof(LayoutElement));
-            spacer.transform.SetParent(tabRow, false);
-            var spacerLayout = spacer.GetComponent<LayoutElement>();
-            spacerLayout.flexibleWidth = 1f;
-
-            demolishTabButton = CreateTabItem("Tháo dỡ (X)", null, () =>
-            {
-                AudioDirector.Post(SoundId.UiClick, Vector3.zero);
-                if (placer != null) placer.ToggleDemolishMode();
-            });
-            demolishTabButton.gameObject.name = "demolishModeButton";
         }
 
         // Khởi tạo một nút tab từ Prefab hoặc tự dựng nếu chưa gán Prefab.
@@ -423,6 +411,22 @@ namespace SurvivalRts
             Refresh(placer != null ? placer.Current : null);
         }
 
+        // Làm mới dòng trạng thái khi lý do chặn vị trí đặt thay đổi.
+        void OnBlockReasonChanged(PlacementBlockReason _)
+        {
+            if (placer == null || placer.IsDemolishing) return;
+            UpdatePlacingLabelText(placer.Current);
+        }
+
+        void UpdatePlacingLabelText(BuildingData current)
+        {
+            if (current == null || placingLabel == null) return;
+            string reasonText = placer != null ? placer.CurrentBlockReasonText : string.Empty;
+            placingLabel.text = string.IsNullOrEmpty(reasonText)
+                ? $"Đang đặt: {current.displayName} ({current.FormatCost()})"
+                : $"Đang đặt: {current.displayName} ({current.FormatCost()})  ·  {reasonText}";
+        }
+
         // Cập nhật trạng thái chọn thẻ công trình và thanh hành động đặt/tháo dỡ.
         void Refresh(BuildingData current)
         {
@@ -442,8 +446,6 @@ namespace SurvivalRts
             }
 
             bool isDemolishing = placer != null && placer.IsDemolishing;
-            ApplyTabStyle(demolishTabButton, isDemolishing);
-
             if (isDemolishing)
             {
                 if (placingBar != null) placingBar.SetActive(true);
@@ -479,7 +481,7 @@ namespace SurvivalRts
             if (placingBar != null) placingBar.SetActive(current != null);
             if (current != null && placingLabel != null)
             {
-                placingLabel.text = $"Đang đặt: {current.displayName} ({current.FormatCost()})";
+                UpdatePlacingLabelText(current);
             }
             if (buildPanel != null) LayoutRebuilder.ForceRebuildLayoutImmediate(buildPanel);
         }

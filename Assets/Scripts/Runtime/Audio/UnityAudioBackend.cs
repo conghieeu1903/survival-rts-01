@@ -350,7 +350,7 @@ namespace SurvivalRts
             if (rule.kind == SoundKind.Loop) return PriorityLoop;
             if (rule.kind == SoundKind.OneShot2D) return PriorityUi;
             // Tiếng đánh trúng phát nhiều nhất và ít quan trọng nhất; cho nó bị cắt trước.
-            if (rule.id == SoundId.EnemyHit) return PriorityExpendable;
+            if (rule.id == SoundId.EnemyHit || rule.id == SoundId.SwordHit) return PriorityExpendable;
             return PrioritySfx;
         }
 

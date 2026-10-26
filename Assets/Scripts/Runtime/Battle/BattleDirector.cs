@@ -50,6 +50,9 @@ namespace SurvivalRts
         {
             simulation.MatchStarted -= OnMatchStarted;
             if (arrowTracers != null) simulation.ShotFired -= arrowTracers.Emit;
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world != null && world.IsCreated)
+                world.GetExistingSystemManaged<BattleUnitPresentation>()?.Clear();
         }
 
         void OnMatchStarted()

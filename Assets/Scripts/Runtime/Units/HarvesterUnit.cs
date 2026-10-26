@@ -131,12 +131,10 @@ namespace SurvivalRts
 
         void SnapToGround()
         {
-            if (BuildGrid.Instance == null) return;
-            var cell = BuildGrid.Instance.MinCell(transform.position, Vector2Int.one);
-            if (!BuildGrid.Instance.InBounds(cell)) return;
-            int idx = BuildGrid.Instance.Index(cell);
+            var grid = BuildGrid.Instance;
+            if (grid == null) return;
             var pos = transform.position;
-            pos.y = BuildGrid.Instance.Heights[idx];
+            pos.y = grid.SampleWorldHeight(pos);
             transform.position = pos;
         }
     }

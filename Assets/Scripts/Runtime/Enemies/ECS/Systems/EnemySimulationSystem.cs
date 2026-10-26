@@ -335,13 +335,15 @@ namespace SurvivalRts
         void RebuildFlowField(BuildGrid buildGrid)
         {
             // BuildGrid dùng cùng cách đánh chỉ số x + y * Size.x nên đọc thẳng theo i.
+            buildGrid.Heights.CopyTo(height);
             var terrain = buildGrid.Terrain;
             var occupancyGrid = buildGrid.Occupancy;
             for (int i = 0; i < grid.CellCount; i++)
             {
                 var occupancy = occupancyGrid[i];
                 bool ground = terrain[i] == CellState.Free;
-                cost[i] = !ground || occupancy == CellOccupancy.Static ? (byte)0
+                bool blockedByObstacle = occupancy == CellOccupancy.Static || occupancy == CellOccupancy.Clearable;
+                cost[i] = !ground || blockedByObstacle ? (byte)0
                     : occupancy == CellOccupancy.Building ? BuildingCost
                     : FreeCost;
                 walk[i] = (byte)(ground && occupancy == CellOccupancy.None ? 1 : 0);
@@ -351,16 +353,7 @@ namespace SurvivalRts
             foreach (var target in PlayerTarget.All)
             {
                 if (target.Priority != TargetPriority.Headquarters || target.Occupant == null) continue;
-                var min = target.Occupant.Min;
-                var footprint = target.Occupant.footprint;
-                for (int y = 0; y < footprint.y; y++)
-                {
-                    for (int x = 0; x < footprint.x; x++)
-                    {
-                        var cell = new int2(min.x + x, min.y + y);
-                        if (grid.InBounds(cell)) goals.Add(grid.Index(cell));
-                    }
-                }
+                foreach (int index in target.Occupant.Cells) goals.Add(index);
             }
 
             new FlowFieldJob

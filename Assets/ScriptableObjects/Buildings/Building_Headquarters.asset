@@ -13,7 +13,26 @@ MonoBehaviour:
   m_Name: Building_Headquarters
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.BuildingData
   displayName: Headquarters
+  category: 0
+  prefab: {fileID: 4824705541841522462, guid: 02f3c88741ccdd140a8a8964c72248b0, type: 3}
   footprint: {x: 4, y: 4}
   height: 7.6
+  maxHeightDelta: 0.3
+  maxSlopeAngle: 22
   maxHealth: 1000
-  prefab: {fileID: 4824705541841522462, guid: 02f3c88741ccdd140a8a8964c72248b0, type: 3}
+  tower: {fileID: 0}
+  soldier: {fileID: 0}
+  woodCost: 0
+  stoneCost: 0
+  ironCost: 0
+  foodCost: 0
+  goldCost: 0
+  buildTime: 6
+  demolishTime: 2.5
+  populationProvided: 0
+  maxWorkers: 0
+  harvestResource: 0
+  harvestRadius: 8
+  requireAdjacentResource: 0
+  harvestInterval: 2.5
+  harvestAmount: 5

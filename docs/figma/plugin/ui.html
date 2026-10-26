@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font: 13px Inter, Arial, sans-serif; margin: 0; padding: 14px; color: #262626; }
+  h3 { margin: 0 0 8px; font-size: 14px; }
+  p { margin: 6px 0; color: #6c6c6c; line-height: 1.4; }
+  label { display: block; margin: 8px 0; }
+  button { width: 100%; padding: 9px; margin-top: 10px; border: 2px solid #262626; background: #505050; color: #fafafa; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  button:disabled { background: #9e9e9e; border-color: #9e9e9e; cursor: default; }
+  #log { margin-top: 10px; max-height: 150px; overflow: auto; font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h3>Import UI từ Unity</h3>
+  <p>Chọn <b>tất cả</b> file JSON trong <code>docs/figma</code>: <code>flow.json</code> và các file trong <code>screens/</code>.</p>
+  <input id="files" type="file" accept=".json" multiple>
+  <label><input id="auto" type="checkbox"> Dùng Auto Layout (thử nghiệm, mặc định giữ đúng toạ độ tuyệt đối)</label>
+  <label><input id="arrows" type="checkbox" checked> Vẽ mũi tên chuyển màn theo flow.json</label>
+  <button id="go" disabled>Vẽ lên Figma</button>
+  <div id="log"></div>
+<script>
+  const input = document.getElementById('files');
+  const go = document.getElementById('go');
+  const log = document.getElementById('log');
+  let loaded = [];
+
+  input.onchange = async () => {
+    loaded = [];
+    for (const file of input.files) {
+      try { loaded.push(JSON.parse(await file.text())); }
+      catch (e) { log.textContent += 'Lỗi đọc ' + file.name + ': ' + e.message + '\n'; }
+    }
+    const screens = loaded.filter(x => x.nodes).length;
+    const hasFlow = loaded.some(x => x.edges);
+    log.textContent = 'Đã đọc ' + screens + ' màn' + (hasFlow ? ' + flow.json' : ' (thiếu flow.json)') + '\n';
+    go.disabled = screens === 0;
+  };
+
+  go.onclick = () => {
+    go.disabled = true;
+    parent.postMessage({ pluginMessage: {
+      type: 'build',
+      files: loaded,
+      autoLayout: document.getElementById('auto').checked,
+      arrows: document.getElementById('arrows').checked
+    } }, '*');
+  };
+
+  onmessage = (e) => {
+    const m = e.data.pluginMessage;
+    if (!m) return;
+    if (m.type === 'log') log.textContent += m.text + '\n';
+    if (m.type === 'done') { log.textContent += 'Xong.\n'; go.disabled = false; }
+  };
+</script>
+</body>
+</html>

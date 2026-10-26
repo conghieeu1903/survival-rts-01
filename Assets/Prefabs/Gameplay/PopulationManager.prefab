@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5039032961045657005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4270492545123681417}
+  - component: {fileID: 3799069181792303981}
+  m_Layer: 0
+  m_Name: PopulationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4270492545123681417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5039032961045657005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3799069181792303981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5039032961045657005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c3bae77b46d424f963faf550ebb1f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.PopulationManager
+  villagerPrefab: {fileID: 1523950972231301887, guid: 4232a14ab312ac14fac63f84dc439b14, type: 3}
+  builderPrefab: {fileID: 866808678214188416, guid: b34768bc44c52b846843e68e89f9e32e, type: 3}
+  lumberjackPrefab: {fileID: 8529722656623635421, guid: ff29d0f1e2937774d8bd9b3ffe966875, type: 3}
+  minerPrefab: {fileID: 4897715458548677848, guid: fcf4d790594a58a4a9139e01f67837f9, type: 3}
+  farmerPrefab: {fileID: 7949281449216385261, guid: a5858ef6dd8282d4f922f96ae6ec7b01, type: 3}
+  initialFreePopulation: 2
+  initialBuilders: 1
+  initialWood: 100
+  initialStone: 100
+  initialFood: 100
+  initialIron: 100
+  initialGold: 100

@@ -1,0 +1,816 @@
+{
+  "screen": "06_hud_tran",
+  "title": "HUD trận đại chiến",
+  "frame": {
+    "width": 1920,
+    "height": 1080
+  },
+  "nodes": [
+    {
+      "name": "Hud",
+      "type": "FRAME",
+      "x": 0.0,
+      "y": 0.0,
+      "w": 1920.0,
+      "h": 1080.0,
+      "visible": true,
+      "children": [
+        {
+          "name": "TopBar",
+          "type": "FRAME",
+          "x": 0.0,
+          "y": 0.0,
+          "w": 1920.0,
+          "h": 40.0,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "HORIZONTAL",
+            "spacing": 12,
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ],
+            "align": "MiddleLeft"
+          },
+          "children": [
+            {
+              "name": "Text - Lượt 120  |  Trễ 0 lượt",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 8.0,
+              "w": 626.67,
+              "h": 24.0,
+              "visible": true,
+              "text": {
+                "characters": "Lượt 120  |  Trễ 0 lượt",
+                "fontSize": 18,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "LEFT",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Text - Đang chờ người chơi...",
+              "type": "TEXT",
+              "x": 646.67,
+              "y": 8.0,
+              "w": 626.67,
+              "h": 24.0,
+              "visible": true,
+              "text": {
+                "characters": "Đang chờ người chơi...",
+                "fontSize": 18,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "CENTER",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Text - Vàng: 400",
+              "type": "TEXT",
+              "x": 1285.33,
+              "y": 8.0,
+              "w": 626.67,
+              "h": 24.0,
+              "visible": true,
+              "text": {
+                "characters": "Vàng: 400",
+                "fontSize": 20,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "RIGHT",
+                "alignV": "CENTER"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Teams",
+          "type": "FRAME",
+          "x": 8.0,
+          "y": 48.0,
+          "w": 240.0,
+          "h": 140.0,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "VERTICAL",
+            "spacing": 4,
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ],
+            "align": "UpperLeft"
+          },
+          "children": [
+            {
+              "name": "Team0",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 8.0,
+              "w": 224.0,
+              "h": 28.0,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 20.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#5A8CFF",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 1 (bạn): 4000 lính",
+                  "type": "TEXT",
+                  "x": 28.0,
+                  "y": 0.0,
+                  "w": -28.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 1 (bạn): 4000 lính",
+                    "fontSize": 18,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team1",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 40.0,
+              "w": 224.0,
+              "h": 28.0,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 20.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#FF6659",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 2 (máy): 4000 lính",
+                  "type": "TEXT",
+                  "x": 28.0,
+                  "y": 0.0,
+                  "w": -28.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 2 (máy): 4000 lính",
+                    "fontSize": 18,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team2",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 72.0,
+              "w": 224.0,
+              "h": 28.0,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 20.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#66E673",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 3 (máy): 4000 lính",
+                  "type": "TEXT",
+                  "x": 28.0,
+                  "y": 0.0,
+                  "w": -28.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 3 (máy): 4000 lính",
+                    "fontSize": 18,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Team3",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 104.0,
+              "w": 224.0,
+              "h": 28.0,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft"
+              },
+              "children": [
+                {
+                  "name": "Swatch",
+                  "type": "FRAME",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 20.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "fill": {
+                    "color": "#FFD94D",
+                    "opacity": 1.0
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4
+                },
+                {
+                  "name": "Text - Đội 4 (máy): 4000 lính",
+                  "type": "TEXT",
+                  "x": 28.0,
+                  "y": 0.0,
+                  "w": -28.0,
+                  "h": 28.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đội 4 (máy): 4000 lính",
+                    "fontSize": 18,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "TrainBar",
+          "type": "FRAME",
+          "x": 699.0,
+          "y": 996.0,
+          "w": 522.0,
+          "h": 76.0,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "HORIZONTAL",
+            "spacing": 8,
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ],
+            "align": "MiddleLeft"
+          },
+          "children": [
+            {
+              "name": "Text - Huấn luyện",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 8.0,
+              "w": 110.0,
+              "h": 60.0,
+              "visible": true,
+              "text": {
+                "characters": "Huấn luyện",
+                "fontSize": 18,
+                "color": "#6C6C6C",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "CENTER",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Button - Lính kiếm 200 vàng · 15s",
+              "type": "FRAME",
+              "x": 126.0,
+              "y": 8.0,
+              "w": 190.0,
+              "h": 60.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Lính kiếm 200 vàng · 15s",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 190.0,
+                  "h": 60.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Lính kiếm\n200 vàng · 15s",
+                    "fontSize": 16,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Button - Lính cung 200 vàng · 15s",
+              "type": "FRAME",
+              "x": 324.0,
+              "y": 8.0,
+              "w": 190.0,
+              "h": 60.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Lính cung 200 vàng · 15s",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 190.0,
+                  "h": 60.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Lính cung\n200 vàng · 15s",
+                    "fontSize": 16,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Squads",
+          "type": "FRAME",
+          "x": 1652.0,
+          "y": 386.0,
+          "w": 260.0,
+          "h": 308.0,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "VERTICAL",
+            "spacing": 6,
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ],
+            "align": "UpperLeft"
+          },
+          "children": [
+            {
+              "name": "Text - Tiểu đội",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 8.0,
+              "w": 244.0,
+              "h": 28.0,
+              "visible": true,
+              "text": {
+                "characters": "Tiểu đội",
+                "fontSize": 20,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "LEFT",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Text - Đang chọn: 0 tiểu đội",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 42.0,
+              "w": 244.0,
+              "h": 26.0,
+              "visible": true,
+              "text": {
+                "characters": "Đang chọn: 0 tiểu đội",
+                "fontSize": 18,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "LEFT",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Button - Chọn cả quân (Q)",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 74.0,
+              "w": 244.0,
+              "h": 36.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Chọn cả quân (Q)",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 244.0,
+                  "h": 36.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Chọn cả quân (Q)",
+                    "fontSize": 16,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Button - Lính kiếm: 28 đội · 2800 lín",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 116.0,
+              "w": 244.0,
+              "h": 36.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Lính kiếm: 28 đội · 2800 lín",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 244.0,
+                  "h": 36.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Lính kiếm: 28 đội · 2800 lính",
+                    "fontSize": 15,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Button - Lính cung: 12 đội · 1200 lín",
+              "type": "FRAME",
+              "x": 8.0,
+              "y": 158.0,
+              "w": 244.0,
+              "h": 36.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Lính cung: 12 đội · 1200 lín",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 244.0,
+                  "h": 36.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Lính cung: 12 đội · 1200 lính",
+                    "fontSize": 15,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Text - Kéo chuột: chọn khung Shift:",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 200.0,
+              "w": 244.0,
+              "h": 100.0,
+              "visible": true,
+              "text": {
+                "characters": "Kéo chuột: chọn khung\nShift: thêm vào\nNhấp đúp: cùng loại\nCtrl+1..9: gán nhóm\n1..9: gọi nhóm\nChuột phải: di chuyển",
+                "fontSize": 14,
+                "color": "#6C6C6C",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "LEFT",
+                "alignV": "TOP"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Notice",
+          "type": "FRAME",
+          "x": 640.0,
+          "y": 52.0,
+          "w": 640.0,
+          "h": 56.0,
+          "visible": false,
+          "fill": {
+            "color": "#DADADA",
+            "opacity": 1.0
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "HORIZONTAL",
+            "spacing": 12,
+            "padding": [
+              8,
+              8,
+              8,
+              8
+            ],
+            "align": "MiddleLeft"
+          },
+          "children": [
+            {
+              "name": "Text - Phát hiện lệch đồng bộ ở lượ",
+              "type": "TEXT",
+              "x": 8.0,
+              "y": 8.0,
+              "w": 522.0,
+              "h": 40.0,
+              "visible": true,
+              "text": {
+                "characters": "Phát hiện lệch đồng bộ ở lượt 120",
+                "fontSize": 18,
+                "color": "#262626",
+                "opacity": 1,
+                "bold": false,
+                "italic": false,
+                "alignH": "LEFT",
+                "alignV": "CENTER"
+              }
+            },
+            {
+              "name": "Button - Đóng",
+              "type": "FRAME",
+              "x": 542.0,
+              "y": 8.0,
+              "w": 90.0,
+              "h": 40.0,
+              "visible": true,
+              "fill": {
+                "color": "#DADADA",
+                "opacity": 1.0
+              },
+              "stroke": {
+                "color": "#808080",
+                "width": 2
+              },
+              "cornerRadius": 4,
+              "button": {
+                "interactable": true
+              },
+              "children": [
+                {
+                  "name": "Text - Đóng",
+                  "type": "TEXT",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "w": 90.0,
+                  "h": 40.0,
+                  "visible": true,
+                  "text": {
+                    "characters": "Đóng",
+                    "fontSize": 16,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "CENTER",
+                    "alignV": "CENTER"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

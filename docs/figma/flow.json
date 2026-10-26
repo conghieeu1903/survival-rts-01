@@ -1,0 +1,263 @@
+{
+  "description": "Luồng chuyển màn Survival RTS. screens: vị trí đặt frame trên canvas Figma (col/row), edges: mũi tên nối màn và nhãn nút bấm.",
+  "grid": {
+    "colWidth": 2120,
+    "rowHeight": 1280
+  },
+  "screens": [
+    {
+      "id": "01_loading",
+      "title": "1. Loading",
+      "col": 0,
+      "row": 0
+    },
+    {
+      "id": "02_menu_chinh",
+      "title": "2. Menu chính",
+      "col": 1,
+      "row": 0
+    },
+    {
+      "id": "02b_hop_thoai_thoat",
+      "title": "2b. Hộp thoại Thoát game",
+      "col": 2,
+      "row": 0
+    },
+    {
+      "id": "08_cai_dat",
+      "title": "8. Cài đặt - Đồ họa",
+      "col": 0,
+      "row": 1
+    },
+    {
+      "id": "08b_cai_dat_am_thanh",
+      "title": "8b. Cài đặt - Âm thanh",
+      "col": 1,
+      "row": 1
+    },
+    {
+      "id": "08c_cai_dat_dieu_khien",
+      "title": "8c. Cài đặt - Điều khiển",
+      "col": 2,
+      "row": 1
+    },
+    {
+      "id": "09_ban_luu",
+      "title": "9. Bản lưu",
+      "col": 0,
+      "row": 2
+    },
+    {
+      "id": "10_credits",
+      "title": "10. Credits",
+      "col": 1,
+      "row": 2
+    },
+    {
+      "id": "03_multiplayer_lan",
+      "title": "3. Multiplayer LAN",
+      "col": 0,
+      "row": 3
+    },
+    {
+      "id": "04_tham_gia_may_chu",
+      "title": "4. Tham gia máy chủ (Online)",
+      "col": 1,
+      "row": 3
+    },
+    {
+      "id": "05_phong_cho",
+      "title": "5. Phòng chờ",
+      "col": 2,
+      "row": 3
+    },
+    {
+      "id": "06_hud_tran",
+      "title": "6. HUD trận đại chiến",
+      "col": 0,
+      "row": 4
+    },
+    {
+      "id": "07_ket_qua",
+      "title": "7. Kết quả trận",
+      "col": 1,
+      "row": 4
+    },
+    {
+      "id": "20_offline_hud",
+      "title": "20. Màn chơi offline (cũ, nền tối)",
+      "col": 0,
+      "row": 5
+    },
+    {
+      "id": "21_offline_menu_esc",
+      "title": "21a. Menu Esc offline - Đồ họa",
+      "col": 1,
+      "row": 5
+    },
+    {
+      "id": "21b_offline_menu_esc_am_thanh",
+      "title": "21b. Menu Esc offline - Âm thanh",
+      "col": 2,
+      "row": 5
+    },
+    {
+      "id": "21c_offline_menu_esc_dieu_khien",
+      "title": "21c. Menu Esc offline - Điều khiển",
+      "col": 3,
+      "row": 5
+    }
+  ],
+  "edges": [
+    {
+      "from": "01_loading",
+      "to": "02_menu_chinh",
+      "label": "Nạp xong 100%"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "20_offline_hud",
+      "label": "Chơi offline"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "03_multiplayer_lan",
+      "label": "Chơi LAN"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "04_tham_gia_may_chu",
+      "label": "Chơi online"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "09_ban_luu",
+      "label": "Bản lưu"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "08_cai_dat",
+      "label": "Cài đặt"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "10_credits",
+      "label": "Credits"
+    },
+    {
+      "from": "02_menu_chinh",
+      "to": "02b_hop_thoai_thoat",
+      "label": "Thoát"
+    },
+    {
+      "from": "02b_hop_thoai_thoat",
+      "to": "02_menu_chinh",
+      "label": "Không"
+    },
+    {
+      "from": "08_cai_dat",
+      "to": "08b_cai_dat_am_thanh",
+      "label": "Tab Âm thanh"
+    },
+    {
+      "from": "08b_cai_dat_am_thanh",
+      "to": "08c_cai_dat_dieu_khien",
+      "label": "Tab Điều khiển"
+    },
+    {
+      "from": "08_cai_dat",
+      "to": "02_menu_chinh",
+      "label": "Quay lại / Esc"
+    },
+    {
+      "from": "09_ban_luu",
+      "to": "02_menu_chinh",
+      "label": "Quay lại / Esc"
+    },
+    {
+      "from": "10_credits",
+      "to": "02_menu_chinh",
+      "label": "Quay lại / Esc"
+    },
+    {
+      "from": "03_multiplayer_lan",
+      "to": "05_phong_cho",
+      "label": "Tạo phòng / Vào phòng"
+    },
+    {
+      "from": "04_tham_gia_may_chu",
+      "to": "05_phong_cho",
+      "label": "Tạo phòng / Vào máy chủ"
+    },
+    {
+      "from": "03_multiplayer_lan",
+      "to": "02_menu_chinh",
+      "label": "Quay lại"
+    },
+    {
+      "from": "04_tham_gia_may_chu",
+      "to": "02_menu_chinh",
+      "label": "Quay lại"
+    },
+    {
+      "from": "05_phong_cho",
+      "to": "06_hud_tran",
+      "label": "Bắt đầu"
+    },
+    {
+      "from": "05_phong_cho",
+      "to": "03_multiplayer_lan",
+      "label": "Rời phòng"
+    },
+    {
+      "from": "06_hud_tran",
+      "to": "07_ket_qua",
+      "label": "Có đội thắng"
+    },
+    {
+      "from": "06_hud_tran",
+      "to": "03_multiplayer_lan",
+      "label": "Mất kết nối"
+    },
+    {
+      "from": "07_ket_qua",
+      "to": "06_hud_tran",
+      "label": "Chơi lại"
+    },
+    {
+      "from": "07_ket_qua",
+      "to": "05_phong_cho",
+      "label": "Về phòng chờ"
+    },
+    {
+      "from": "07_ket_qua",
+      "to": "03_multiplayer_lan",
+      "label": "Thoát"
+    },
+    {
+      "from": "20_offline_hud",
+      "to": "21_offline_menu_esc",
+      "label": "Esc"
+    },
+    {
+      "from": "21_offline_menu_esc",
+      "to": "20_offline_hud",
+      "label": "Tiếp tục / Esc"
+    },
+    {
+      "from": "21_offline_menu_esc",
+      "to": "21b_offline_menu_esc_am_thanh",
+      "label": "Tab Âm thanh"
+    },
+    {
+      "from": "21b_offline_menu_esc_am_thanh",
+      "to": "21c_offline_menu_esc_dieu_khien",
+      "label": "Tab Điều khiển"
+    },
+    {
+      "from": "21_offline_menu_esc",
+      "to": "02_menu_chinh",
+      "label": "Về menu chính"
+    }
+  ]
+}

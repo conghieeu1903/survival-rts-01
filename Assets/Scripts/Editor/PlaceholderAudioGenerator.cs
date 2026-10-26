@@ -38,6 +38,8 @@ namespace SurvivalRts.Editor
             count += Save("Music", "Music_Calm_Loop", MusicCalm());
             count += Save("Music", "Music_Battle_Loop", MusicBattle(800));
             for (int i = 0; i < 3; i++) count += Save("SFX/Building", $"Builder_Hammer_{i + 1:00}", Hammer(0.92f + i * 0.08f, 900 + i));
+            for (int i = 0; i < 4; i++) count += Save("SFX/Combat", $"Sword_Hit_{i + 1:00}", SwordSlash(0.92f + i * 0.06f, 1000 + i));
+            for (int i = 0; i < 3; i++) count += Save("SFX/Combat", $"Bow_Shot_{i + 1:00}", BowRelease(0.94f + i * 0.06f, 1100 + i));
 
             AssetDatabase.Refresh();
             BindSoundLibrary();
@@ -50,6 +52,9 @@ namespace SurvivalRts.Editor
             var mixer = EnsureAudioMixer();
             var library = AssetDatabase.LoadAssetAtPath<SoundLibrary>(LibraryAssetPath);
             if (library == null || library.rules == null) return;
+
+            EnsureRule(library, SoundId.SwordHit);
+            EnsureRule(library, SoundId.BowShot);
 
             library.mixer = mixer;
             var subAssets = AssetDatabase.LoadAllAssetsAtPath(MixerAssetPath);
@@ -153,11 +158,45 @@ namespace SurvivalRts.Editor
                         rule.maxSimultaneous = 1;
                         rule.pitchRandom = 0f;
                         break;
+                    case SoundId.SwordHit:
+                        rule.clips = LoadClips("SFX/Combat/Sword_Hit_01", "SFX/Combat/Sword_Hit_02", "SFX/Combat/Sword_Hit_03", "SFX/Combat/Sword_Hit_04");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.kind = SoundKind.OneShot3D;
+                        rule.cullOutsideView = true;
+                        rule.mergeCellSize = 6f;
+                        rule.maxStartsPerSecond = 14;
+                        rule.maxSimultaneous = 8;
+                        rule.pitchRandom = 0.08f;
+                        rule.volume = 0.95f;
+                        rule.mergeVolumeBoost = 0.28f;
+                        rule.maxVolume = 1.5f;
+                        break;
+                    case SoundId.BowShot:
+                        rule.clips = LoadClips("SFX/Combat/Bow_Shot_01", "SFX/Combat/Bow_Shot_02", "SFX/Combat/Bow_Shot_03");
+                        rule.channel = VolumeChannel.Sfx;
+                        rule.kind = SoundKind.OneShot3D;
+                        rule.cullOutsideView = true;
+                        rule.mergeCellSize = 5f;
+                        rule.maxStartsPerSecond = 16;
+                        rule.maxSimultaneous = 8;
+                        rule.pitchRandom = 0.07f;
+                        rule.volume = 1f;
+                        rule.mergeVolumeBoost = 0.22f;
+                        rule.maxVolume = 1.5f;
+                        break;
                 }
             }
 
             EditorUtility.SetDirty(library);
             AssetDatabase.SaveAssets();
+        }
+
+        static void EnsureRule(SoundLibrary library, SoundId id)
+        {
+            if (library.Get(id) != null) return;
+            int len = library.rules.Length;
+            Array.Resize(ref library.rules, len + 1);
+            library.rules[len] = new SoundLibrary.Rule { id = id };
         }
 
         public static AudioMixer EnsureAudioMixer()
@@ -306,6 +345,63 @@ namespace SurvivalRts.Editor
                 float metalTap = Mathf.Sin(2f * Mathf.PI * 1450f * pitch * t) * Mathf.Exp(-t * 55f);
                 float knock = wood * Mathf.Exp(-t * 42f);
                 buffer[n] = woodTone * 0.95f + metalTap * 0.65f + knock * 0.85f;
+            }
+            return buffer;
+        }
+
+        // Tiếng kiếm chém chạm giáp/khiên: tiếng vút lưỡi kiếm + tiếng ngân kim loại đanh gọn + lực va chạm.
+        static float[] SwordSlash(float pitch, int seed)
+        {
+            var rng = new System.Random(seed);
+            var buffer = new float[Samples(0.26f)];
+            float swish = 0f;
+            for (int n = 0; n < buffer.Length; n++)
+            {
+                float t = n / (float)SampleRate;
+                float noise = Noise(rng);
+                swish = OnePole(swish, noise, 0.42f);
+                float whoosh = (noise - swish * 0.55f) * Envelope(t, 0.008f, 0.045f) * 0.55f;
+
+                float hitT = Mathf.Max(0f, t - 0.018f);
+                float hitEnv = t >= 0.018f ? Mathf.Exp(-hitT * 30f) : 0f;
+                float ringEnv = t >= 0.018f ? Mathf.Exp(-hitT * 18f) : 0f;
+                float f1 = 1680f * pitch;
+                float f2 = 2540f * pitch;
+                float f3 = 3820f * pitch;
+                float clang = (Mathf.Sin(2f * Mathf.PI * f1 * hitT) * 0.55f
+                    + Mathf.Sin(2f * Mathf.PI * f2 * hitT) * 0.35f
+                    + Mathf.Sin(2f * Mathf.PI * f3 * hitT) * 0.20f) * ringEnv;
+                float bodyFreq = Mathf.Lerp(165f, 68f, Mathf.Clamp01(hitT / 0.09f)) * pitch;
+                float body = Mathf.Sin(2f * Mathf.PI * bodyFreq * hitT) * hitEnv * 0.65f;
+                buffer[n] = whoosh + clang + body;
+            }
+            return buffer;
+        }
+
+        // Tiếng bật dây cung và mũi tên xé gió: tiếng dây bật trầm ấm + tiếng vút không khí ngắn.
+        static float[] BowRelease(float pitch, int seed)
+        {
+            var rng = new System.Random(seed);
+            var buffer = new float[Samples(0.28f)];
+            float lpFast = 0f;
+            float lpSlow = 0f;
+            float stringPhase = 0f;
+            for (int n = 0; n < buffer.Length; n++)
+            {
+                float t = n / (float)SampleRate;
+                float stringFreq = Mathf.Lerp(195f, 128f, Mathf.Clamp01(t / 0.10f)) * pitch;
+                stringPhase += stringFreq / SampleRate;
+                float twang = (Mathf.Sin(2f * Mathf.PI * stringPhase) * 0.75f
+                    + Mathf.Sin(4f * Mathf.PI * stringPhase) * 0.35f
+                    + Mathf.Sin(6f * Mathf.PI * stringPhase) * 0.18f) * Mathf.Exp(-t * 24f);
+                float woodSnap = Mathf.Sin(2f * Mathf.PI * 580f * pitch * t) * Mathf.Exp(-t * 60f) * 0.35f;
+
+                float noise = Noise(rng);
+                lpFast = OnePole(lpFast, noise, 0.36f);
+                lpSlow = OnePole(lpSlow, noise, 0.08f);
+                float bandNoise = lpFast - lpSlow;
+                float whooshEnv = Mathf.Clamp01(t / 0.035f) * Mathf.Exp(-Mathf.Max(0f, t - 0.035f) * 18f);
+                buffer[n] = twang + woodSnap + bandNoise * whooshEnv * 1.15f;
             }
             return buffer;
         }

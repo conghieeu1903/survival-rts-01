@@ -36,7 +36,7 @@ namespace SurvivalRts
             get
             {
                 if (occupant == null || BuildGrid.Instance == null) return new Vector2(radius, radius);
-                return (Vector2)occupant.footprint * (BuildGrid.Instance.CellSize * 0.5f);
+                return occupant.WorldHalfExtents(BuildGrid.Instance.CellSize);
             }
         }
 

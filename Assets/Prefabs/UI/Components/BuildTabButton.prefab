@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 97ba796de5b90d94697c189bea1d2f0e, type: 2}
-  m_sharedMaterial: {fileID: 6264591567557923059, guid: 97ba796de5b90d94697c189bea1d2f0e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0a5221b82fced4c46b8b5821206e8859, type: 2}
+  m_sharedMaterial: {fileID: 2445671646048988259, guid: 0a5221b82fced4c46b8b5821206e8859, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -204,8 +204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Kinh t\u1EBF"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 97ba796de5b90d94697c189bea1d2f0e, type: 2}
-  m_sharedMaterial: {fileID: 6264591567557923059, guid: 97ba796de5b90d94697c189bea1d2f0e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0a5221b82fced4c46b8b5821206e8859, type: 2}
+  m_sharedMaterial: {fileID: 2445671646048988259, guid: 0a5221b82fced4c46b8b5821206e8859, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

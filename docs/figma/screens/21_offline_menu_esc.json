@@ -1,0 +1,1618 @@
+{
+  "screen": "21_offline_menu_esc",
+  "title": "Menu Esc offline - tab Đồ họa",
+  "frame": {
+    "width": 1920,
+    "height": 1080
+  },
+  "nodes": [
+    {
+      "name": "SettingsMenu",
+      "type": "FRAME",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 1080,
+      "visible": true,
+      "fill": {
+        "color": "#262626",
+        "opacity": 0.45
+      },
+      "children": [
+        {
+          "name": "Card",
+          "type": "FRAME",
+          "x": 180,
+          "y": 48,
+          "w": 1560,
+          "h": 984,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "VERTICAL",
+            "spacing": 16,
+            "padding": [
+              24,
+              24,
+              24,
+              24
+            ],
+            "align": "UpperLeft",
+            "expandWidth": true,
+            "expandHeight": false
+          },
+          "children": [
+            {
+              "name": "Header",
+              "type": "FRAME",
+              "x": 24,
+              "y": 24,
+              "w": 1512,
+              "h": 48,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 12,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "LowerLeft",
+                "expandWidth": false,
+                "expandHeight": false
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Text - Cài đặt",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 4,
+                  "w": 1180,
+                  "h": 44,
+                  "visible": true,
+                  "text": {
+                    "characters": "Cài đặt",
+                    "fontSize": 32,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 1,
+                    "growY": 0
+                  }
+                },
+                {
+                  "name": "Text - Cài đặt · Đồ họa",
+                  "type": "TEXT",
+                  "x": 1192,
+                  "y": 24,
+                  "w": 320,
+                  "h": 24,
+                  "visible": true,
+                  "text": {
+                    "characters": "Cài đặt · Đồ họa",
+                    "fontSize": 14,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "RIGHT",
+                    "alignV": "CENTER"
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 88,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Tabs",
+              "type": "FRAME",
+              "x": 24,
+              "y": 106,
+              "w": 1512,
+              "h": 48,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft",
+                "expandWidth": false,
+                "expandHeight": true
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Button - Đồ họa",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#505050",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#262626",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Đồ họa",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Đồ họa",
+                        "fontSize": 20,
+                        "color": "#FAFAFA",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Âm thanh",
+                  "type": "FRAME",
+                  "x": 188,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Âm thanh",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Âm thanh",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Điều khiển",
+                  "type": "FRAME",
+                  "x": 376,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Điều khiển",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Điều khiển",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 170,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Scroll",
+              "type": "FRAME",
+              "x": 24,
+              "y": 188,
+              "w": 1512,
+              "h": 686,
+              "visible": true,
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 1,
+                "growY": 1
+              },
+              "children": [
+                {
+                  "name": "Viewport",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 1512,
+                  "h": 686,
+                  "visible": true,
+                  "fill": {
+                    "color": "#000000",
+                    "opacity": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Content",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "w": 1512,
+                      "h": 390,
+                      "visible": true,
+                      "autoLayout": {
+                        "direction": "VERTICAL",
+                        "spacing": 20,
+                        "padding": [
+                          0,
+                          0,
+                          0,
+                          0
+                        ],
+                        "align": "UpperLeft",
+                        "expandWidth": true,
+                        "expandHeight": false
+                      },
+                      "hug": {
+                        "x": false,
+                        "y": true
+                      },
+                      "children": [
+                        {
+                          "name": "Group",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
+                          "w": 1512,
+                          "h": 272,
+                          "visible": true,
+                          "autoLayout": {
+                            "direction": "VERTICAL",
+                            "spacing": 2,
+                            "padding": [
+                              0,
+                              0,
+                              0,
+                              0
+                            ],
+                            "align": "UpperLeft",
+                            "expandWidth": true,
+                            "expandHeight": false
+                          },
+                          "children": [
+                            {
+                              "name": "Text - Hiển thị màn hình",
+                              "type": "TEXT",
+                              "x": 0,
+                              "y": 0,
+                              "w": 1512,
+                              "h": 40,
+                              "visible": true,
+                              "text": {
+                                "characters": "Hiển thị màn hình",
+                                "fontSize": 24,
+                                "color": "#262626",
+                                "opacity": 1,
+                                "bold": false,
+                                "italic": false,
+                                "alignH": "LEFT",
+                                "alignV": "CENTER"
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              }
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 42,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Độ phân giải",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 746,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Độ phân giải",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Spacer",
+                                  "type": "FRAME",
+                                  "x": 766,
+                                  "y": 4,
+                                  "w": 386,
+                                  "h": 48,
+                                  "visible": true,
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - <",
+                                  "type": "FRAME",
+                                  "x": 1168,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - <",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": "<",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Text - 1048 x 582",
+                                  "type": "TEXT",
+                                  "x": 1228,
+                                  "y": 4,
+                                  "w": 220,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "1048 x 582",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "CENTER",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - >",
+                                  "type": "FRAME",
+                                  "x": 1464,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - >",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": ">",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 100,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Toàn màn hình",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 856,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Toàn màn hình",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Spacer",
+                                  "type": "FRAME",
+                                  "x": 876,
+                                  "y": 4,
+                                  "w": 496,
+                                  "h": 48,
+                                  "visible": true,
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - Tắt",
+                                  "type": "FRAME",
+                                  "x": 1388,
+                                  "y": 4,
+                                  "w": 120,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - Tắt",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 120,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": "Tắt",
+                                        "fontSize": 18,
+                                        "color": "#6C6C6C",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 158,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Đồng bộ dọc (VSync)",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 856,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Đồng bộ dọc (VSync)",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Spacer",
+                                  "type": "FRAME",
+                                  "x": 876,
+                                  "y": 4,
+                                  "w": 496,
+                                  "h": 48,
+                                  "visible": true,
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - Tắt",
+                                  "type": "FRAME",
+                                  "x": 1388,
+                                  "y": 4,
+                                  "w": 120,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - Tắt",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 120,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": "Tắt",
+                                        "fontSize": 18,
+                                        "color": "#6C6C6C",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 216,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Giới hạn FPS",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 746,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Giới hạn FPS",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Spacer",
+                                  "type": "FRAME",
+                                  "x": 766,
+                                  "y": 4,
+                                  "w": 386,
+                                  "h": 48,
+                                  "visible": true,
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - <",
+                                  "type": "FRAME",
+                                  "x": 1168,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - <",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": "<",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Text - 144 FPS",
+                                  "type": "TEXT",
+                                  "x": 1228,
+                                  "y": 4,
+                                  "w": 220,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "144 FPS",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "CENTER",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - >",
+                                  "type": "FRAME",
+                                  "x": 1464,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - >",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": ">",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "Group",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 292,
+                          "w": 1512,
+                          "h": 98,
+                          "visible": true,
+                          "autoLayout": {
+                            "direction": "VERTICAL",
+                            "spacing": 2,
+                            "padding": [
+                              0,
+                              0,
+                              0,
+                              0
+                            ],
+                            "align": "UpperLeft",
+                            "expandWidth": true,
+                            "expandHeight": false
+                          },
+                          "children": [
+                            {
+                              "name": "Text - Chất lượng",
+                              "type": "TEXT",
+                              "x": 0,
+                              "y": 0,
+                              "w": 1512,
+                              "h": 40,
+                              "visible": true,
+                              "text": {
+                                "characters": "Chất lượng",
+                                "fontSize": 24,
+                                "color": "#262626",
+                                "opacity": 1,
+                                "bold": false,
+                                "italic": false,
+                                "alignH": "LEFT",
+                                "alignV": "CENTER"
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              }
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 42,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Chất lượng đồ họa",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 746,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Chất lượng đồ họa",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Spacer",
+                                  "type": "FRAME",
+                                  "x": 766,
+                                  "y": 4,
+                                  "w": 386,
+                                  "h": 48,
+                                  "visible": true,
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - <",
+                                  "type": "FRAME",
+                                  "x": 1168,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - <",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": "<",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Text - PC",
+                                  "type": "TEXT",
+                                  "x": 1228,
+                                  "y": 4,
+                                  "w": 220,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "PC",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "CENTER",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Button - >",
+                                  "type": "FRAME",
+                                  "x": 1464,
+                                  "y": 4,
+                                  "w": 44,
+                                  "h": 48,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#DADADA",
+                                    "opacity": 1
+                                  },
+                                  "stroke": {
+                                    "color": "#808080",
+                                    "width": 2
+                                  },
+                                  "cornerRadius": 4,
+                                  "button": {
+                                    "interactable": true
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 0,
+                                    "growY": 0
+                                  },
+                                  "children": [
+                                    {
+                                      "name": "Text - >",
+                                      "type": "TEXT",
+                                      "x": 0,
+                                      "y": 0,
+                                      "w": 44,
+                                      "h": 48,
+                                      "visible": true,
+                                      "text": {
+                                        "characters": ">",
+                                        "fontSize": 20,
+                                        "color": "#262626",
+                                        "opacity": 1,
+                                        "bold": false,
+                                        "italic": false,
+                                        "alignH": "CENTER",
+                                        "alignV": "CENTER"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 890,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Footer",
+              "type": "FRAME",
+              "x": 24,
+              "y": 908,
+              "w": 1512,
+              "h": 52,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 12,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft",
+                "expandWidth": false,
+                "expandHeight": true
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Button - Mặc định",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Mặc định",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Mặc định",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Spacer",
+                  "type": "FRAME",
+                  "x": 172,
+                  "y": 0,
+                  "w": 764,
+                  "h": 52,
+                  "visible": true,
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 1,
+                    "growY": 0
+                  }
+                },
+                {
+                  "name": "Button - Về menu chính",
+                  "type": "FRAME",
+                  "x": 948,
+                  "y": 0,
+                  "w": 220,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Về menu chính",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 220,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Về menu chính",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Tiếp tục",
+                  "type": "FRAME",
+                  "x": 1180,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Tiếp tục",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Tiếp tục",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Áp dụng",
+                  "type": "FRAME",
+                  "x": 1352,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#505050",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#262626",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Áp dụng",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Áp dụng",
+                        "fontSize": 20,
+                        "color": "#FAFAFA",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

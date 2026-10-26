@@ -19,12 +19,25 @@ namespace SurvivalRts.Editor
             EditorApplication.delayCall += EnsureUpdatedOnce;
         }
 
-        // Tự động cập nhật lại Prefab nếu bản đồ vẫn còn cấu trúc khung cũ.
+        // Tự động cập nhật lại Prefab nếu bản đồ vẫn còn cấu trúc khung cũ hoặc có Missing Prefab.
         static void EnsureUpdatedOnce()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling) return;
             var bmPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/UI/Screens/BuildMenuScreen.prefab");
-            if (bmPrefab != null && bmPrefab.transform.Find("minimapPanel") != null)
+            bool needsUpdate = bmPrefab != null && bmPrefab.transform.Find("minimapPanel") != null;
+            var activeScene = EditorSceneManager.GetActiveScene();
+            if (!needsUpdate && activeScene.IsValid() && activeScene.path == "Assets/Scenes/prototype.unity")
+            {
+                foreach (var rootGo in activeScene.GetRootGameObjects())
+                {
+                    if (rootGo != null && PrefabUtility.IsPrefabAssetMissing(rootGo))
+                    {
+                        needsUpdate = true;
+                        break;
+                    }
+                }
+            }
+            if (needsUpdate)
             {
                 BuildAllPrefabsAndSetupScene();
             }
@@ -51,7 +64,6 @@ namespace SurvivalRts.Editor
             var healthBarPrefab = BuildHealthBarScreenPrefab(font);
             var unitCommandPrefab = BuildUnitCommandScreenPrefab(font);
             var settingsMenuPrefab = BuildSettingsMenuScreenPrefab(font);
-            BuildLoadingScreenPrefab(font);
 
             SetupActiveScene(buildMenuPrefab, healthBarPrefab, unitCommandPrefab, settingsMenuPrefab);
             AssetDatabase.SaveAssets();
@@ -686,181 +698,19 @@ namespace SurvivalRts.Editor
             return prefab;
         }
 
-        // Tạo Prefab màn hình SettingsMenuScreen tạm dừng và chỉnh âm lượng.
+        // Tạo Prefab màn hình SettingsMenuScreen cho menu tạm dừng Esc trong trận.
         static GameObject BuildSettingsMenuScreenPrefab(TMP_FontAsset font)
         {
-            var root = CreateScreenCanvas("SettingsMenu", 50);
-            var smCtrl = root.AddComponent<SettingsMenuController>();
-
-            var settingsRoot = new GameObject("settingsRoot", typeof(RectTransform), typeof(Image), typeof(UiPointerBlocker));
-            settingsRoot.transform.SetParent(root.transform, false);
-            var srRect = settingsRoot.GetComponent<RectTransform>();
-            srRect.anchorMin = Vector2.zero;
-            srRect.anchorMax = Vector2.one;
-            srRect.offsetMin = Vector2.zero;
-            srRect.offsetMax = Vector2.zero;
-            settingsRoot.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.60f);
-
-            var panel = new GameObject("settingsPanel", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
-            panel.transform.SetParent(settingsRoot.transform, false);
-            var pRect = panel.GetComponent<RectTransform>();
-            pRect.anchorMin = new Vector2(0.5f, 0.5f);
-            pRect.anchorMax = new Vector2(0.5f, 0.5f);
-            pRect.pivot = new Vector2(0.5f, 0.5f);
-            pRect.sizeDelta = new Vector2(440f, 0f);
-            panel.GetComponent<Image>().color = new Color(0.14f, 0.14f, 0.14f, 0.98f);
-            panel.GetComponent<Outline>().effectColor = BorderCol;
-
-            var pVlg = panel.GetComponent<VerticalLayoutGroup>();
-            pVlg.padding = new RectOffset(22, 22, 18, 20);
-            pVlg.spacing = 8f;
-            pVlg.childAlignment = TextAnchor.UpperCenter;
-            pVlg.childControlWidth = true;
-            pVlg.childControlHeight = true;
-            pVlg.childForceExpandWidth = true;
-            pVlg.childForceExpandHeight = false;
-
-            var pCsf = panel.GetComponent<ContentSizeFitter>();
-            pCsf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            pCsf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            var title = CreateText(panel.transform, "titleLabel", font, "CÀI ĐẶT", 20f, FontStyles.Bold, TextMain, TextAlignmentOptions.Center);
-            title.gameObject.AddComponent<LayoutElement>().minHeight = 28f;
-
-            var section = CreateText(panel.transform, "audioSection", font, "ÂM THANH", 12.5f, FontStyles.Bold, TextDim, TextAlignmentOptions.MidlineLeft);
-            section.gameObject.AddComponent<LayoutElement>().minHeight = 20f;
-
-            var masterSlider = CreateSliderRow(panel.transform, font, "masterRow", "Tổng", "masterSlider", "masterValue", out var masterValue);
-            var musicSlider = CreateSliderRow(panel.transform, font, "musicRow", "Nhạc nền", "musicSlider", "musicValue", out var musicValue);
-            var sfxSlider = CreateSliderRow(panel.transform, font, "sfxRow", "Hiệu ứng", "sfxSlider", "sfxValue", out var sfxValue);
-            var uiSlider = CreateSliderRow(panel.transform, font, "uiRow", "Giao diện", "uiSlider", "uiValue", out var uiValue);
-
-            var btnRow = new GameObject("buttonRow", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
-            btnRow.transform.SetParent(panel.transform, false);
-            var brHlg = btnRow.GetComponent<HorizontalLayoutGroup>();
-            brHlg.spacing = 10f;
-            brHlg.padding = new RectOffset(0, 0, 6, 0);
-            brHlg.childAlignment = TextAnchor.MiddleRight;
-            brHlg.childControlWidth = true;
-            brHlg.childControlHeight = true;
-            brHlg.childForceExpandWidth = false;
-            brHlg.childForceExpandHeight = false;
-            var brLe = btnRow.GetComponent<LayoutElement>();
-            brLe.minHeight = 40f;
-            brLe.preferredHeight = 40f;
-            brLe.flexibleHeight = 0f;
-
-            var defaultBtn = CreateButton(btnRow.transform, "defaultButton", font, "Mặc định", 104f, 34f, CardBg, TextMain);
-            var resumeBtn = CreateButton(btnRow.transform, "resumeButton", font, "Tiếp tục", 104f, 34f, AccentGray, DarkText);
-
-            var hint = CreateText(panel.transform, "hintLabel", font, "Esc để đóng · Game tạm dừng khi menu mở", 11.5f, FontStyles.Normal, TextDim, TextAlignmentOptions.Center);
-            hint.gameObject.AddComponent<LayoutElement>().minHeight = 18f;
-
-            settingsRoot.SetActive(false);
-
-            var smSo = new SerializedObject(smCtrl);
-            smSo.FindProperty("root").objectReferenceValue = settingsRoot;
-            smSo.FindProperty("masterSlider").objectReferenceValue = masterSlider;
-            smSo.FindProperty("masterValue").objectReferenceValue = masterValue;
-            smSo.FindProperty("musicSlider").objectReferenceValue = musicSlider;
-            smSo.FindProperty("musicValue").objectReferenceValue = musicValue;
-            smSo.FindProperty("sfxSlider").objectReferenceValue = sfxSlider;
-            smSo.FindProperty("sfxValue").objectReferenceValue = sfxValue;
-            smSo.FindProperty("uiSlider").objectReferenceValue = uiSlider;
-            smSo.FindProperty("uiValue").objectReferenceValue = uiValue;
-            smSo.FindProperty("resumeButton").objectReferenceValue = resumeBtn;
-            smSo.FindProperty("defaultButton").objectReferenceValue = defaultBtn;
-            smSo.ApplyModifiedPropertiesWithoutUndo();
+            var root = new GameObject("SettingsMenu", typeof(SettingsMenuController));
+            var ctrl = root.GetComponent<SettingsMenuController>();
+            var so = new SerializedObject(ctrl);
+            so.FindProperty("fontAsset").objectReferenceValue = font;
+            so.ApplyModifiedPropertiesWithoutUndo();
 
             string path = "Assets/Prefabs/UI/Screens/SettingsMenuScreen.prefab";
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             Object.DestroyImmediate(root);
             return prefab;
-        }
-
-        // Tạo Prefab màn hình LoadingScreen wireframe xám.
-        static void BuildLoadingScreenPrefab(TMP_FontAsset font)
-        {
-            var root = CreateScreenCanvas("LoadingScreen", 100);
-
-            var bg = new GameObject("loadingScreen", typeof(RectTransform), typeof(Image));
-            bg.transform.SetParent(root.transform, false);
-            var bgRect = bg.GetComponent<RectTransform>();
-            bgRect.anchorMin = Vector2.zero;
-            bgRect.anchorMax = Vector2.one;
-            bgRect.offsetMin = Vector2.zero;
-            bgRect.offsetMax = Vector2.zero;
-            bg.GetComponent<Image>().color = new Color(0.10f, 0.10f, 0.10f, 1f);
-
-            var center = new GameObject("loadingCenter", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
-            center.transform.SetParent(bg.transform, false);
-            var cRect = center.GetComponent<RectTransform>();
-            cRect.anchorMin = new Vector2(0.5f, 0.5f);
-            cRect.anchorMax = new Vector2(0.5f, 0.5f);
-            cRect.pivot = new Vector2(0.5f, 0.5f);
-            var cVlg = center.GetComponent<VerticalLayoutGroup>();
-            cVlg.spacing = 10f;
-            cVlg.childAlignment = TextAnchor.MiddleCenter;
-            cVlg.childControlWidth = true;
-            cVlg.childControlHeight = true;
-            var cCsf = center.GetComponent<ContentSizeFitter>();
-            cCsf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            cCsf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            CreateText(center.transform, "titleLabel", font, "SURVIVAL RTS", 46f, FontStyles.Bold, TextMain, TextAlignmentOptions.Center);
-            CreateText(center.transform, "subtitleLabel", font, "BUILD · GATHER · SURVIVE", 15f, FontStyles.Bold, TextDim, TextAlignmentOptions.Center);
-
-            var footer = new GameObject("loadingFooter", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(VerticalLayoutGroup));
-            footer.transform.SetParent(bg.transform, false);
-            var fRect = footer.GetComponent<RectTransform>();
-            fRect.anchorMin = new Vector2(0f, 0f);
-            fRect.anchorMax = new Vector2(1f, 0f);
-            fRect.pivot = new Vector2(0.5f, 0f);
-            fRect.sizeDelta = new Vector2(0f, 120f);
-            footer.GetComponent<Image>().color = PanelBg;
-            footer.GetComponent<Outline>().effectColor = BorderCol;
-
-            var fVlg = footer.GetComponent<VerticalLayoutGroup>();
-            fVlg.padding = new RectOffset(100, 100, 20, 20);
-            fVlg.spacing = 10f;
-            fVlg.childControlWidth = true;
-            fVlg.childControlHeight = true;
-            fVlg.childForceExpandWidth = true;
-            fVlg.childForceExpandHeight = false;
-
-            var statusRow = new GameObject("statusRow", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
-            statusRow.transform.SetParent(footer.transform, false);
-            var srHlg = statusRow.GetComponent<HorizontalLayoutGroup>();
-            srHlg.childControlWidth = true;
-            srHlg.childControlHeight = true;
-            srHlg.childForceExpandWidth = true;
-            statusRow.GetComponent<LayoutElement>().minHeight = 22f;
-
-            CreateText(statusRow.transform, "statusLabel", font, "Đang tải bản đồ...", 14.5f, FontStyles.Normal, TextMain, TextAlignmentOptions.MidlineLeft);
-            CreateText(statusRow.transform, "percentLabel", font, "45%", 14.5f, FontStyles.Bold, AccentGray, TextAlignmentOptions.MidlineRight);
-
-            var barTrack = new GameObject("progressBar", typeof(RectTransform), typeof(Image), typeof(Outline), typeof(LayoutElement));
-            barTrack.transform.SetParent(footer.transform, false);
-            barTrack.GetComponent<Image>().color = TrackBg;
-            barTrack.GetComponent<Outline>().effectColor = BorderCol;
-            var btLe = barTrack.GetComponent<LayoutElement>();
-            btLe.minHeight = 10f;
-            btLe.preferredHeight = 10f;
-
-            var barFill = new GameObject("progressFill", typeof(RectTransform), typeof(Image));
-            barFill.transform.SetParent(barTrack.transform, false);
-            var bfRect = barFill.GetComponent<RectTransform>();
-            bfRect.anchorMin = Vector2.zero;
-            bfRect.anchorMax = new Vector2(0.45f, 1f);
-            bfRect.offsetMin = Vector2.zero;
-            bfRect.offsetMax = Vector2.zero;
-            barFill.GetComponent<Image>().color = AccentGray;
-
-            CreateText(footer.transform, "tipLabel", font, "Mẹo: Thu thập tài nguyên trước khi đêm xuống để xây dựng phòng thủ.", 13f, FontStyles.Normal, TextDim, TextAlignmentOptions.MidlineLeft);
-
-            string path = "Assets/Prefabs/UI/Screens/LoadingScreen.prefab";
-            PrefabUtility.SaveAsPrefabAsset(root, path);
-            Object.DestroyImmediate(root);
         }
 
         // Tạo một đối tượng Canvas chuẩn cho mỗi màn hình UI.
@@ -925,102 +775,6 @@ namespace SurvivalRts.Editor
             return go.GetComponent<Button>();
         }
 
-        // Tạo một hàng điều chỉnh âm lượng gồm nhãn tên, thanh trượt Slider và nhãn phần trăm TextMeshPro.
-        static Slider CreateSliderRow(Transform parent, TMP_FontAsset font, string rowName, string title, string sliderName, string valueName, out TMP_Text valueLabel)
-        {
-            var row = new GameObject(rowName, typeof(RectTransform), typeof(Image), typeof(Outline), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
-            row.transform.SetParent(parent, false);
-            row.GetComponent<Image>().color = CardBg;
-            row.GetComponent<Outline>().effectColor = BorderCol;
-
-            var hlg = row.GetComponent<HorizontalLayoutGroup>();
-            hlg.padding = new RectOffset(12, 12, 0, 0);
-            hlg.spacing = 10f;
-            hlg.childAlignment = TextAnchor.MiddleCenter;
-            hlg.childControlWidth = true;
-            hlg.childControlHeight = true;
-            hlg.childForceExpandWidth = false;
-            hlg.childForceExpandHeight = false;
-
-            var rLe = row.GetComponent<LayoutElement>();
-            rLe.minHeight = 40f;
-            rLe.preferredHeight = 40f;
-            rLe.flexibleHeight = 0f;
-
-            var lbl = CreateText(row.transform, "rowLabel", font, title, 14f, FontStyles.Normal, TextMain, TextAlignmentOptions.MidlineLeft);
-            var lblLe = lbl.gameObject.AddComponent<LayoutElement>();
-            lblLe.minWidth = 100f;
-            lblLe.preferredWidth = 100f;
-            lblLe.flexibleWidth = 0f;
-
-            var sliderGo = new GameObject(sliderName, typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
-            sliderGo.transform.SetParent(row.transform, false);
-            var sLe = sliderGo.GetComponent<LayoutElement>();
-            sLe.flexibleWidth = 1f;
-            sLe.minHeight = 20f;
-            sLe.preferredHeight = 20f;
-
-            var bgGo = new GameObject("Background", typeof(RectTransform), typeof(Image));
-            bgGo.transform.SetParent(sliderGo.transform, false);
-            var bgRect = bgGo.GetComponent<RectTransform>();
-            bgRect.anchorMin = new Vector2(0f, 0.35f);
-            bgRect.anchorMax = new Vector2(1f, 0.65f);
-            bgRect.offsetMin = Vector2.zero;
-            bgRect.offsetMax = Vector2.zero;
-            bgGo.GetComponent<Image>().color = TrackBg;
-
-            var fillArea = new GameObject("Fill Area", typeof(RectTransform));
-            fillArea.transform.SetParent(sliderGo.transform, false);
-            var faRect = fillArea.GetComponent<RectTransform>();
-            faRect.anchorMin = new Vector2(0f, 0.35f);
-            faRect.anchorMax = new Vector2(1f, 0.65f);
-            faRect.offsetMin = Vector2.zero;
-            faRect.offsetMax = Vector2.zero;
-
-            var fill = new GameObject("Fill", typeof(RectTransform), typeof(Image));
-            fill.transform.SetParent(fillArea.transform, false);
-            var fRect = fill.GetComponent<RectTransform>();
-            fRect.anchorMin = Vector2.zero;
-            fRect.anchorMax = Vector2.one;
-            fRect.offsetMin = Vector2.zero;
-            fRect.offsetMax = Vector2.zero;
-            fill.GetComponent<Image>().color = AccentGray;
-
-            var handleArea = new GameObject("Handle Slide Area", typeof(RectTransform));
-            handleArea.transform.SetParent(sliderGo.transform, false);
-            var haRect = handleArea.GetComponent<RectTransform>();
-            haRect.anchorMin = Vector2.zero;
-            haRect.anchorMax = Vector2.one;
-            haRect.offsetMin = new Vector2(6f, 0f);
-            haRect.offsetMax = new Vector2(-6f, 0f);
-
-            var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image), typeof(Outline));
-            handle.transform.SetParent(handleArea.transform, false);
-            var hRect = handle.GetComponent<RectTransform>();
-            hRect.sizeDelta = new Vector2(14f, 18f);
-            var hImg = handle.GetComponent<Image>();
-            hImg.color = TextMain;
-            handle.GetComponent<Outline>().effectColor = TrackBg;
-
-            var slider = sliderGo.GetComponent<Slider>();
-            slider.fillRect = fRect;
-            slider.handleRect = hRect;
-            slider.targetGraphic = hImg;
-            slider.direction = Slider.Direction.LeftToRight;
-            slider.minValue = 0f;
-            slider.maxValue = 100f;
-            slider.value = 80f;
-
-            var valTxt = CreateText(row.transform, valueName, font, "80%", 13.5f, FontStyles.Bold, AccentGray, TextAlignmentOptions.MidlineRight);
-            var vLe = valTxt.gameObject.AddComponent<LayoutElement>();
-            vLe.minWidth = 46f;
-            vLe.preferredWidth = 46f;
-            vLe.flexibleWidth = 0f;
-            valueLabel = valTxt;
-
-            return slider;
-        }
-
         // Thay thế các đối tượng UI trong Scene hiện tại bằng Prefab uGUI TextMeshPro và lưu Scene.
         static void SetupActiveScene(GameObject buildMenuPrefab, GameObject healthBarPrefab, GameObject unitCommandPrefab, GameObject settingsMenuPrefab)
         {
@@ -1032,6 +786,11 @@ namespace SurvivalRts.Editor
             DestroyAllByName("HealthBar");
             DestroyAllByName("UnitCommand");
             DestroyAllByName("SettingsMenu");
+            foreach (var rootGo in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if (rootGo != null && (PrefabUtility.IsPrefabAssetMissing(rootGo) || rootGo.name.StartsWith("SettingsMenu")))
+                    Object.DestroyImmediate(rootGo);
+            }
             foreach (var c in Object.FindObjectsByType<BuildMenuController>(FindObjectsSortMode.None))
                 if (c != null) Object.DestroyImmediate(c.gameObject);
             foreach (var c in Object.FindObjectsByType<MinimapController>(FindObjectsSortMode.None))
@@ -1067,6 +826,7 @@ namespace SurvivalRts.Editor
             smInst.name = "SettingsMenu";
             var smSo = new SerializedObject(smInst.GetComponent<SettingsMenuController>());
             smSo.FindProperty("placer").objectReferenceValue = placer;
+            smSo.FindProperty("fontAsset").objectReferenceValue = EnsureVietnameseTmpFont();
             smSo.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

@@ -1,0 +1,199 @@
+{
+  "screen": "03_multiplayer_lan",
+  "title": "Multiplayer LAN",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "MainMenu",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": true,
+      "fill": { "color": "#C6C6C6", "opacity": 1 },
+      "children": [
+        {
+          "name": "Panel",
+          "type": "FRAME",
+          "x": 640, "y": 329, "w": 640, "h": 422,
+          "visible": true,
+          "fill": { "color": "#FAFAFA", "opacity": 1 },
+          "stroke": { "color": "#808080", "width": 2 },
+          "cornerRadius": 6,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 16, "padding": [24, 24, 24, 24], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "hug": { "x": false, "y": true },
+          "children": [
+            {
+              "name": "Heading",
+              "type": "FRAME",
+              "x": 24, "y": 24, "w": 592, "h": 52,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 8, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+              "children": [
+                {
+                  "name": "Text - Đại chiến 4 đội - LAN",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 592, "h": 42,
+                  "visible": true,
+                  "text": { "characters": "Đại chiến 4 đội - LAN", "fontSize": 30, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                },
+                {
+                  "name": "Line",
+                  "type": "FRAME",
+                  "x": 0, "y": 50, "w": 592, "h": 2,
+                  "visible": true,
+                  "fill": { "color": "#C0C0C0", "opacity": 1 },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                }
+              ]
+            },
+            {
+              "name": "Button - Tạo phòng",
+              "type": "FRAME",
+              "x": 24, "y": 92, "w": 592, "h": 56,
+              "visible": true,
+              "fill": { "color": "#505050", "opacity": 1 },
+              "stroke": { "color": "#262626", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Tạo phòng",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 592, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Tạo phòng", "fontSize": 22, "color": "#FAFAFA", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "JoinRow",
+              "type": "FRAME",
+              "x": 24, "y": 164, "w": 592, "h": 48,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Input",
+                  "type": "FRAME",
+                  "x": 0, "y": 0, "w": 410, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#FAFAFA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 6,
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text Area",
+                      "type": "FRAME",
+                      "x": 12, "y": 4, "w": 386, "h": 40,
+                      "visible": true,
+                      "children": [
+                        {
+                          "name": "Text - 127.0.0.1​",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 386, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "127.0.0.1​", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" }
+                        },
+                        {
+                          "name": "Placeholder",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 386, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Địa chỉ IP hoặc IP:cổng", "fontSize": 20, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": true, "alignH": "LEFT", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Vào phòng",
+                  "type": "FRAME",
+                  "x": 422, "y": 0, "w": 170, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Vào phòng",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 170, "h": 48,
+                      "visible": true,
+                      "text": { "characters": "Vào phòng", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Text - Phòng trong mạng LAN",
+              "type": "TEXT",
+              "x": 24, "y": 228, "w": 592, "h": 26,
+              "visible": true,
+              "text": { "characters": "Phòng trong mạng LAN", "fontSize": 18, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "RoomList",
+              "type": "FRAME",
+              "x": 24, "y": 270, "w": 592, "h": 0,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 8, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false }
+            },
+            {
+              "name": "Label",
+              "type": "TEXT",
+              "x": 24, "y": 286, "w": 592, "h": 30,
+              "visible": true,
+              "text": { "characters": "", "fontSize": 18, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24, "y": 332, "w": 592, "h": 2,
+              "visible": true,
+              "fill": { "color": "#C0C0C0", "opacity": 1 },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Actions",
+              "type": "FRAME",
+              "x": 24, "y": 350, "w": 592, "h": 48,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Button - Quay lại",
+                  "type": "FRAME",
+                  "x": 0, "y": 0, "w": 160, "h": 48,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Quay lại",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 160, "h": 48,
+                      "visible": true,
+                      "text": { "characters": "Quay lại", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,8 @@ namespace SurvivalRts
         {
             homePosition = home;
             animator = GetComponent<GpuMeshAnimator>();
+            SnapToGround();
+            homePosition.y = transform.position.y;
             PickNextWait();
         }
 
@@ -25,6 +27,7 @@ namespace SurvivalRts
         {
             if (!moving)
             {
+                SnapToGround();
                 waitTimer -= Time.deltaTime;
                 if (waitTimer <= 0f) PickNextTarget();
                 return;
@@ -35,6 +38,7 @@ namespace SurvivalRts
             float dist = diff.magnitude;
             if (dist <= 0.1f)
             {
+                SnapToGround();
                 PickNextWait();
                 return;
             }
@@ -54,11 +58,12 @@ namespace SurvivalRts
 
         void PickNextTarget()
         {
-            for (int i = 0; i < 6; i++)
+            var grid = BuildGrid.Instance;
+            for (int i = 0; i < 8; i++)
             {
                 var offset = Random.insideUnitCircle * WanderRadius;
                 var candidate = homePosition + new Vector3(offset.x, 0f, offset.y);
-                if (BuildGrid.Instance == null)
+                if (grid == null)
                 {
                     targetPosition = candidate;
                     moving = true;
@@ -66,26 +71,27 @@ namespace SurvivalRts
                     return;
                 }
 
-                var cell = BuildGrid.Instance.MinCell(candidate, Vector2Int.one);
-                if (BuildGrid.Instance.InBounds(cell) && BuildGrid.Instance.GetOccupancy(cell) == CellOccupancy.None)
-                {
-                    targetPosition = candidate;
-                    moving = true;
-                    if (animator != null) animator.Play("Walk");
-                    return;
-                }
+                var cell = grid.MinCell(candidate, Vector2Int.one);
+                if (!grid.InBounds(cell) || grid.GetOccupancy(cell) != CellOccupancy.None) continue;
+                int idx = grid.Index(cell);
+                if (grid.Terrain[idx] != CellState.Free) continue;
+                float candidateY = grid.SampleWorldHeight(candidate);
+                if (Mathf.Abs(candidateY - homePosition.y) > 0.65f) continue;
+
+                targetPosition = new Vector3(candidate.x, candidateY, candidate.z);
+                moving = true;
+                if (animator != null) animator.Play("Walk");
+                return;
             }
             PickNextWait();
         }
 
         void SnapToGround()
         {
-            if (BuildGrid.Instance == null) return;
-            var cell = BuildGrid.Instance.MinCell(transform.position, Vector2Int.one);
-            if (!BuildGrid.Instance.InBounds(cell)) return;
-            int idx = BuildGrid.Instance.Index(cell);
+            var grid = BuildGrid.Instance;
+            if (grid == null) return;
             var pos = transform.position;
-            pos.y = BuildGrid.Instance.Heights[idx];
+            pos.y = grid.SampleWorldHeight(pos);
             transform.position = pos;
         }
     }

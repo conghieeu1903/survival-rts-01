@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,16 @@ namespace SurvivalRts
     // Phòng chờ: bốn ô đội (người chơi / máy), địa chỉ LAN của host, nút bắt đầu và rời phòng.
     public class BattleLobbyScreen
     {
-        readonly BattleUiController owner;
+        static readonly Color[] DefaultTeamColors =
+        {
+            new Color(0.35f, 0.55f, 1f, 1f),
+            new Color(1f, 0.4f, 0.35f, 1f),
+            new Color(0.4f, 0.9f, 0.45f, 1f),
+            new Color(1f, 0.85f, 0.3f, 1f)
+        };
+
+        readonly Action onLeave;
+        readonly Color backdropColor;
         RectTransform root;
         readonly TMP_Text[] slotLabels = new TMP_Text[BattleSimulation.TeamCount];
         readonly Image[] slotSwatches = new Image[BattleSimulation.TeamCount];
@@ -17,14 +27,20 @@ namespace SurvivalRts
 
         public GameObject Root => root.gameObject;
 
-        public BattleLobbyScreen(BattleUiController owner)
+        public BattleLobbyScreen(Action onLeave, Color? backdrop = null)
         {
-            this.owner = owner;
+            this.onLeave = onLeave;
+            backdropColor = backdrop ?? BattleUiKit.BackdropColor;
+        }
+
+        public BattleLobbyScreen(BattleUiController owner)
+            : this(owner != null ? (Action)owner.LeaveRoom : null, BattleUiKit.BackdropColor)
+        {
         }
 
         public void Build(Transform parent)
         {
-            var overlay = BattleUiKit.Background(parent, "Lobby", BattleUiKit.WorldColor);
+            var overlay = BattleUiKit.Background(parent, "Lobby", backdropColor);
             root = overlay.rectTransform;
 
             var panel = BattleUiKit.Panel(root, "Panel", BattleUiKit.PanelColor);
@@ -68,19 +84,32 @@ namespace SurvivalRts
 
         void OnLeave()
         {
-            owner.LeaveRoom();
+            onLeave?.Invoke();
         }
 
-        public void Refresh(LockstepNetwork net, BattleData data)
+        public void Show()
         {
+            root.gameObject.SetActive(true);
+            var net = LockstepNetwork.Instance;
+            if (net != null) Refresh(net, null);
+        }
+
+        public void Hide()
+        {
+            root.gameObject.SetActive(false);
+        }
+
+        public void Refresh(LockstepNetwork net, BattleData data = null)
+        {
+            if (net == null) return;
+            var colors = data != null && data.teamColors != null && data.teamColors.Length > 0 ? data.teamColors : DefaultTeamColors;
             for (int i = 0; i < BattleSimulation.TeamCount; i++)
             {
                 string text;
                 if (i < net.PlayerCount) text = "Người chơi" + (i == net.LocalTeam ? " (bạn)" : "");
                 else text = "Máy";
                 BattleUiKit.SetText(slotLabels[i], $"Đội {i + 1}: {text}");
-                slotSwatches[i].color = data != null && data.teamColors != null && i < data.teamColors.Length
-                    ? data.teamColors[i] : Color.gray;
+                slotSwatches[i].color = i < colors.Length ? colors[i] : Color.gray;
             }
 
             if (net.IsHost)

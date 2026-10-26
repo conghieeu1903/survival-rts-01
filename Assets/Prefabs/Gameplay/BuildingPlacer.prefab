@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5253088902396237864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4322168902931451868}
+  - component: {fileID: 6568413321628167369}
+  m_Layer: 0
+  m_Name: BuildingPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4322168902931451868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5253088902396237864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6568413321628167369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5253088902396237864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d4afecc182a194890c515a61970975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivalRts.BuildingPlacer
+  buildings:
+  - {fileID: 11400000, guid: 9b8cd251cf84a774281ad031ddbb4d9e, type: 2}
+  - {fileID: 11400000, guid: 5ef9d35dc7b800e46938696974443dca, type: 2}
+  - {fileID: 11400000, guid: 1ab1ba00969055d40a27f78dd0772247, type: 2}
+  - {fileID: 11400000, guid: 71498daf60e978546b30636d29006649, type: 2}
+  - {fileID: 11400000, guid: bc376bc8b364d234d8535dc086a79946, type: 2}
+  - {fileID: 11400000, guid: 2c2a9d67613391c4e83d466abefb0421, type: 2}
+  - {fileID: 11400000, guid: 5c7c5b00c4384d84492b79c9575d14d8, type: 2}
+  - {fileID: 11400000, guid: fab71ba85a5cd4247bd8b43854bedf6f, type: 2}
+  - {fileID: 11400000, guid: 675441e47cd3a6d4a81a3529d70a0cde, type: 2}
+  - {fileID: 11400000, guid: 42f3729535f55c04786f7330e1151177, type: 2}
+  - {fileID: 11400000, guid: c2c8a2aba62b9fe4094d79ac60fb6a4d, type: 2}
+  - {fileID: 11400000, guid: 1131cd1de8c8aa14392f0076f72bd877, type: 2}
+  - {fileID: 11400000, guid: 189f77bb813fdf44882b91ed5e3028e1, type: 2}
+  - {fileID: 11400000, guid: 4be06c1e0c96c584ab54ed29c269399f, type: 2}
+  - {fileID: 11400000, guid: 667604a33f547b34492e5c6f19c473ce, type: 2}
+  cam: {fileID: 0}
+  ghostValid: {fileID: 2100000, guid: 1e47b29dad96e314fb8789084fb79f89, type: 2}
+  ghostInvalid: {fileID: 2100000, guid: 38ae9b6488cddc0418b73be86b1f809d, type: 2}
+  gridCellPrefab: {fileID: 2826235564899540391, guid: 0d33288d6a8a9e74aaf837f57288fc71, type: 3}
+  cellFree: {fileID: 2100000, guid: 32b5532c0adbe5a4b8a21fd485ce3f69, type: 2}
+  cellBlocked: {fileID: 2100000, guid: b2cd94447fc588745a221940a4a10343, type: 2}
+  constructionStages:
+  - {fileID: 5487800948104073906, guid: 0bffbe7c7a4e817458b1e0e4d0fd692e, type: 3}
+  - {fileID: 7213008788132430887, guid: 563b259789bc6ba4d95db4443bde452c, type: 3}
+  - {fileID: 1989754269125287737, guid: a7369aa2c81451d4d925b7a7a695beb9, type: 3}

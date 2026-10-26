@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SurvivalRts.Editor
 {
-    // Dựng scene init thành màn loading, scene menu thành menu chính và xếp thứ tự Build Settings (init chạy đầu tiên).
+    // Dựng scene init thành màn loading, scene menu thành menu chính (kèm LockstepNetwork + LanDiscovery), cập nhật scene battle và xếp thứ tự Build Settings.
     public static class LoadingSceneSetup
     {
         const string InitScene = "Assets/Scenes/init.unity";
@@ -21,6 +21,7 @@ namespace SurvivalRts.Editor
         public static void SetupScenes()
         {
             SetupInitScene();
+            BattleSceneSetup.Setup();
             SetupMenuScene();
             SetBuildScenes();
         }
@@ -65,6 +66,11 @@ namespace SurvivalRts.Editor
             var audioSo = new SerializedObject(director);
             audioSo.FindProperty("library").objectReferenceValue = AssetDatabase.LoadAssetAtPath<SoundLibrary>(SoundLibraryPath);
             audioSo.ApplyModifiedPropertiesWithoutUndo();
+
+            var netGo = GameObject.Find("LockstepNetwork");
+            if (netGo == null) netGo = new GameObject("LockstepNetwork");
+            if (netGo.GetComponent<LockstepNetwork>() == null) netGo.AddComponent<LockstepNetwork>();
+            if (netGo.GetComponent<LanDiscovery>() == null) netGo.AddComponent<LanDiscovery>();
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);

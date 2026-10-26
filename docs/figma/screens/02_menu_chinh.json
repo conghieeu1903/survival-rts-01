@@ -1,0 +1,213 @@
+{
+  "screen": "02_menu_chinh",
+  "title": "Menu chính",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "Background",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": true,
+      "fill": { "color": "#C6C6C6", "opacity": 1 },
+      "children": [
+        {
+          "name": "Text - HÌNH NỀN",
+          "type": "TEXT",
+          "x": 520, "y": 0, "w": 1400, "h": 1080,
+          "visible": true,
+          "text": { "characters": "HÌNH NỀN", "fontSize": 28, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+        },
+        {
+          "name": "Sidebar",
+          "type": "FRAME",
+          "x": 80, "y": 200, "w": 380, "h": 800,
+          "visible": true,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "children": [
+            {
+              "name": "Placeholder",
+              "type": "FRAME",
+              "x": 0, "y": 0, "w": 380, "h": 176,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - SURVIVAL RTS",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 176,
+                  "visible": true,
+                  "text": { "characters": "SURVIVAL RTS", "fontSize": 30, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "LogoGap",
+              "type": "FRAME",
+              "x": 0, "y": 188, "w": 380, "h": 8,
+              "visible": true,
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Button - Chơi offline",
+              "type": "FRAME",
+              "x": 0, "y": 208, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#505050", "opacity": 1 },
+              "stroke": { "color": "#262626", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Chơi offline",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Chơi offline", "fontSize": 24, "color": "#FAFAFA", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Chơi LAN",
+              "type": "FRAME",
+              "x": 0, "y": 276, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Chơi LAN",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Chơi LAN", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Chơi online",
+              "type": "FRAME",
+              "x": 0, "y": 344, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Chơi online",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Chơi online", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Bản lưu",
+              "type": "FRAME",
+              "x": 0, "y": 412, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Bản lưu",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Bản lưu", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Cài đặt",
+              "type": "FRAME",
+              "x": 0, "y": 480, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Cài đặt",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Cài đặt", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Credits",
+              "type": "FRAME",
+              "x": 0, "y": 548, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Credits",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Credits", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Button - Thoát",
+              "type": "FRAME",
+              "x": 0, "y": 616, "w": 380, "h": 56,
+              "visible": true,
+              "fill": { "color": "#DADADA", "opacity": 1 },
+              "stroke": { "color": "#808080", "width": 2 },
+              "cornerRadius": 4,
+              "button": { "interactable": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Thoát",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 380, "h": 56,
+                  "visible": true,
+                  "text": { "characters": "Thoát", "fontSize": 24, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                }
+              ]
+            },
+            {
+              "name": "Spacer",
+              "type": "FRAME",
+              "x": 0, "y": 684, "w": 380, "h": 82,
+              "visible": true,
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 1 }
+            },
+            {
+              "name": "Text - v0.1",
+              "type": "TEXT",
+              "x": 0, "y": 778, "w": 380, "h": 22,
+              "visible": true,
+              "text": { "characters": "v0.1", "fontSize": 14, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

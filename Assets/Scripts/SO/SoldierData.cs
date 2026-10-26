@@ -27,6 +27,9 @@ namespace SurvivalRts
         public int goldCost;
 
         [Header("Chiến đấu")]
+        [Tooltip("Bắn cung tầm xa thay vì đánh cận chiến")]
+        public bool ranged;
+
         [Tooltip("Máu tối đa")]
         public float maxHealth = 140f;
 

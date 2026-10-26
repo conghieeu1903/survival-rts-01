@@ -90,6 +90,48 @@ namespace SurvivalRts
             return sprite;
         }
 
+        // Sprite vòng cung tròn dùng cho biểu tượng xoay ở màn loading chuyển cảnh.
+        public static Sprite SpinnerSprite(Color color, int size = 56, int thickness = 4)
+        {
+            string key = $"spinner:{color}{size}{thickness}";
+            if (sprites.TryGetValue(key, out var cached) && cached != null) return cached;
+
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            float half = size * 0.5f;
+            float halfThick = thickness * 0.5f;
+            float rMid = half - halfThick - 1f;
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = x + 0.5f - half;
+                    float dy = y + 0.5f - half;
+                    float dist = Mathf.Sqrt(dx * dx + dy * dy);
+                    float dRing = Mathf.Abs(dist - rMid) - halfThick;
+                    float ringAlpha = Mathf.Clamp01(0.5f - dRing);
+                    float angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+                    if (angle < 0f) angle += 360f;
+                    float arcAlpha = angle <= 280f ? Mathf.Lerp(0.15f, 1f, angle / 280f) : 0f;
+                    var c = color;
+                    c.a *= ringAlpha * arcAlpha;
+                    pixels[y * size + x] = c;
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+
+            var sprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            sprites[key] = sprite;
+            return sprite;
+        }
+
         static void ApplyStyle(Image image, Color fill, Color border, int radius)
         {
             image.sprite = RoundedSprite(fill, border, radius, BorderWidth);
@@ -330,9 +372,10 @@ namespace SurvivalRts
 
         // Màn hình toàn khung có thẻ panel ở giữa: tiêu đề bên trái, ghi chú mờ bên phải, đường kẻ dưới tiêu đề.
         // Trả về thẻ để bên gọi thêm nội dung, cuối cùng gọi Footer.
-        public static RectTransform ScreenCard(Transform parent, string name, string title, string note, float marginX, float marginY)
+        public static RectTransform ScreenCard(Transform parent, string name, string title, string note, float marginX, float marginY,
+            Color? backdrop = null)
         {
-            var screen = Background(parent, name, ScreenColor);
+            var screen = Background(parent, name, backdrop ?? ScreenColor);
             var card = Panel(screen.transform, "Card", PanelColor);
             card.rectTransform.offsetMin = new Vector2(marginX, marginY);
             card.rectTransform.offsetMax = new Vector2(-marginX, -marginY);

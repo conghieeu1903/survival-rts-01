@@ -1,0 +1,347 @@
+{
+  "screen": "10_credits",
+  "title": "Credits",
+  "frame": { "width": 1920, "height": 1080 },
+  "nodes": [
+    {
+      "name": "Credits",
+      "type": "FRAME",
+      "x": 0, "y": 0, "w": 1920, "h": 1080,
+      "visible": false,
+      "fill": { "color": "#E8E8E8", "opacity": 1 },
+      "children": [
+        {
+          "name": "Card",
+          "type": "FRAME",
+          "x": 480, "y": 110, "w": 960, "h": 860,
+          "visible": true,
+          "fill": { "color": "#FAFAFA", "opacity": 1 },
+          "stroke": { "color": "#808080", "width": 2 },
+          "cornerRadius": 6,
+          "autoLayout": { "direction": "VERTICAL", "spacing": 16, "padding": [24, 24, 24, 24], "align": "UpperLeft", "expandWidth": true, "expandHeight": false },
+          "children": [
+            {
+              "name": "Header",
+              "type": "FRAME",
+              "x": 24, "y": 24, "w": 912, "h": 48,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "LowerLeft", "expandWidth": false, "expandHeight": false },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Credits",
+                  "type": "TEXT",
+                  "x": 0, "y": 4, "w": 580, "h": 44,
+                  "visible": true,
+                  "text": { "characters": "Credits", "fontSize": 32, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                },
+                {
+                  "name": "Text - Survival RTS",
+                  "type": "TEXT",
+                  "x": 592, "y": 24, "w": 320, "h": 24,
+                  "visible": true,
+                  "text": { "characters": "Survival RTS", "fontSize": 14, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "RIGHT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24, "y": 88, "w": 912, "h": 2,
+              "visible": true,
+              "fill": { "color": "#C0C0C0", "opacity": 1 },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Body",
+              "type": "FRAME",
+              "x": 24, "y": 106, "w": 912, "h": 644,
+              "visible": true,
+              "autoLayout": { "direction": "VERTICAL", "spacing": 24, "padding": [0, 0, 0, 0], "align": "MiddleCenter", "expandWidth": true, "expandHeight": false },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 1 },
+              "children": [
+                {
+                  "name": "BadgeRow",
+                  "type": "FRAME",
+                  "x": 0, "y": 86, "w": 912, "h": 84,
+                  "visible": true,
+                  "autoLayout": { "direction": "HORIZONTAL", "spacing": 0, "padding": [0, 0, 0, 0], "align": "MiddleCenter", "expandWidth": false, "expandHeight": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Placeholder",
+                      "type": "FRAME",
+                      "x": 346, "y": 0, "w": 220, "h": 84,
+                      "visible": true,
+                      "fill": { "color": "#DADADA", "opacity": 1 },
+                      "stroke": { "color": "#808080", "width": 2 },
+                      "cornerRadius": 4,
+                      "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - SURVIVAL RTS",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 220, "h": 84,
+                          "visible": true,
+                          "text": { "characters": "SURVIVAL RTS", "fontSize": 24, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Text - Công nghệ sử dụng trong game",
+                  "type": "TEXT",
+                  "x": 0, "y": 194, "w": 912, "h": 40,
+                  "visible": true,
+                  "text": { "characters": "Công nghệ sử dụng trong game", "fontSize": 26, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                },
+                {
+                  "name": "Setting",
+                  "type": "FRAME",
+                  "x": 0, "y": 258, "w": 912, "h": 84,
+                  "visible": true,
+                  "autoLayout": { "direction": "HORIZONTAL", "spacing": 16, "padding": [4, 4, 4, 4], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Line",
+                      "type": "FRAME",
+                      "x": 0, "y": 82, "w": 912, "h": 2,
+                      "visible": true,
+                      "fill": { "color": "#C0C0C0", "opacity": 1 },
+                      "layoutChild": { "ignoreLayout": true, "growX": 0, "growY": 0 }
+                    },
+                    {
+                      "name": "Info",
+                      "type": "FRAME",
+                      "x": 4, "y": 4, "w": 698, "h": 76,
+                      "visible": true,
+                      "autoLayout": { "direction": "VERTICAL", "spacing": 4, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": true, "expandHeight": false },
+                      "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - Unity 6",
+                          "type": "TEXT",
+                          "x": 0, "y": 2, "w": 698, "h": 28,
+                          "visible": true,
+                          "text": { "characters": "Unity 6", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        },
+                        {
+                          "name": "Text - Engine, Entities (ECS), Burs",
+                          "type": "TEXT",
+                          "x": 0, "y": 34, "w": 698, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Engine, Entities (ECS), Burst và Entities Graphics cho hàng chục nghìn lính", "fontSize": 15, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Button - Mở trang chủ",
+                      "type": "FRAME",
+                      "x": 718, "y": 4, "w": 190, "h": 76,
+                      "visible": true,
+                      "fill": { "color": "#DADADA", "opacity": 1 },
+                      "stroke": { "color": "#808080", "width": 2 },
+                      "cornerRadius": 4,
+                      "button": { "interactable": true },
+                      "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - Mở trang chủ",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 190, "h": 76,
+                          "visible": true,
+                          "text": { "characters": "Mở trang chủ", "fontSize": 18, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Setting",
+                  "type": "FRAME",
+                  "x": 0, "y": 366, "w": 912, "h": 84,
+                  "visible": true,
+                  "autoLayout": { "direction": "HORIZONTAL", "spacing": 16, "padding": [4, 4, 4, 4], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Line",
+                      "type": "FRAME",
+                      "x": 0, "y": 82, "w": 912, "h": 2,
+                      "visible": true,
+                      "fill": { "color": "#C0C0C0", "opacity": 1 },
+                      "layoutChild": { "ignoreLayout": true, "growX": 0, "growY": 0 }
+                    },
+                    {
+                      "name": "Info",
+                      "type": "FRAME",
+                      "x": 4, "y": 4, "w": 698, "h": 76,
+                      "visible": true,
+                      "autoLayout": { "direction": "VERTICAL", "spacing": 4, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": true, "expandHeight": false },
+                      "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - FishNet",
+                          "type": "TEXT",
+                          "x": 0, "y": 2, "w": 698, "h": 28,
+                          "visible": true,
+                          "text": { "characters": "FishNet", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        },
+                        {
+                          "name": "Text - Thư viện mạng; game dùng khó",
+                          "type": "TEXT",
+                          "x": 0, "y": 34, "w": 698, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Thư viện mạng; game dùng khóa bước (lockstep) trên nền Tugboat", "fontSize": 15, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Button - Mở trang chủ",
+                      "type": "FRAME",
+                      "x": 718, "y": 4, "w": 190, "h": 76,
+                      "visible": true,
+                      "fill": { "color": "#DADADA", "opacity": 1 },
+                      "stroke": { "color": "#808080", "width": 2 },
+                      "cornerRadius": 4,
+                      "button": { "interactable": true },
+                      "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - Mở trang chủ",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 190, "h": 76,
+                          "visible": true,
+                          "text": { "characters": "Mở trang chủ", "fontSize": 18, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Setting",
+                  "type": "FRAME",
+                  "x": 0, "y": 474, "w": 912, "h": 84,
+                  "visible": true,
+                  "autoLayout": { "direction": "HORIZONTAL", "spacing": 16, "padding": [4, 4, 4, 4], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Line",
+                      "type": "FRAME",
+                      "x": 0, "y": 82, "w": 912, "h": 2,
+                      "visible": true,
+                      "fill": { "color": "#C0C0C0", "opacity": 1 },
+                      "layoutChild": { "ignoreLayout": true, "growX": 0, "growY": 0 }
+                    },
+                    {
+                      "name": "Info",
+                      "type": "FRAME",
+                      "x": 4, "y": 4, "w": 698, "h": 76,
+                      "visible": true,
+                      "autoLayout": { "direction": "VERTICAL", "spacing": 4, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": true, "expandHeight": false },
+                      "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - TextMeshPro",
+                          "type": "TEXT",
+                          "x": 0, "y": 2, "w": 698, "h": 28,
+                          "visible": true,
+                          "text": { "characters": "TextMeshPro", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        },
+                        {
+                          "name": "Text - Hiển thị chữ rõ nét, hỗ trợ ",
+                          "type": "TEXT",
+                          "x": 0, "y": 34, "w": 698, "h": 40,
+                          "visible": true,
+                          "text": { "characters": "Hiển thị chữ rõ nét, hỗ trợ tiếng Việt có dấu", "fontSize": 15, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                          "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Button - Mở trang chủ",
+                      "type": "FRAME",
+                      "x": 718, "y": 4, "w": 190, "h": 76,
+                      "visible": true,
+                      "fill": { "color": "#DADADA", "opacity": 1 },
+                      "stroke": { "color": "#808080", "width": 2 },
+                      "cornerRadius": 4,
+                      "button": { "interactable": true },
+                      "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                      "children": [
+                        {
+                          "name": "Text - Mở trang chủ",
+                          "type": "TEXT",
+                          "x": 0, "y": 0, "w": 190, "h": 76,
+                          "visible": true,
+                          "text": { "characters": "Mở trang chủ", "fontSize": 18, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24, "y": 766, "w": 912, "h": 2,
+              "visible": true,
+              "fill": { "color": "#C0C0C0", "opacity": 1 },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 }
+            },
+            {
+              "name": "Footer",
+              "type": "FRAME",
+              "x": 24, "y": 784, "w": 912, "h": 52,
+              "visible": true,
+              "autoLayout": { "direction": "HORIZONTAL", "spacing": 12, "padding": [0, 0, 0, 0], "align": "MiddleLeft", "expandWidth": false, "expandHeight": true },
+              "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+              "children": [
+                {
+                  "name": "Text - Nhấn vào nút để mở trên trìn",
+                  "type": "TEXT",
+                  "x": 0, "y": 0, "w": 740, "h": 52,
+                  "visible": true,
+                  "text": { "characters": "Nhấn vào nút để mở trên trình duyệt", "fontSize": 16, "color": "#6C6C6C", "opacity": 1, "bold": false, "italic": false, "alignH": "LEFT", "alignV": "CENTER" },
+                  "layoutChild": { "ignoreLayout": false, "growX": 1, "growY": 0 }
+                },
+                {
+                  "name": "Button - Quay lại",
+                  "type": "FRAME",
+                  "x": 752, "y": 0, "w": 160, "h": 52,
+                  "visible": true,
+                  "fill": { "color": "#DADADA", "opacity": 1 },
+                  "stroke": { "color": "#808080", "width": 2 },
+                  "cornerRadius": 4,
+                  "button": { "interactable": true },
+                  "layoutChild": { "ignoreLayout": false, "growX": 0, "growY": 0 },
+                  "children": [
+                    {
+                      "name": "Text - Quay lại",
+                      "type": "TEXT",
+                      "x": 0, "y": 0, "w": 160, "h": 52,
+                      "visible": true,
+                      "text": { "characters": "Quay lại", "fontSize": 20, "color": "#262626", "opacity": 1, "bold": false, "italic": false, "alignH": "CENTER", "alignV": "CENTER" }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

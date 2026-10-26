@@ -62,6 +62,8 @@ namespace SurvivalRts
                 return;
             }
 
+            SnapToGround();
+
             // Đã tới rìa công trường: quay mặt vào tâm công trình và vung búa xây dựng.
             var lookDir = targetSite.transform.position - transform.position;
             lookDir.y = 0f;
@@ -98,6 +100,7 @@ namespace SurvivalRts
             }
             else
             {
+                SnapToGround();
                 if (animator != null) animator.Play("Idle");
             }
         }
@@ -126,17 +129,18 @@ namespace SurvivalRts
             if (homeTransform == null) return transform.position;
             float angle = (workSlot - 1) * 0.65f;
             var localOffset = new Vector3(Mathf.Sin(angle) * 1.2f, 0f, 1.6f + Mathf.Cos(angle) * 0.3f);
-            return homeTransform.position + homeTransform.rotation * localOffset;
+            var pos = homeTransform.position + homeTransform.rotation * localOffset;
+            if (BuildGrid.Instance != null)
+                pos.y = BuildGrid.Instance.SampleWorldHeight(pos);
+            return pos;
         }
 
         void SnapToGround()
         {
-            if (BuildGrid.Instance == null) return;
-            var cell = BuildGrid.Instance.MinCell(transform.position, Vector2Int.one);
-            if (!BuildGrid.Instance.InBounds(cell)) return;
-            int idx = BuildGrid.Instance.Index(cell);
+            var grid = BuildGrid.Instance;
+            if (grid == null) return;
             var pos = transform.position;
-            pos.y = BuildGrid.Instance.Heights[idx];
+            pos.y = grid.SampleWorldHeight(pos);
             transform.position = pos;
         }
     }

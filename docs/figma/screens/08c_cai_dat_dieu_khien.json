@@ -1,0 +1,1244 @@
+{
+  "screen": "08c_cai_dat_dieu_khien",
+  "title": "Cài đặt - tab Điều khiển",
+  "frame": {
+    "width": 1920,
+    "height": 1080
+  },
+  "nodes": [
+    {
+      "name": "Settings",
+      "type": "FRAME",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 1080,
+      "visible": true,
+      "fill": {
+        "color": "#E8E8E8",
+        "opacity": 1
+      },
+      "children": [
+        {
+          "name": "Card",
+          "type": "FRAME",
+          "x": 180,
+          "y": 48,
+          "w": 1560,
+          "h": 984,
+          "visible": true,
+          "fill": {
+            "color": "#FAFAFA",
+            "opacity": 1
+          },
+          "stroke": {
+            "color": "#808080",
+            "width": 2
+          },
+          "cornerRadius": 6,
+          "autoLayout": {
+            "direction": "VERTICAL",
+            "spacing": 16,
+            "padding": [
+              24,
+              24,
+              24,
+              24
+            ],
+            "align": "UpperLeft",
+            "expandWidth": true,
+            "expandHeight": false
+          },
+          "children": [
+            {
+              "name": "Header",
+              "type": "FRAME",
+              "x": 24,
+              "y": 24,
+              "w": 1512,
+              "h": 48,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 12,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "LowerLeft",
+                "expandWidth": false,
+                "expandHeight": false
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Text - Cài đặt",
+                  "type": "TEXT",
+                  "x": 0,
+                  "y": 4,
+                  "w": 1180,
+                  "h": 44,
+                  "visible": true,
+                  "text": {
+                    "characters": "Cài đặt",
+                    "fontSize": 32,
+                    "color": "#262626",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "LEFT",
+                    "alignV": "CENTER"
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 1,
+                    "growY": 0
+                  }
+                },
+                {
+                  "name": "Text - Cài đặt · Điều khiển",
+                  "type": "TEXT",
+                  "x": 1192,
+                  "y": 24,
+                  "w": 320,
+                  "h": 24,
+                  "visible": true,
+                  "text": {
+                    "characters": "Cài đặt · Điều khiển",
+                    "fontSize": 14,
+                    "color": "#6C6C6C",
+                    "opacity": 1,
+                    "bold": false,
+                    "italic": false,
+                    "alignH": "RIGHT",
+                    "alignV": "CENTER"
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 88,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Tabs",
+              "type": "FRAME",
+              "x": 24,
+              "y": 106,
+              "w": 1512,
+              "h": 48,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 8,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft",
+                "expandWidth": false,
+                "expandHeight": true
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Button - Đồ họa",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Đồ họa",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Đồ họa",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Âm thanh",
+                  "type": "FRAME",
+                  "x": 188,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Âm thanh",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Âm thanh",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Điều khiển",
+                  "type": "FRAME",
+                  "x": 376,
+                  "y": 0,
+                  "w": 180,
+                  "h": 48,
+                  "visible": true,
+                  "fill": {
+                    "color": "#505050",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#262626",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Điều khiển",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 180,
+                      "h": 48,
+                      "visible": true,
+                      "text": {
+                        "characters": "Điều khiển",
+                        "fontSize": 20,
+                        "color": "#FAFAFA",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 170,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Scroll",
+              "type": "FRAME",
+              "x": 24,
+              "y": 188,
+              "w": 1512,
+              "h": 686,
+              "visible": true,
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 1,
+                "growY": 1
+              },
+              "children": [
+                {
+                  "name": "Viewport",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 1512,
+                  "h": 686,
+                  "visible": true,
+                  "fill": {
+                    "color": "#000000",
+                    "opacity": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Content",
+                      "type": "FRAME",
+                      "x": 0,
+                      "y": 0,
+                      "w": 1512,
+                      "h": 422,
+                      "visible": true,
+                      "autoLayout": {
+                        "direction": "VERTICAL",
+                        "spacing": 20,
+                        "padding": [
+                          0,
+                          0,
+                          0,
+                          0
+                        ],
+                        "align": "UpperLeft",
+                        "expandWidth": true,
+                        "expandHeight": false
+                      },
+                      "hug": {
+                        "x": false,
+                        "y": true
+                      },
+                      "children": [
+                        {
+                          "name": "Group",
+                          "type": "FRAME",
+                          "x": 0,
+                          "y": 0,
+                          "w": 1512,
+                          "h": 422,
+                          "visible": true,
+                          "autoLayout": {
+                            "direction": "VERTICAL",
+                            "spacing": 2,
+                            "padding": [
+                              0,
+                              0,
+                              0,
+                              0
+                            ],
+                            "align": "UpperLeft",
+                            "expandWidth": true,
+                            "expandHeight": false
+                          },
+                          "children": [
+                            {
+                              "name": "Text - Phím và thao tác",
+                              "type": "TEXT",
+                              "x": 0,
+                              "y": 0,
+                              "w": 1512,
+                              "h": 40,
+                              "visible": true,
+                              "text": {
+                                "characters": "Phím và thao tác",
+                                "fontSize": 24,
+                                "color": "#262626",
+                                "opacity": 1,
+                                "bold": false,
+                                "italic": false,
+                                "alignH": "LEFT",
+                                "alignV": "CENTER"
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              }
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 42,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Chọn tiểu đội",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 731.86,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Chọn tiểu đội",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - Kéo chuột trái để chọn khung",
+                                  "type": "TEXT",
+                                  "x": 751.86,
+                                  "y": 4,
+                                  "w": 756.14,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Kéo chuột trái để chọn khung, Shift để thêm vào",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 100,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Chọn cùng loại",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 818.92,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Chọn cùng loại",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - Nhấp đúp vào một tiểu đội",
+                                  "type": "TEXT",
+                                  "x": 838.92,
+                                  "y": 4,
+                                  "w": 669.08,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Nhấp đúp vào một tiểu đội",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 158,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Chọn cả quân",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 917,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Chọn cả quân",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - Q",
+                                  "type": "TEXT",
+                                  "x": 937,
+                                  "y": 4,
+                                  "w": 571,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Q",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 216,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Gán nhóm",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 884.73,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Gán nhóm",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - Ctrl + 1..9",
+                                  "type": "TEXT",
+                                  "x": 904.73,
+                                  "y": 4,
+                                  "w": 603.27,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Ctrl + 1..9",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 274,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Gọi nhóm",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 908.98,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Gọi nhóm",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - 1..9",
+                                  "type": "TEXT",
+                                  "x": 928.98,
+                                  "y": 4,
+                                  "w": 579.02,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "1..9",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Setting",
+                              "type": "FRAME",
+                              "x": 0,
+                              "y": 332,
+                              "w": 1512,
+                              "h": 56,
+                              "visible": true,
+                              "autoLayout": {
+                                "direction": "HORIZONTAL",
+                                "spacing": 16,
+                                "padding": [
+                                  4,
+                                  4,
+                                  4,
+                                  4
+                                ],
+                                "align": "MiddleLeft",
+                                "expandWidth": false,
+                                "expandHeight": true
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              },
+                              "children": [
+                                {
+                                  "name": "Text - Di chuyển",
+                                  "type": "TEXT",
+                                  "x": 4,
+                                  "y": 4,
+                                  "w": 880.46,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Di chuyển",
+                                    "fontSize": 20,
+                                    "color": "#262626",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "LEFT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Line",
+                                  "type": "FRAME",
+                                  "x": 0,
+                                  "y": 54,
+                                  "w": 1512,
+                                  "h": 2,
+                                  "visible": true,
+                                  "fill": {
+                                    "color": "#C0C0C0",
+                                    "opacity": 1
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": true,
+                                    "growX": 0,
+                                    "growY": 0
+                                  }
+                                },
+                                {
+                                  "name": "Text - Chuột phải",
+                                  "type": "TEXT",
+                                  "x": 900.46,
+                                  "y": 4,
+                                  "w": 607.54,
+                                  "h": 48,
+                                  "visible": true,
+                                  "text": {
+                                    "characters": "Chuột phải",
+                                    "fontSize": 18,
+                                    "color": "#6C6C6C",
+                                    "opacity": 1,
+                                    "bold": false,
+                                    "italic": false,
+                                    "alignH": "RIGHT",
+                                    "alignV": "CENTER"
+                                  },
+                                  "layoutChild": {
+                                    "ignoreLayout": false,
+                                    "growX": 1,
+                                    "growY": 0
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Text - Chưa hỗ trợ đổi phím.",
+                              "type": "TEXT",
+                              "x": 0,
+                              "y": 390,
+                              "w": 1512,
+                              "h": 32,
+                              "visible": true,
+                              "text": {
+                                "characters": "Chưa hỗ trợ đổi phím.",
+                                "fontSize": 16,
+                                "color": "#6C6C6C",
+                                "opacity": 1,
+                                "bold": false,
+                                "italic": false,
+                                "alignH": "LEFT",
+                                "alignV": "CENTER"
+                              },
+                              "layoutChild": {
+                                "ignoreLayout": false,
+                                "growX": 0,
+                                "growY": 0
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Separator",
+              "type": "FRAME",
+              "x": 24,
+              "y": 890,
+              "w": 1512,
+              "h": 2,
+              "visible": true,
+              "fill": {
+                "color": "#C0C0C0",
+                "opacity": 1
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              }
+            },
+            {
+              "name": "Footer",
+              "type": "FRAME",
+              "x": 24,
+              "y": 908,
+              "w": 1512,
+              "h": 52,
+              "visible": true,
+              "autoLayout": {
+                "direction": "HORIZONTAL",
+                "spacing": 12,
+                "padding": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "align": "MiddleLeft",
+                "expandWidth": false,
+                "expandHeight": true
+              },
+              "layoutChild": {
+                "ignoreLayout": false,
+                "growX": 0,
+                "growY": 0
+              },
+              "children": [
+                {
+                  "name": "Button - Mặc định",
+                  "type": "FRAME",
+                  "x": 0,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Mặc định",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Mặc định",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Spacer",
+                  "type": "FRAME",
+                  "x": 172,
+                  "y": 0,
+                  "w": 996,
+                  "h": 52,
+                  "visible": true,
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 1,
+                    "growY": 0
+                  }
+                },
+                {
+                  "name": "Button - Quay lại",
+                  "type": "FRAME",
+                  "x": 1180,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#DADADA",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#808080",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Quay lại",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Quay lại",
+                        "fontSize": 20,
+                        "color": "#262626",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Button - Áp dụng",
+                  "type": "FRAME",
+                  "x": 1352,
+                  "y": 0,
+                  "w": 160,
+                  "h": 52,
+                  "visible": true,
+                  "fill": {
+                    "color": "#505050",
+                    "opacity": 1
+                  },
+                  "stroke": {
+                    "color": "#262626",
+                    "width": 2
+                  },
+                  "cornerRadius": 4,
+                  "button": {
+                    "interactable": true
+                  },
+                  "layoutChild": {
+                    "ignoreLayout": false,
+                    "growX": 0,
+                    "growY": 0
+                  },
+                  "children": [
+                    {
+                      "name": "Text - Áp dụng",
+                      "type": "TEXT",
+                      "x": 0,
+                      "y": 0,
+                      "w": 160,
+                      "h": 52,
+                      "visible": true,
+                      "text": {
+                        "characters": "Áp dụng",
+                        "fontSize": 20,
+                        "color": "#FAFAFA",
+                        "opacity": 1,
+                        "bold": false,
+                        "italic": false,
+                        "alignH": "CENTER",
+                        "alignV": "CENTER"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

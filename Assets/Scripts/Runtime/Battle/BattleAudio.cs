@@ -47,7 +47,7 @@ namespace SurvivalRts
 
         void OnMeleeHit(Vector3 position)
         {
-            Post(SoundId.EnemyHit, position);
+            Post(SoundId.SwordHit, position);
         }
 
         void OnUnitKilled(Vector3 position)
@@ -57,7 +57,7 @@ namespace SurvivalRts
 
         void OnShotFired(Vector3 from, Vector3 to)
         {
-            Post(SoundId.TowerShot, from);
+            Post(SoundId.BowShot, from);
         }
 
         static void Post(SoundId id, Vector3 position)
